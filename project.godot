@@ -1,0 +1,107 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Line2D",
+"class": "Trail2D",
+"language": "GDScript",
+"path": "res://scripts/trail.gd"
+}, {
+"base": "object",
+"class": "asteroid",
+"language": "GDScript",
+"path": "res://scripts/entity/objects/asteroid.gd"
+}, {
+"base": "Area2D",
+"class": "entity",
+"language": "GDScript",
+"path": "res://scripts/entity/entity.gd"
+}, {
+"base": "entity",
+"class": "galaxy",
+"language": "GDScript",
+"path": "res://scripts/entity/galaxy.gd"
+}, {
+"base": "entity",
+"class": "object",
+"language": "GDScript",
+"path": "res://scripts/entity/objects/object.gd"
+}, {
+"base": "entity",
+"class": "planet",
+"language": "GDScript",
+"path": "res://scripts/entity/planets/planet.gd"
+}, {
+"base": "entity",
+"class": "ship",
+"language": "GDScript",
+"path": "res://scripts/entity/ships/ship.gd"
+} ]
+_global_script_class_icons={
+"Trail2D": "",
+"asteroid": "",
+"entity": "",
+"galaxy": "",
+"object": "",
+"planet": "",
+"ship": ""
+}
+
+[application]
+
+config/name="space-4x"
+run/main_scene="res://scenes/menu.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+Enums="*res://scripts/utils/enums.gd"
+NameGenerator="*res://scripts/utils/name_generator.gd"
+WorldGenerator="*res://scripts/utils/world_generator.gd"
+Scene="*res://scripts/utils/scene.gd"
+State="*res://scripts/utils/state.gd"
+StateManager="*res://scripts/utils/state_manager.gd"
+
+[debug]
+
+settings/stdout/print_fps=true
+
+[display]
+
+window/vsync/use_vsync=false
+
+[importer_defaults]
+
+texture={
+"compress/bptc_ldr": 0,
+"compress/hdr_mode": 0,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d": false,
+"flags/anisotropic": false,
+"flags/filter": false,
+"flags/mipmaps": false,
+"flags/repeat": 0,
+"flags/srgb": 2,
+"process/HDR_as_SRGB": false,
+"process/fix_alpha_border": true,
+"process/invert_color": false,
+"process/premult_alpha": false,
+"size_limit": 0,
+"stream": false,
+"svg/scale": 1.0
+}
+
+[rendering]
+
+threads/thread_model=2
+environment/default_clear_color=Color( 0.0862745, 0.0862745, 0.2, 1 )
+environment/default_environment="res://default_env.tres"

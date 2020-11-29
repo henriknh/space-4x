@@ -1,0 +1,15 @@
+[gd_scene format=2]
+
+[node name="LoadingScene" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+margin_top = 586.0
+margin_right = 1024.0
+margin_bottom = 600.0
+max_value = 1.0
