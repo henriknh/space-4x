@@ -1,10 +1,22 @@
 extends Node
 
-var prefab = preload('res://prefabs/ship_combat.tscn')
+var prefab_combat = preload('res://prefabs/entities/ships/combat/ship_combat.tscn')
+var prefab_transport = preload('res://prefabs/entities/ships/transport/ship_transport.tscn')
+var prefab_miner = preload('res://prefabs/entities/ships/miner/ship_miner.tscn')
 
 func create(target):
 	for _i in range(10):
-		var instance = prefab.instance()
-		instance.set_star_system(State.get_star_system())
+		var instance = null
+		print(WorldGenerator.rng.randi_range(0, 2))
+		print(WorldGenerator.rng.randi_range(0, 2))
+		print(WorldGenerator.rng.randi_range(0, 2))
+		match WorldGenerator.rng.randi_range(0, 2):
+			0:
+				instance = prefab_combat.instance()
+			1:
+				instance = prefab_transport.instance()
+			2:
+				instance = prefab_miner.instance()
+		instance.set_planet_system(State.get_planet_system())
 		instance.create()
 		target.add_child(instance)

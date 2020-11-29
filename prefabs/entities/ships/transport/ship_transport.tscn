@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://shaders/outline.shader" type="Shader" id=1]
+[ext_resource path="res://prefabs/entities/ships/transport/ship_transport.gd" type="Script" id=2]
+[ext_resource path="res://assets/ship-mining-1.png" type="Texture" id=3]
+[ext_resource path="res://prefabs/entities/ships/effects/trail.tscn" type="PackedScene" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 7 )
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 1 )
+shader_param/outLineSize = 0.05
+shader_param/outLineColor = Plane( 0.09, 0.09, 0.2, 1 )
+
+[node name="ShipTransport" type="KinematicBody2D" groups=[
+"Persist",
+"Ship",
+"Transport",
+]]
+z_index = 1
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 2 )
+texture = ExtResource( 3 )
+
+[node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]
+position = Vector2( 2.86102e-06, 2.14577e-06 )
+scale = Vector2( 1.6, 0.7 )
+
+[node name="Trail" parent="." instance=ExtResource( 4 )]

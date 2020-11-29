@@ -3,7 +3,7 @@ extends Node
 var _world_size: int = 1
 var _seed: int = 0
 
-onready var rng = null
+onready var rng: RandomNumberGenerator = null
 
 func _ready():
 	rng = RandomNumberGenerator.new()
@@ -20,13 +20,13 @@ func set_seed(seed_value: int) -> void:
 func generate_world():
 	print('generate world with seed: %d' % rng.get_seed())
 	
-	var spawner_star_systems = load('res://scripts/spawners/spawner_star_systems.gd').new()
+	var spawner_planet_systems = load('res://scripts/spawners/spawner_planet_systems.gd').new()
 	var spawner_planets = load('res://scripts/spawners/spawner_planets.gd').new()
 	var spawner_objects = load('res://scripts/spawners/spawner_objects.gd').new()
 	
-	for star_system_idx in range(2):
-		spawner_star_systems.create(get_node('/root'), star_system_idx)
-		var star_system_size = spawner_planets.create(get_node('/root'), star_system_idx)
-		spawner_objects.create(get_node('/root'), star_system_idx, star_system_size)
+	for planet_system_idx in range(2):
+		spawner_planet_systems.create(get_node('/root'), planet_system_idx)
+		var planet_system_size = spawner_planets.create(get_node('/root'), planet_system_idx)
+		spawner_objects.create(get_node('/root'), planet_system_idx, planet_system_size)
 	
-	State.set_star_system(0)
+	State.set_planet_system(0)

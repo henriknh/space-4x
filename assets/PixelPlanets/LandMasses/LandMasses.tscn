@@ -59,10 +59,8 @@ shader_param/OCTAVES = 2
 shader_param/seed = 5.939
 
 [node name="Control" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -312.0
-margin_bottom = -100.0
+margin_right = 200.0
+margin_bottom = 200.0
 rect_min_size = Vector2( 200, 200 )
 size_flags_horizontal = 0
 size_flags_vertical = 0

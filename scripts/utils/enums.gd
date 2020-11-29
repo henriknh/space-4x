@@ -1,5 +1,11 @@
 extends Node
 
+enum entity_types {
+	ship,
+	planet,
+	object
+}
+
 enum planet_types {
 	lava,
 	iron,
@@ -8,11 +14,11 @@ enum planet_types {
 }
 
 const scenes = {
-	'loading': 'res://scenes/loading.tscn',
-	'menu': 'res://scenes/menu.tscn',
-	'game': 'res://scenes/game.tscn',
-	'galaxy': 'res://scenes/galaxy_system.tscn',
-	'star_system': 'res://scenes/star_system.tscn'
+	'loading': 'res://prefabs/scenes/loading.tscn',
+	'main_menu': 'res://prefabs/scenes/main_menu.tscn',
+	'game': 'res://prefabs/scenes/game.tscn',
+	'galaxy_system': 'res://prefabs/scenes/galaxy_system.tscn',
+	'planet_system': 'res://prefabs/scenes/planet_system.tscn'
 }
 
 const world_sizes = {

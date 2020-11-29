@@ -12,52 +12,58 @@ _global_script_classes=[ {
 "base": "Line2D",
 "class": "Trail2D",
 "language": "GDScript",
-"path": "res://scripts/trail.gd"
+"path": "res://prefabs/entities/ships/effects/trail_line.gd"
 }, {
 "base": "object",
 "class": "asteroid",
 "language": "GDScript",
-"path": "res://scripts/entity/objects/asteroid.gd"
+"path": "res://prefabs/entities/objects/asteroid/asteroid.gd"
 }, {
-"base": "Area2D",
+"base": "KinematicBody2D",
 "class": "entity",
 "language": "GDScript",
-"path": "res://scripts/entity/entity.gd"
-}, {
-"base": "entity",
-"class": "galaxy",
-"language": "GDScript",
-"path": "res://scripts/entity/galaxy.gd"
+"path": "res://prefabs/entities/entity.gd"
 }, {
 "base": "entity",
 "class": "object",
 "language": "GDScript",
-"path": "res://scripts/entity/objects/object.gd"
+"path": "res://prefabs/entities/objects/object.gd"
 }, {
 "base": "entity",
 "class": "planet",
 "language": "GDScript",
-"path": "res://scripts/entity/planets/planet.gd"
+"path": "res://prefabs/entities/planets/planet.gd"
+}, {
+"base": "entity",
+"class": "planet_system",
+"language": "GDScript",
+"path": "res://prefabs/entities/planet_system/planet_system.gd"
 }, {
 "base": "entity",
 "class": "ship",
 "language": "GDScript",
-"path": "res://scripts/entity/ships/ship.gd"
+"path": "res://prefabs/entities/ships/ship.gd"
+}, {
+"base": "ship",
+"class": "ship_miner",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/miner/ship_miner.gd"
 } ]
 _global_script_class_icons={
 "Trail2D": "",
 "asteroid": "",
 "entity": "",
-"galaxy": "",
 "object": "",
 "planet": "",
-"ship": ""
+"planet_system": "",
+"ship": "",
+"ship_miner": ""
 }
 
 [application]
 
 config/name="space-4x"
-run/main_scene="res://scenes/menu.tscn"
+run/main_scene="res://prefabs/scenes/main_menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -68,6 +74,7 @@ WorldGenerator="*res://scripts/utils/world_generator.gd"
 Scene="*res://scripts/utils/scene.gd"
 State="*res://scripts/utils/state.gd"
 StateManager="*res://scripts/utils/state_manager.gd"
+Formatter="*res://scripts/utils/formatter.gd"
 
 [debug]
 

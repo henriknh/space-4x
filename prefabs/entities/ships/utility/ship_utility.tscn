@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://shaders/outline.shader" type="Shader" id=1]
+[ext_resource path="res://prefabs/entities/ships/utility/ship_utility.gd" type="Script" id=2]
+[ext_resource path="res://prefabs/entities/ships/effects/trail.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/ship3.png" type="Texture" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 8 )
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 1 )
+shader_param/outLineSize = 0.05
+shader_param/outLineColor = Plane( 0.09, 0.09, 0.2, 1 )
+
+[node name="ShipUtility" type="KinematicBody2D" groups=[
+"Persist",
+"Ship",
+"Utility",
+]]
+z_index = 1
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 2 )
+texture = ExtResource( 4 )
+
+[node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]
+
+[node name="Trail" parent="." instance=ExtResource( 3 )]
