@@ -11,6 +11,7 @@ radius = 64.0
 "Persist",
 "StarSystem",
 ]]
+input_pickable = true
 script = ExtResource( 3 )
 
 [node name="sprite" type="Sprite" parent="."]
@@ -20,4 +21,5 @@ texture = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="EntityGUI" parent="." instance=ExtResource( 2 )]
+visible = false
 [connection signal="input_event" from="." to="." method="_on_input_event"]

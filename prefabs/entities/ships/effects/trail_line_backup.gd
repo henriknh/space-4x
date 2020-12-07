@@ -4,7 +4,7 @@
 # texture, or trail width, use parameters from the `Line2D` class.
 tool
 
-class_name Trail2D
+class_name Trail2D_backup
 extends Line2D
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
@@ -16,17 +16,15 @@ export var resolution := 10
 # Life of each point in seconds before it is deleted.
 export var lifetime := 1
 # Maximum number of points allowed on the curve.
-export var max_points := 10
+export var max_points := 50
 
 # Optional path to the target node to follow. If not set, the instance follows its parent.
 export var target_path: NodePath
 
 var _points_creation_time := []
-var _points := []
 var _last_point := Vector2.ZERO
 var _clock := 0.0
 var _offset := 0.0
-var is_colinear = false
 
 onready var target: Node2D = get_parent() as Node2D
 
@@ -52,40 +50,17 @@ func _process(delta: float) -> void:
 	# Adding new points if necessary.
 	var desired_point := to_local(target.global_position)
 	var distance: float = _last_point.distance_squared_to(desired_point)
-
-	if camera and distance > pow(max(resolution, resolution * camera.zoom.x * 0.125), 2):
+	if camera and distance > pow(max(resolution, resolution * camera.zoom.x * 0.5), 2):
 		add_timed_point(desired_point, _clock)
-
 
 
 # Creates a new point and stores its creation time.
 func add_timed_point(point: Vector2, time: float) -> void:
-	_points.append(point)
+	add_point(point + calculate_offset())
 	_points_creation_time.append(time)
 	_last_point = point
-	
-	var is_colinear_before = is_colinear
-	
-	if _points.size() >= 3:
-		var p1 = point + calculate_offset()
-		var p2 = _points[_points.size() / 2]
-		var p3 = _points[0]
-		lifetime = 2
-		max_points = 50
-		#y2 - y1 / x2- x1 = y3 - y1 / x3 - x1
-		
-		#print(get_point_count())
-		is_colinear = ((p2[1] - p1[1]) / (p2[0] - p1[0])) - ((p3[1] - p1[1]) / (p3[0] - p1[0])) < 0.001
-		#print(colinear)
-		
-	if is_colinear:
-		if is_colinear != is_colinear_before:
-			points = PoolVector2Array([_points[0], point])
-		
-	else:
-		add_point(point + calculate_offset())
-		if get_point_count() > max_points:
-			remove_first_point()
+	if get_point_count() > max_points:
+		remove_first_point()
 
 
 # Calculates the offset of the trail from its target.
@@ -97,7 +72,6 @@ func calculate_offset() -> Vector2:
 func remove_first_point() -> void:
 	if get_point_count() > 1:
 		remove_point(0)
-	_points.pop_front()
 	_points_creation_time.pop_front()
 
 
@@ -111,12 +85,6 @@ func remove_older() -> void:
 		# isn't older than `lifetime`, we know all remaining points should stay as well.
 		else:
 			break
-	if is_colinear and _points.size() >= 2:
-		pass
-		clear_points()
-		add_point(_points[0])
-		add_point(_points[_points.size() - 1])
-		#points = PoolVector2Array([_points[0], _points[_points.size() - 1]])
 
 
 func set_emitting(emitting: bool) -> void:
@@ -129,6 +97,5 @@ func set_emitting(emitting: bool) -> void:
 	
 	if is_emitting:
 		clear_points()
-		_points.clear()
 		_points_creation_time.clear()
 		_last_point = to_local(target.global_position) + calculate_offset()

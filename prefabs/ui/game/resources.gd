@@ -29,11 +29,11 @@ func update_ui():
 	var water = 0
 	
 	for entity in planets:
-		if entity.get_planet_system() == State.get_planet_system():
-			metal += entity.get_metal()
-			power += entity.get_power()
-			food += entity.get_food()
-			water += entity.get_water()
+		if entity.planet_system == State.get_planet_system():
+			metal += entity.metal
+			power += entity.power
+			food += entity.food
+			water += entity.water
 		
 	node_metal.text = Formatter.round_to_dec(metal, 2) as String
 	node_power.text = Formatter.round_to_dec(power, 2) as String

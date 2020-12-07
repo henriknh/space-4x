@@ -3,12 +3,13 @@ extends object
 class_name asteroid
 
 func create():
-	set_name(NameGenerator.get_name_asteroid())
-	set_rotation_speed(WorldGenerator.rng.randf_range(-1, 1) * 10)
+	label = NameGenerator.get_name_asteroid()
+	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
+	metal = WorldGenerator.rng.randf_range(100, 1000)
 	
 func _process(delta):
 	if visible:
-		$Sprite.rotation_degrees += _rotation_speed * delta
+		$Sprite.rotation_degrees += rotation_speed * delta
 
 func get_target_point():
 	var angle = 2 * PI * randf()

@@ -3,28 +3,28 @@ extends entity
 class_name planet
 
 var prefab_lava = preload('res://assets/PixelPlanets/LavaWorld/LavaWorld.tscn')
+var prefab_iron = preload('res://assets/PixelPlanets/GasPlanet/GasPlanet.tscn')
 var prefab_earth_1 = preload('res://assets/PixelPlanets/LandMasses/LandMasses.tscn')
 var prefab_earth_2 = preload('res://assets/PixelPlanets/Rivers/Rivers.tscn')
 var prefab_ice = preload('res://assets/PixelPlanets/IceWorld/IceWorld.tscn')
 
 func create():
-	.set_type(Enums.entity_types.planet)
-	.set_rotation_speed(WorldGenerator.rng.randf_range(-1, 1) * 10)
-	.set_name(NameGenerator.get_name_planet())
-	.set_indestructible(true)
+	entity_type = Enums.entity_types.planet
+	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
+	label = NameGenerator.get_name_planet()
+	indestructible = true
 	init()
 	
 func init():
-	.get_node("InfoUI").set_name(.get_name())
+	.get_node("InfoUI").set_label(label)
 	
 	var instance = null
-	var test_type = .get_planet_type()
-	match .get_planet_type():
+	match planet_type:
 		Enums.planet_types.lava:
 			instance = prefab_lava.instance()
 			.add_to_group('Lava')
 		Enums.planet_types.iron:
-			instance = prefab_lava.instance()
+			instance = prefab_iron.instance()
 			.add_to_group('Iron')
 		Enums.planet_types.earth:
 			if WorldGenerator.rng.randi() % 2 == 0:
@@ -36,8 +36,8 @@ func init():
 			instance = prefab_ice.instance()
 			.add_to_group('Ice')
 			
-	(instance as Control).rect_scale = Vector2(.get_planet_size(), .get_planet_size())
-	(instance as Control).set_position(Vector2(-100 * .get_planet_size(), -100 * .get_planet_size()))
+	(instance as Control).rect_scale = Vector2(planet_size, planet_size)
+	(instance as Control).set_position(Vector2(-100 * planet_size, -100 * planet_size))
 
 	.add_child(instance)
 	
@@ -46,7 +46,7 @@ func _ready():
 	
 func _process(delta):
 	if self.visible:
-		.get_node("Sprite").rotation_degrees += .get_rotation_speed() * delta
+		.get_node("Sprite").rotation_degrees += rotation_speed * delta
 
 func get_target_point():
 	var angle = 2 * PI * randf()

@@ -5,11 +5,8 @@ var prefab_transport = preload('res://prefabs/entities/ships/transport/ship_tran
 var prefab_miner = preload('res://prefabs/entities/ships/miner/ship_miner.tscn')
 
 func create(target):
-	for _i in range(10):
+	for _i in range(100):
 		var instance = null
-		print(WorldGenerator.rng.randi_range(0, 2))
-		print(WorldGenerator.rng.randi_range(0, 2))
-		print(WorldGenerator.rng.randi_range(0, 2))
 		match WorldGenerator.rng.randi_range(0, 2):
 			0:
 				instance = prefab_combat.instance()
@@ -17,6 +14,6 @@ func create(target):
 				instance = prefab_transport.instance()
 			2:
 				instance = prefab_miner.instance()
-		instance.set_planet_system(State.get_planet_system())
+		instance.planet_system = State.get_planet_system()
 		instance.create()
 		target.add_child(instance)

@@ -14,6 +14,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/effects/trail_line.gd"
 }, {
+"base": "Line2D",
+"class": "Trail2D_backup",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/effects/trail_line_backup.gd"
+}, {
 "base": "object",
 "class": "asteroid",
 "language": "GDScript",
@@ -45,19 +50,38 @@ _global_script_classes=[ {
 "path": "res://prefabs/entities/ships/ship.gd"
 }, {
 "base": "ship",
+"class": "ship_combat",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/combat/ship_combat.gd"
+}, {
+"base": "ship",
 "class": "ship_miner",
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/miner/ship_miner.gd"
+}, {
+"base": "ship",
+"class": "ship_transport",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/transport/ship_transport.gd"
+}, {
+"base": "ship",
+"class": "ship_utility",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/utility/ship_utility.gd"
 } ]
 _global_script_class_icons={
 "Trail2D": "",
+"Trail2D_backup": "",
 "asteroid": "",
 "entity": "",
 "object": "",
 "planet": "",
 "planet_system": "",
 "ship": "",
-"ship_miner": ""
+"ship_combat": "",
+"ship_miner": "",
+"ship_transport": "",
+"ship_utility": ""
 }
 
 [application]
@@ -75,6 +99,7 @@ Scene="*res://scripts/utils/scene.gd"
 State="*res://scripts/utils/state.gd"
 StateManager="*res://scripts/utils/state_manager.gd"
 Formatter="*res://scripts/utils/formatter.gd"
+PathNavigation="*res://scripts/utils/path_navigation.gd"
 
 [debug]
 

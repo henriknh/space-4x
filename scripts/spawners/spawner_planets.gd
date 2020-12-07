@@ -19,13 +19,23 @@ var max_planets = 30
 
 onready var orbits = 0
 var min_orbits = 4
-var max_orbits = 6
+var max_orbits = 16
+# 4-8 small
+# 9-12 medium
+# 13-16 large
 var orbits_exp_factor = 0.3
 
-var base_distance_to_sun = 800
+var base_distance_to_sun = 600
 var min_distance_orbits = 600
-var max_distance_orbits = 1400
+var max_distance_orbits = 1200
 var distance_orbits_planet_count_factor = 7
+
+var quadrants = {
+	0: 0,
+	1: 0,
+	2: 0,
+	3: 0
+}
 
 func create(target: Node, planet_system_idx: int) -> int:
 	
@@ -34,85 +44,110 @@ func create(target: Node, planet_system_idx: int) -> int:
 	sum_orbit_weight = 0
 	planet_system_size = 0
 	planets_placed = 0
+	var orbit_distance = WorldGenerator.rng.randi_range(min_distance_orbits, max_distance_orbits)
+	
+	quadrants = {
+		0: 0,
+		1: 0,
+		2: 0,
+		3: 0
+	}
 	
 	var file = File.new()
 	file.open("res://assets/planet_system_plant_odds.json", file.READ)
 	var json_text = file.get_as_text()
 	planet_system_plant_odds = JSON.parse(json_text).result
-	planets = int(WorldGenerator.rng.randi_range(min_planets, max_planets))
 	orbits = int(WorldGenerator.rng.randi_range(min_orbits, max_orbits))
 	
-	for orbit in range(orbits):
-		sum_orbit_weight += _get_orbit_weight(orbit)
+	var orbit_diff = (30000 / orbits) * 0.2
+	print(orbit_diff)
+	print(orbit_diff)
+	print(orbit_diff)
+	print(orbit_diff)
+	
+	var planet_types = []
 	
 	for orbit in range(orbits):
 		
-		var planets_in_orbit = max(_get_planets_on_orbit(orbit), 1)
-
-		planets_placed += planets_in_orbit
+		var smallest_quadrant = _get_least_dense_quadrant()
+		var angle = WorldGenerator.rng.randf() * PI / 2 + smallest_quadrant * PI / 2
+		orbit_distance = (30000 / orbits) * (orbit + 1) + WorldGenerator.rng.randi_range(-orbit_diff, orbit_diff)
 		
-		var angle_span = (2 * PI) / planets_in_orbit
-		var random_main_angle = WorldGenerator.rng.randf() * 2 * PI
+		var position = Vector2(orbit_distance * sin(angle), orbit_distance * cos(angle))
+		var planet_type = _calc_planet_type(orbit)
+		var instance = null
 		
-		planet_system_size += WorldGenerator.rng.randi_range(min_distance_orbits, max_distance_orbits) + planets * orbits * distance_orbits_planet_count_factor
-		orbit_distances.push_back(planet_system_size)
+		match planet_type:
+			Enums.planet_types.earth:
+				instance = prefab_earth.instance()
+			Enums.planet_types.ice:
+				instance = prefab_ice.instance()
+			Enums.planet_types.iron:
+				instance = prefab_iron.instance()
+			Enums.planet_types.lava:
+				instance = prefab_lava.instance()
+				
+		instance.position = position
+		instance.planet_system = planet_system_idx
+		instance.planet_orbit_distance = orbit_distance
+		instance.visible = false
+		instance.create()
+		target.add_child(instance)
 		
-		for planet_in_orbit in range(planets_in_orbit):
-			var angle = random_main_angle + angle_span * planet_in_orbit + angle_span * 0.2 + angle_span * WorldGenerator.rng.randf() * 0.6
+		planet_types.append(planet_type)
+		print('orbit %d, orbits %d, distance %d' % [orbit, orbits, orbit_distance])
 			
-			var position = Vector2((base_distance_to_sun + planet_system_size) * sin(angle), (base_distance_to_sun + planet_system_size) * cos(angle))
-			
-			var planet_type = _calc_planet_type(orbit)
-			var instance = null
-			
-			match planet_type:
-				Enums.planet_types.earth:
-					instance = prefab_earth.instance()
-				Enums.planet_types.ice:
-					instance = prefab_ice.instance()
-				Enums.planet_types.iron:
-					instance = prefab_iron.instance()
-				Enums.planet_types.lava:
-					instance = prefab_lava.instance()
-					
-			instance.position = position
-			instance.set_planet_system(planet_system_idx)
-			instance.set_planet_type(planet_type)
-			instance.set_planet_size(WorldGenerator.rng.randf_range(1.0, 2.0))
-			instance.set_orbit_distance(base_distance_to_sun + planet_system_size)
-			instance.visible = false
-			instance.create()
-			target.add_child(instance)
-			
+	print(planet_types)
+	
 	return planet_system_size
 
-func _get_planets_on_orbit(orbit):
-	if orbit + 1 < orbits:
-		return round(planets * (_get_orbit_weight(orbit) / sum_orbit_weight))
-	else:
-		return planets - planets_placed
-
-func _get_orbit_weight(orbit):
-	return 1 + exp(orbit * orbits_exp_factor)
 	
 func _calc_planet_type(orbit):
 	var r = WorldGenerator.rng.randf()
 	var odds_sum = 0
-
-	odds_sum += planet_system_plant_odds[str(orbits)][str(orbit)]['lava']
-	if r <= odds_sum:
-		return Enums.planet_types.lava
-
-	odds_sum += planet_system_plant_odds[str(orbits)][str(orbit)]['iron']
-	if r <= odds_sum:
-		return Enums.planet_types.iron
-
-	odds_sum += planet_system_plant_odds[str(orbits)][str(orbit)]['earth']
-	if r <= odds_sum:
-		return Enums.planet_types.earth
-
-	odds_sum += planet_system_plant_odds[str(orbits)][str(orbit)]['ice']
-	if r <= odds_sum:
-		return Enums.planet_types.ice
+	
+	if float(orbit) / orbits < 0.25:
+		if r < 0.8:
+			return Enums.planet_types.lava
+		else:
+			return Enums.planet_types.iron
+	elif float(orbit) / orbits < 0.5:
+		if r < 0.2:
+			return Enums.planet_types.lava
+		elif r < 0.8:
+			return Enums.planet_types.iron
+		else:
+			return Enums.planet_types.earth
+		
+	elif float(orbit) / orbits < 0.75:
+		if r < 0.4:
+			return Enums.planet_types.iron
+		else:
+			return Enums.planet_types.earth
+		
+	else:
+		if r < 0.4:
+			return Enums.planet_types.iron
+		else:
+			return Enums.planet_types.ice
+		
 		
 	return -1
+	
+func _get_least_dense_quadrant():
+	var smallest_quadrant = 0
+	var smallest_value = quadrants[smallest_quadrant]
+	
+	if quadrants[1] < smallest_value:
+		smallest_quadrant = 1
+		smallest_value = quadrants[smallest_quadrant]
+	if quadrants[2] < smallest_value:
+		smallest_quadrant = 2
+		smallest_value = quadrants[smallest_quadrant]
+	if quadrants[3] < smallest_value:
+		smallest_quadrant = 3
+		smallest_value = quadrants[smallest_quadrant]
+		
+	quadrants[smallest_quadrant] = quadrants[smallest_quadrant] + 1
+	
+	return smallest_quadrant

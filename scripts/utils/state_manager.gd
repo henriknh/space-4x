@@ -53,14 +53,14 @@ func load_game(target) -> bool:
 		var new_object = load(node_data["filename"]).instance()
 		new_object.visible = false
 		new_object.position = Vector2(node_data["pos_x"], node_data["pos_y"])
-		if node_data["_ship_target_x"] and node_data["_ship_target_y"]:
-			new_object._ship_target = Vector2(node_data["_ship_target_x"], node_data["_ship_target_y"])
+		if node_data["ship_target_x"] and node_data["ship_target_y"]:
+			new_object.ship_target = Vector2(node_data["ship_target_x"], node_data["ship_target_y"])
 		else:
-			new_object._ship_target = null
+			new_object.ship_target = null
 
 		# Now we set the remaining variables.
 		for i in node_data.keys():
-			if i == "filename" or i == "parent" or i == "pos_x" or i == "pos_y" or i == "_ship_target_x" or i == "_ship_target_y":
+			if i == "filename" or i == "parent" or i == "pos_x" or i == "pos_y" or i == "ship_target_x" or i == "ship_target_y":
 				continue
 			new_object.set(i, node_data[i])
 			

@@ -13,6 +13,13 @@ enum planet_types {
 	ice
 }
 
+enum ship_types {
+	combat,
+	miner,
+	transport,
+	utility
+}
+
 const scenes = {
 	'loading': 'res://prefabs/scenes/loading.tscn',
 	'main_menu': 'res://prefabs/scenes/main_menu.tscn',

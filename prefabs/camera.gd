@@ -7,6 +7,9 @@ var camera_pos_change = Vector2.ZERO
 const CAMERA_SPEED = 0.6
 var is_over_ui = false
 
+const ZOOM_MIN = 2
+const ZOOM_MAX = 30
+
 func _input(event):
 	if State.is_over_ui:
 		return
@@ -29,12 +32,12 @@ func _input(event):
 		match event.button_index:
 			BUTTON_WHEEL_UP:
 				target_zoom -= 1
-				if target_zoom < 0:
-					target_zoom = 0.2
+				if target_zoom < ZOOM_MIN:
+					target_zoom = ZOOM_MIN
 			BUTTON_WHEEL_DOWN:
 				target_zoom += 1
-				if target_zoom > 20:
-					target_zoom = 20
+				if target_zoom > ZOOM_MAX:
+					target_zoom = ZOOM_MAX
 			BUTTON_MIDDLE:
 				if event.pressed:
 					is_dragging = true

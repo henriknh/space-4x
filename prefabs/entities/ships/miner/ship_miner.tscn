@@ -1,17 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://shaders/outline.shader" type="Shader" id=1]
 [ext_resource path="res://prefabs/entities/ships/miner/ship_miner.gd" type="Script" id=2]
-[ext_resource path="res://assets/ship-mining-1.png" type="Texture" id=3]
+[ext_resource path="res://sketches/ship.png" type="Texture" id=3]
 [ext_resource path="res://prefabs/entities/ships/effects/trail.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 7 )
-
-[sub_resource type="ShaderMaterial" id=2]
-shader = ExtResource( 1 )
-shader_param/outLineSize = 0.05
-shader_param/outLineColor = Plane( 0.09, 0.09, 0.2, 1 )
 
 [node name="ShipMiner" type="KinematicBody2D" groups=[
 "Miner",
@@ -25,7 +19,8 @@ script = ExtResource( 2 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-material = SubResource( 2 )
+modulate = Color( 1, 0.866667, 0, 1 )
+rotation = 1.5708
 texture = ExtResource( 3 )
 
 [node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]

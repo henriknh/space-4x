@@ -46,13 +46,13 @@ func update_ui():
 		entities += get_tree().get_nodes_in_group(show_list_item)
 	
 	for entity in entities:
-		if entity.get_planet_system() == State.get_planet_system():
+		if entity.planet_system == State.get_planet_system():
 			var item = tree.create_item(root)
 			item.set_text(0, entity.get_name())
-			item.set_text(1, Formatter.round_to_dec(entity.get_metal(), 2) as String)
-			item.set_text(2, Formatter.round_to_dec(entity.get_power(), 2) as String)
-			item.set_text(3, Formatter.round_to_dec(entity.get_food(), 2) as String)
-			item.set_text(4, Formatter.round_to_dec(entity.get_water(), 2) as String)
+			item.set_text(1, Formatter.round_to_dec(entity.metal, 2) as String)
+			item.set_text(2, Formatter.round_to_dec(entity.power, 2) as String)
+			item.set_text(3, Formatter.round_to_dec(entity.food, 2) as String)
+			item.set_text(4, Formatter.round_to_dec(entity.water, 2) as String)
 			
 			if entity.is_in_group('Lava'):
 				lava = lava + 1
