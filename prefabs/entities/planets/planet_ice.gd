@@ -1,7 +1,9 @@
 extends planet
 
+class_name planet_ice
+
 func create():
 	planet_type = Enums.planet_types.ice
-	planet_size = WorldGenerator.rng.randf_range(1.0, 2.0)
+	add_to_group('Ice')
 	.create()
 

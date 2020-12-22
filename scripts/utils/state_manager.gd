@@ -29,7 +29,7 @@ func save_game() -> void:
 		save_game.store_line(to_json(node_data))
 	save_game.close()
 
-func load_game(target) -> bool:
+func load_game() -> bool:
 	var save_game = File.new()
 	if not save_game.file_exists(save_file_path):
 		return false# Error! We don't have a save to load.
@@ -50,8 +50,10 @@ func load_game(target) -> bool:
 		var node_data = parse_json(save_game.get_line())
 
 		# Firstly, we need to create the object and add it to the tree and set its position.
-		var new_object = load(node_data["filename"]).instance()
+		var new_object: KinematicBody2D = load(node_data["filename"]).instance()
+		new_object.set_script(load(node_data["script"]))
 		new_object.visible = false
+		new_object.color = Color(node_data['color'])
 		new_object.position = Vector2(node_data["pos_x"], node_data["pos_y"])
 		if node_data["ship_target_x"] and node_data["ship_target_y"]:
 			new_object.ship_target = Vector2(node_data["ship_target_x"], node_data["ship_target_y"])
@@ -60,14 +62,15 @@ func load_game(target) -> bool:
 
 		# Now we set the remaining variables.
 		for i in node_data.keys():
-			if i == "filename" or i == "parent" or i == "pos_x" or i == "pos_y" or i == "ship_target_x" or i == "ship_target_y":
+			var special_keys = ['filename', 'script', 'color', 'parent', 'pos_x', 'pos_y', 'ship_target_x', 'ship_target_y']
+			if special_keys.has(i):
 				continue
 			new_object.set(i, node_data[i])
 			
-		if new_object.has_method('init'):
-			new_object.init()
+		if new_object.has_method('ready'):
+			new_object.ready()
 		
-		target.add_child(new_object)
+		get_node("/root/GameScene").add_child(new_object)
 
 	save_game.close()
 	

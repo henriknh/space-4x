@@ -14,9 +14,9 @@ export var is_emitting := true setget set_emitting
 # Distance in pixels between vertices. A higher resolution leads to more details.
 export var resolution := 10
 # Life of each point in seconds before it is deleted.
-export var lifetime := 1
+export var lifetime := 2
 # Maximum number of points allowed on the curve.
-export var max_points := 10
+export var max_points := 20
 
 # Optional path to the target node to follow. If not set, the instance follows its parent.
 export var target_path: NodePath
@@ -52,11 +52,11 @@ func _process(delta: float) -> void:
 	# Adding new points if necessary.
 	var desired_point := to_local(target.global_position)
 	var distance: float = _last_point.distance_squared_to(desired_point)
-
-	if camera and distance > pow(max(resolution, resolution * camera.zoom.x * 0.125), 2):
-		add_timed_point(desired_point, _clock)
-
-
+	
+	var zoom_resolution = camera.zoom.x * 0.5
+	if camera and distance > pow(max(resolution, zoom_resolution), 2):
+		#add_timed_point(desired_point, _clock)
+		call_deferred('add_timed_point', desired_point, _clock)
 
 # Creates a new point and stores its creation time.
 func add_timed_point(point: Vector2, time: float) -> void:
@@ -70,8 +70,6 @@ func add_timed_point(point: Vector2, time: float) -> void:
 		var p1 = point + calculate_offset()
 		var p2 = _points[_points.size() / 2]
 		var p3 = _points[0]
-		lifetime = 2
-		max_points = 50
 		#y2 - y1 / x2- x1 = y3 - y1 / x3 - x1
 		
 		#print(get_point_count())
@@ -85,13 +83,13 @@ func add_timed_point(point: Vector2, time: float) -> void:
 	else:
 		add_point(point + calculate_offset())
 		if get_point_count() > max_points:
-			remove_first_point()
+			#remove_first_point()
+			call_deferred('remove_first_point')
 
 
 # Calculates the offset of the trail from its target.
 func calculate_offset() -> Vector2:
 	return - 1.0 * polar2cartesian(1.0, target.rotation).rotated(- PI / 2) * _offset
-
 
 # Removes the first point in the line and the corresponding time.
 func remove_first_point() -> void:

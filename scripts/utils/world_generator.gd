@@ -23,10 +23,10 @@ func generate_world():
 	var spawner_planet_systems = load('res://scripts/spawners/spawner_planet_systems.gd').new()
 	var spawner_planets = load('res://scripts/spawners/spawner_planets.gd').new()
 	var spawner_objects = load('res://scripts/spawners/spawner_objects.gd').new()
-	
+	var gameScene = get_node('/root/GameScene')
 	for planet_system_idx in range(2):
-		spawner_planet_systems.create(get_node('/root'), planet_system_idx)
-		var planet_system_size = spawner_planets.create(get_node('/root'), planet_system_idx)
-		spawner_objects.create(get_node('/root'), planet_system_idx, planet_system_size)
+		spawner_planet_systems.create(gameScene, planet_system_idx)
+		var planet_system_size = spawner_planets.create(gameScene, planet_system_idx)
+		spawner_objects.create(gameScene, planet_system_idx, planet_system_size)
 	
 	State.set_planet_system(0)

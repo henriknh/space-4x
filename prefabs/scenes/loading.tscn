@@ -10,7 +10,15 @@ __meta__ = {
 }
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
+visible = false
+margin_top = 568.0
+margin_right = 1024.0
+margin_bottom = 582.0
+max_value = 1.0
+
+[node name="Label" type="Label" parent="."]
 margin_top = 586.0
 margin_right = 1024.0
 margin_bottom = 600.0
-max_value = 1.0
+text = "Loading..."
+align = 2

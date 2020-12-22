@@ -73,3 +73,6 @@ material = SubResource( 3 )
 margin_right = 40.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 200, 200 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -4,30 +4,30 @@ onready var target_zoom = zoom.x
 const SMOOTH_SPEED = 5
 var is_dragging = false
 var camera_pos_change = Vector2.ZERO
-const CAMERA_SPEED = 0.6
+const CAMERA_SPEED = 500
 var is_over_ui = false
 
 const ZOOM_MIN = 2
-const ZOOM_MAX = 30
+const ZOOM_MAX = 200
 
 func _input(event):
 	if State.is_over_ui:
 		return
-	
+
 	if event is InputEventKey and event.pressed and event.scancode == KEY_A:
 		camera_pos_change.x = -1
 	if event is InputEventKey and event.pressed and event.scancode == KEY_D:
 		camera_pos_change.x = 1
 	elif event is InputEventKey and not event.pressed and (event.scancode == KEY_A or event.scancode == KEY_D):
 		camera_pos_change.x = 0
-		
+
 	if event is InputEventKey and event.pressed and event.scancode == KEY_W:
 		camera_pos_change.y = -1
 	elif event is InputEventKey and event.pressed and event.scancode == KEY_S:
 		camera_pos_change.y = 1
 	elif event is InputEventKey and not event.pressed and (event.scancode == KEY_W or event.scancode == KEY_S):
 		camera_pos_change.y = 0
-		
+
 	if event is InputEventMouseButton:
 		match event.button_index:
 			BUTTON_WHEEL_UP:
@@ -47,14 +47,14 @@ func _input(event):
 		if is_dragging:
 			position -= event.relative * zoom.x
 			camera_pos_change = Vector2.ZERO
-		
+
 
 func _process(delta):
 	var zoom_difference = target_zoom - zoom.x
 	var smoothed_zoom = (zoom_difference * SMOOTH_SPEED * delta)
 	zoom += Vector2(smoothed_zoom, smoothed_zoom)
-	
-	position += camera_pos_change * zoom.x * CAMERA_SPEED
+
+	position += camera_pos_change * zoom.x * CAMERA_SPEED * delta
 
 func update_limit(distance: int):
 	limit_left = -int(distance + get_viewport().size.x)

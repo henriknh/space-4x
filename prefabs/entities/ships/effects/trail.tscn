@@ -8,7 +8,7 @@
 _data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="Gradient" id=2]
-colors = PoolColorArray( 0.537255, 0.619608, 0.937255, 0, 0.537255, 0.618505, 0.937255, 0.392157 )
+colors = PoolColorArray( 0.537255, 0.619608, 0.937255, 0, 1, 1, 1, 0.4 )
 
 [sub_resource type="Gradient" id=3]
 offsets = PoolRealArray( 0, 0.985185 )
@@ -43,9 +43,12 @@ script = ExtResource( 2 )
 points = PoolVector2Array( 0.0774117, -0.0630035 )
 width = 4.0
 width_curve = SubResource( 1 )
+default_color = Color( 1, 1, 1, 1 )
 gradient = SubResource( 2 )
 antialiased = true
 script = ExtResource( 1 )
+lifetime = 1
+max_points = 10
 
 [node name="Particles2D" type="Particles2D" parent="."]
 visible = false

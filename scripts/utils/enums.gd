@@ -13,11 +13,25 @@ enum planet_types {
 	ice
 }
 
+const planet_scripts = {
+	'earth': 'res://prefabs/entities/planets/planet_earth.gd',
+	'ice': 'res://prefabs/entities/planets/planet_ice.gd',
+	'iron': 'res://prefabs/entities/planets/planet_iron.gd',
+	'lava': 'res://prefabs/entities/planets/planet_lava.gd'
+}
+
 enum ship_types {
 	combat,
+	explorer,
 	miner,
-	transport,
-	utility
+	transport
+}
+
+const ship_scripts = {
+	'combat': 'res://prefabs/entities/ships/ship_combat.gd',
+	'explorer': 'res://prefabs/entities/ships/ship_explorer.gd',
+	'miner': 'res://prefabs/entities/ships/ship_miner.gd',
+	'transport': 'res://prefabs/entities/ships/ship_transport.gd'
 }
 
 const scenes = {

@@ -10,7 +10,7 @@ var indestructible = false
 var faction = 0
 var planet_system = -1
 var rotation_speed = 0
-var temperature = 0
+var color = Color(1,1,1,1)
 
 # Resources
 var metal: float = 0
@@ -48,6 +48,7 @@ func set_visible(in_data):
 func save():
 	return {
 		"filename": get_filename(),
+		"script": get_script().get_path(),
 		"pos_x" : position.x,
 		"pos_y" : position.y,
 		"rotation": rotation,
@@ -60,6 +61,7 @@ func save():
 		"faction": faction,
 		"planet_system": planet_system,
 		"rotation_speed": rotation_speed,
+		"color": color.to_html(true),
 		
 		# Resources
 		"metal": metal,

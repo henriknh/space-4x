@@ -1,19 +1,27 @@
 extends Node
 
-var prefab_combat = preload('res://prefabs/entities/ships/combat/ship_combat.tscn')
-var prefab_transport = preload('res://prefabs/entities/ships/transport/ship_transport.tscn')
-var prefab_miner = preload('res://prefabs/entities/ships/miner/ship_miner.tscn')
+var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
+var script_combat = load(Enums.ship_scripts.combat)
+var script_explorer = load(Enums.ship_scripts.explorer)
+var script_miner = load(Enums.ship_scripts.miner)
+var script_transport = load(Enums.ship_scripts.transport)
 
-func create(target):
+func create(gameScene: Node):
 	for _i in range(100):
-		var instance = null
-		match WorldGenerator.rng.randi_range(0, 2):
-			0:
-				instance = prefab_combat.instance()
-			1:
-				instance = prefab_transport.instance()
-			2:
-				instance = prefab_miner.instance()
+		
+		var instance = prefab_ship.instance()
+		
+		match WorldGenerator.rng.randi_range(0, Enums.ship_types.size() - 1):
+			Enums.ship_types.combat:
+				instance.set_script(script_combat)
+			Enums.ship_types.explorer:
+				instance.set_script(script_explorer)
+			Enums.ship_types.miner:
+				instance.set_script(script_miner)
+			Enums.ship_types.transport:
+				instance.set_script(script_transport)
+				
+		
 		instance.planet_system = State.get_planet_system()
 		instance.create()
-		target.add_child(instance)
+		gameScene.add_child(instance)
