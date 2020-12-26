@@ -32,7 +32,7 @@ func generate_world():
 		spawner_planet_systems.create(gameScene, planet_system_idx)
 		
 		# Spawn planets
-		var planet_system_size = spawner_planets.create(gameScene, planet_system_idx)
+		spawner_planets.create(gameScene, planet_system_idx)
 		
 		var planets = []
 		for planet in get_tree().get_nodes_in_group('Planet'):
@@ -45,6 +45,6 @@ func generate_world():
 			planet.planet_convex_hull = voronoi.site_registry.get_convex_hull_of_node(planet)
 			
 		# Spawn objects
-		spawner_objects.create(gameScene, planet_system_idx, planet_system_size)
+		spawner_objects.create(gameScene, planet_system_idx)
 		
 	State.set_planet_system(0)

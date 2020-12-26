@@ -1,71 +1,29 @@
 extends Node2D
 
-onready var camera = get_node('/root/GameScene/Camera') as Camera2D
-
-var planet_system_plant_odds = {}
-var orbit_distances = []
-var sum_orbit_weight = 0
-var planet_system_size = 0
-var planets_placed = 0
-
 var prefab_planet = preload('res://prefabs/entities/planets/planet.tscn')
 
-var planets = 0
-var min_planets = 10
-var max_planets = 30
+onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 
-onready var orbits = 0
-var min_orbits = 4
-var max_orbits = 16
-# 4-8 small
-# 9-12 medium
-# 13-16 large
-var orbits_exp_factor = 0.3
-
-var base_distance_to_sun = 600
-var min_distance_orbits = 600
-var max_distance_orbits = 1200
-var distance_orbits_planet_count_factor = 7
-
-var quadrants = {
-	0: 0,
-	1: 0,
-	2: 0,
-	3: 0
-}
-
-func create(gameScene: Node, planet_system_idx: int) -> int:
-
-	planet_system_plant_odds = {}
-	orbit_distances = []
-	sum_orbit_weight = 0
-	planet_system_size = 0
-	planets_placed = 0
-	var orbit_distance = WorldGenerator.rng.randi_range(min_distance_orbits, max_distance_orbits)
-
-	quadrants = {
+func create(gameScene: Node, planet_system_idx: int) -> void:
+	
+	var quadrants = {
 		0: 0,
 		1: 0,
 		2: 0,
 		3: 0
 	}
+	
+	var total_orbits = int(WorldGenerator.rng.randi_range(Consts.planet_system_min_orbits, Consts.planet_system_max_orbits))
+	var orbit_diff = (Consts.planet_system_radius / total_orbits) * 0.2
 
-	var file = File.new()
-	file.open("res://assets/planet_system_plant_odds.json", file.READ)
-	var json_text = file.get_as_text()
-	planet_system_plant_odds = JSON.parse(json_text).result
-	orbits = int(WorldGenerator.rng.randi_range(min_orbits, max_orbits))
+	for orbit in range(total_orbits):
 
-	var orbit_diff = (30000 / orbits) * 0.2
-
-	for orbit in range(orbits):
-
-		var smallest_quadrant = _get_least_dense_quadrant()
+		var smallest_quadrant = _get_least_dense_quadrant(quadrants)
 		var angle = WorldGenerator.rng.randf() * PI / 2 + smallest_quadrant * PI / 2
-		orbit_distance = (30000 / orbits) * (orbit + 1) + WorldGenerator.rng.randi_range(-orbit_diff, orbit_diff)
+		var orbit_distance = Consts.planet_system_base_distance_to_sun + (Consts.planet_system_radius / total_orbits) * (orbit + 1) + WorldGenerator.rng.randi_range(-orbit_diff, orbit_diff)
 
 		var position = Vector2(orbit_distance * sin(angle), orbit_distance * cos(angle))
-		var planet_type = _calc_planet_type(orbit)
+		var planet_type = _calc_planet_type(orbit, total_orbits)
 		var instance: KinematicBody2D = prefab_planet.instance()
 
 		match planet_type:
@@ -85,19 +43,16 @@ func create(gameScene: Node, planet_system_idx: int) -> int:
 		instance.create()
 		gameScene.add_child(instance)
 
-	return planet_system_size
-
-
-func _calc_planet_type(orbit):
+func _calc_planet_type(orbit: int, total_orbits: int) -> int:
 	var r = WorldGenerator.rng.randf()
 	var odds_sum = 0
 
-	if float(orbit) / orbits < 0.25:
+	if float(orbit) / total_orbits < 0.25:
 		if r < 0.8:
 			return Enums.planet_types.lava
 		else:
 			return Enums.planet_types.iron
-	elif float(orbit) / orbits < 0.5:
+	elif float(orbit) / total_orbits < 0.5:
 		if r < 0.2:
 			return Enums.planet_types.lava
 		elif r < 0.8:
@@ -105,7 +60,7 @@ func _calc_planet_type(orbit):
 		else:
 			return Enums.planet_types.earth
 
-	elif float(orbit) / orbits < 0.75:
+	elif float(orbit) / total_orbits < 0.75:
 		if r < 0.4:
 			return Enums.planet_types.iron
 		else:
@@ -120,7 +75,7 @@ func _calc_planet_type(orbit):
 
 	return -1
 
-func _get_least_dense_quadrant():
+func _get_least_dense_quadrant(quadrants: Dictionary) -> int:
 	var smallest_quadrant = 0
 	var smallest_value = quadrants[smallest_quadrant]
 

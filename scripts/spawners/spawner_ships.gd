@@ -7,7 +7,7 @@ var script_miner = load(Enums.ship_scripts.miner)
 var script_transport = load(Enums.ship_scripts.transport)
 
 func create(gameScene: Node):
-	for _i in range(100):
+	for _i in range(1):
 		
 		var instance = prefab_ship.instance()
 		
