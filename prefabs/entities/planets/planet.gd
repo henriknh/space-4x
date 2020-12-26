@@ -20,7 +20,7 @@ func create():
 	
 func ready():
 	get_node("InfoUI").set_label(label)
-	(get_node("PlanetArea/PlanetCollision") as CollisionPolygon2D).polygon = Voronoi.site_registry.get_polygon_of_node(self)
+	(get_node("PlanetArea/PlanetCollision") as CollisionPolygon2D).polygon = Voronoi.site_registry.get_convex_hull_of_node(self)
 	
 	var instance = null
 	match planet_type:
@@ -51,11 +51,13 @@ func _process(delta):
 		
 func _draw():
 	if self in State.get_selection():
-		draw_polygon(Voronoi.site_registry.get_polygon_of_node(self), [Color(1, 1, 0, 0.1)])
-		draw_polyline(Voronoi.site_registry.get_polygon_of_node(self), Color(1, 1, 0, 0.25), 1, true)
+		var polygon = Voronoi.site_registry.get_convex_hull_of_node(self)
+		draw_polygon(polygon, [Color(1, 1, 0, 0.1)])
+		draw_polyline(polygon, Color(1, 1, 0, 0.25), 1, true)
 	elif is_hover:
-		draw_polygon(Voronoi.site_registry.get_polygon_of_node(self), [Color(1, 1, 1, 0.01)])
-		draw_polyline(Voronoi.site_registry.get_polygon_of_node(self), Color(1, 1, 1, 0.05), 1, true)
+		var polygon = Voronoi.site_registry.get_convex_hull_of_node(self)
+		draw_polygon(polygon, [Color(1, 1, 1, 0.01)])
+		draw_polyline(polygon, Color(1, 1, 1, 0.05), 1, true)
 
 func get_target_point():
 	var angle = 2 * PI * randf()
@@ -83,16 +85,12 @@ func _on_PlanetArea_body_exited(body):
 	#print(body)
 
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
-	pass # Replace with function body.
-	print(event)
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed and (event as InputEventMouseButton).button_index == BUTTON_LEFT:
 		State.set_selection(self)
-		print('pressed')
 
 func _on_hover_enter():
 	is_hover = true
 	update()
-
 
 func _on_hover_leave():
 	is_hover = false

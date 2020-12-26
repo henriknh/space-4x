@@ -3,6 +3,10 @@ extends Node
 onready var edge_registry = EdgeRegistry.new()
 onready var site_registry = SiteRegistry.new()
 var events = []
+var convex_hull = []
+var edges1 = []
+var edges2 = []
+var edges3 = []
 
 class Edge:
 	var nodes = []
@@ -33,14 +37,21 @@ class EdgeRegistry:
 		
 class Site:
 	var node: Node2D = null
-	var polygon: Array = []
+	var points: Array = []
+	var convex_hull: Array = []
 	
-	func _init(node: Node2D, polygon: Array) -> void:
+	func _init(node: Node2D, _points: Array) -> void:
 		self.node = node
-		for point in polygon:
-			if not point in self.polygon:
-				self.polygon.append(point)
-		print(self.polygon.size())
+		for point in _points:
+			if not point in self.points:
+				self.points.append(point)
+		
+		self.convex_hull = Geometry.convex_hull_2d(self.points)
+		
+	func add_point(point: Vector2) -> void:
+		if not point in self.points:
+			self.points.append(point)
+			self.convex_hull = Geometry.convex_hull_2d(self.points)
 	
 class SiteRegistry:
 	
@@ -48,21 +59,53 @@ class SiteRegistry:
 	
 	func register_site(node: Node2D, local_points: Array) -> void:
 		if local_points.size() > 0:
-			var convex_hull = Geometry.convex_hull_2d(local_points)
 			
-			self.sites.append(Site.new(node, convex_hull))
+			var site = Site.new(node, local_points)
+			self.sites.append(site)
 			
-			var last_point = convex_hull[0]
-			for i in range(1, convex_hull.size()):
-				var curr_point = convex_hull[i]
+			var last_point = site.convex_hull[0]
+			for i in range(1, site.convex_hull.size()):
+				var curr_point = site.convex_hull[i]
 				Voronoi.register_edge_to_node(node, last_point, curr_point)
 				last_point = curr_point
+	
+	func add_point(node: Node2D, point: Vector2) -> void:
+		for site in sites:
+			if site.node == node:
+				site.add_point(point)
 		
-	func get_polygon_of_node(node: Node2D) -> Array:
+	func get_convex_hull_of_node(node: Node2D) -> Array:
 		for site in self.sites:
 			if site.node == node:
-				return site.polygon
+				return site.convex_hull
 		return []
+	
+	func get_edge_node_by_points(points: Array) -> Node2D:
+		var node = null
+		var furthest_dist = 0
+		for site in sites:
+			var has_point = 0
+			
+			for point in points:
+				if (point - site.node.position) in site.points:
+					has_point = has_point + 1
+			
+			if has_point == points.size():
+				var sum_x = 0
+				var sum_y = 0
+				
+				for point in site.points:
+					sum_x = sum_x + point.x
+					sum_y = sum_y + point.y
+				
+				var avg_x = sum_x / site.points.size()
+				var avg_y = sum_y / site.points.size()
+				
+				var curr_dist = Vector2(avg_x, avg_y).distance_squared_to(Vector2.ZERO)
+				if curr_dist > furthest_dist:
+					node = site.node
+
+		return node
 
 class MyCustomSorter:
 	static func sort_ascending(a, b):
@@ -75,19 +118,110 @@ class MyCustomSorter:
 	
 func register_edge_to_node(n, p1, p2):
 	edge_registry.register_edge(n, p1, p2)
+
+func clear():
+	edge_registry = EdgeRegistry.new()
+	site_registry = SiteRegistry.new()
+	events = []
+	convex_hull = []
+	edges1 = []
+	edges2 = []
+	edges3 = []
 	
 func calc():
+	print('calc')
 	var planets = []
 	for planet in get_tree().get_nodes_in_group('Planet'):
 		if planet.planet_system == State.curr_planet_system:
 			planets.append(planet)
 			
-	events = calc_voroni(planets)
+	events = _calc_voroni(planets)
+	_calc_sites(planets)
+	convex_hull = _calc_convex_hull(planets)
+	_extend_sites(planets)
 	
-	var i = 0
+
+func _calc_convex_hull(planets):
+	var convex_points = []
+	
 	for planet in planets:
-		print(i)
-		i = i + 1
+		for event in events:
+			if planet in event.nodes:
+				if event.has('edgepoint'):
+					convex_points.append(event.edgepoint)
+				elif event.has('circle'):
+					convex_points.append(event.circle.position)
+
+	var convex_hull = Geometry.convex_hull_2d(convex_points)
+	convex_hull.remove(0)
+	return convex_hull
+	
+func _extend_sites(planets):
+	var idx = 0
+	for convex_point in convex_hull:
+		for event in events:
+			if event.has('edgepoint') and event.edgepoint == convex_point:
+				var closest_circle = null
+				for event_circle in events:
+					if event_circle.has('circle'):
+						if not closest_circle:
+							closest_circle = event_circle
+						elif event_circle.circle.position.distance_squared_to(event.edgepoint) < closest_circle.circle.position.distance_squared_to(event.edgepoint):
+							closest_circle = event_circle
+				
+				var opposite = event.edgepoint + (event.edgepoint - closest_circle.circle.position) * 20000
+				
+				edges1.append([closest_circle.circle.position, convex_point, opposite])
+				
+				Voronoi.site_registry.add_point(event.nodes[0], opposite - event.nodes[0].position)
+				Voronoi.site_registry.add_point(event.nodes[1], opposite - event.nodes[1].position)
+				
+			elif event.has('circle') and event.circle.position == convex_point:
+				var prev_convex_idx = (idx - 1 + convex_hull.size()) % (convex_hull.size())
+				var next_convex_idx = (idx + 1 + convex_hull.size()) % (convex_hull.size())
+				var prev_convex_point = convex_hull[prev_convex_idx]
+				var next_convex_point = convex_hull[next_convex_idx]
+				
+				print('1 . . . . .')
+				
+				var prev_nodes = Voronoi.site_registry.get_edge_node_by_points([prev_convex_point, convex_point])
+				var next_nodes = Voronoi.site_registry.get_edge_node_by_points([next_convex_point, convex_point])
+				print(prev_nodes)
+				print(next_nodes)
+				print('2 . . . . .')
+				
+				var midpoint = _get_midpoint(prev_nodes[0].position, next_nodes[0].position)
+				var opposite = event.circle.position + (event.circle.position - midpoint) * 20000
+				
+				edges2.append([midpoint, convex_point, opposite])
+				edges3.append([prev_convex_point, midpoint, next_convex_point])
+				
+				var n1 = event.nodes[0]
+				var n2 = event.nodes[1]
+				var n3 = event.nodes[2]
+				
+				var d1 = (opposite as Vector2).distance_squared_to(n1.position)
+				var d2 = (opposite as Vector2).distance_squared_to(n2.position)
+				var d3 = (opposite as Vector2).distance_squared_to(n3.position)
+				
+				if d1 <= d3 and d2 <= d3:
+					Voronoi.site_registry.add_point(n1, opposite - n1.position)
+					Voronoi.site_registry.add_point(n2, opposite - n2.position)
+					pass
+				elif d1 <= d2 and d3 <= d2:
+					Voronoi.site_registry.add_point(n1, opposite - n1.position)
+					Voronoi.site_registry.add_point(n3, opposite - n3.position)
+					pass
+				elif d2 <= d1 and d3 <= d1:
+					Voronoi.site_registry.add_point(n2, opposite - n2.position)
+					Voronoi.site_registry.add_point(n3, opposite - n3.position)
+					pass
+				
+		idx = idx + 1
+
+func _calc_sites(planets):
+	
+	for planet in planets:
 		var local_points = []
 		for event in events:
 			if planet in event.nodes:
@@ -97,14 +231,13 @@ func calc():
 					local_points.append(event.circle.position - planet.position)
 		
 		Voronoi.site_registry.register_site(planet, local_points)
-		print(planet)
-
-func calc_voroni(nodes: Array) -> Array:
+	
+func _calc_voroni(nodes: Array) -> Array:
 	
 	print('Voronoi nodes: %d' % nodes.size())
 	
 	var events = []
-	var circle_points = []
+	var convex_points = []
 	
 	for n1 in nodes.slice(0, nodes.size() - 2):
 		for n2 in nodes.slice(1, nodes.size() - 1):
@@ -122,44 +255,72 @@ func calc_voroni(nodes: Array) -> Array:
 							
 							if not has_point_in_circle:
 								
-								var mpn2 = _get_midpoint(n1, n2)
-								var mpn3 = _get_midpoint(n1, n3)
-								var dn2 = (n1 as Node2D).position.distance_to(mpn2)
-								var dn3 = (n1 as Node2D).position.distance_to(mpn3)
-								
-								if true:
-									events.append({
-										"nodes": [n1, n2],
-										"midpoint": mpn2
-									})
-									events.append({
-										"nodes": [n1, n3],
-										"midpoint": mpn3
-									})
-									events.append({
-										"nodes": [n2, n3],
-										"midpoint":  _get_midpoint(n2, n3)
-									})
+								events.append({
+									"nodes": [n1, n2],
+									"midpoint": _get_midpoint(n1.position, n2.position)
+								})
+								events.append({
+									"nodes": [n1, n3],
+									"midpoint": _get_midpoint(n1.position, n3.position)
+								})
+								events.append({
+									"nodes": [n2, n3],
+									"midpoint":  _get_midpoint(n2.position, n3.position)
+								})
 								
 								events.append({
 									"nodes": [n1, n2, n3],
 									"circle": circle
 								})
-								circle_points.append(circle.position)
-								
-	var convex_hull = Geometry.convex_hull_2d(circle_points)
+								convex_points.append(circle.position)
 	
+	var convex_hull = Geometry.convex_hull_2d(convex_points)
+	convex_points = []
 	for event in events:
+		if event.has('circle'):
+			convex_points.append(event.circle.position)
 		if event.has('midpoint'):
-			if not Geometry.is_point_in_polygon(event.midpoint, convex_hull):
+			if not Geometry.is_point_in_polygon(event.midpoint, convex_hull) and not _point_on_polyline(event.midpoint, convex_hull):
+				var edgepoint = event.midpoint
 				events.append({
 					"nodes": event.nodes,
-					"edgepoint": event.midpoint
+					"edgepoint": edgepoint
 				})
+				convex_points.append(event.midpoint)
 	
+	convex_hull = Geometry.convex_hull_2d(convex_points)
+	var i = 0
+	var r = 0
+	for event in events:
+		if event.has('edgepoint') and Geometry.is_point_in_polygon(event.edgepoint, convex_hull) and not _point_on_polyline(event.edgepoint, convex_hull):
+			events.erase(event)
+			r = r +1
+		elif event.has('edgepoint'):
+			i = i + 1
+			
+	print(i)
+	print(r)
+			
+
 	return events
 	
-func _point_in_circle(p, circle):
+func _point_on_polyline(point: Vector2, polyline: Array) -> bool:
+	var prev = polyline[0]
+	for i in range(1, polyline.size()):
+		var curr = polyline[i]
+		
+		var on_segment = _point_on_segment(point, prev, curr)
+		if on_segment:
+			return true
+		
+		prev = curr
+	return false
+
+func _point_on_segment(point: Vector2, a: Vector2, b: Vector2) -> bool:
+	var epsilon = 0.01
+	return abs(a.distance_to(point) + point.distance_to(b) - a.distance_to(b)) < epsilon
+	
+func _point_in_circle(p: Vector2, circle) -> bool:
 	return pow(p[0] - circle.position[0], 2) + pow(p[1] - circle.position[1], 2) < pow(circle.radius, 2)
 	
 func _define_circle(p1, p2, p3):
@@ -186,5 +347,5 @@ func _define_circle(p1, p2, p3):
 		"radius": radius
 	}
 	
-func _get_midpoint(n1: Node2D, n2: Node2D) -> Vector2:
-	return Vector2((n1.position.x + n2.position.x) / 2, (n1.position.y + n2.position.y) / 2)
+func _get_midpoint(p1: Vector2, p2: Vector2) -> Vector2:
+	return Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)

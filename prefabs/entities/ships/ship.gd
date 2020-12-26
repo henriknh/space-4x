@@ -44,17 +44,21 @@ func _physics_process(delta):
 		return
 	else:
 		if ship_target:
-			rotation += get_angle_to(ship_target) * turn_speed * _delta
-
-			var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
-
-			position += ship_forward_dir * ship_speed * _delta
-
-			.call_deferred("_calc_speed", _delta)
+			call_deferred("_move", _delta)
 		else:
-			get_new_target()
+			call_deferred("get_new_target")
 
 		_delta = 0
+		
+func _move(delta):
+	rotation += get_angle_to(ship_target) * turn_speed * delta
+
+	var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
+
+	position += ship_forward_dir * ship_speed * delta
+
+	call_deferred("_calc_speed", delta)
+	
 
 func _calc_speed(delta):
 	var distance_to_target = global_transform.origin.distance_squared_to(ship_target)
@@ -76,7 +80,7 @@ func _calc_speed(delta):
 		ship_speed -= ship_speed_max / 10 * delta * 10
 
 func get_new_target():
-	var planets = .get_tree().get_nodes_in_group("Planet")
+	var planets = get_tree().get_nodes_in_group("Planet")
 	var planets_in_planet_system = []
 	for planet in planets:
 		if planet.planet_system == State.get_planet_system():

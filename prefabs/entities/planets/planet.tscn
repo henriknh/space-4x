@@ -17,6 +17,7 @@ self_modulate = Color( 1, 1, 0.00392157, 1 )
 [node name="PlanetArea" type="Area2D" parent="."]
 
 [node name="PlanetCollision" type="CollisionPolygon2D" parent="PlanetArea"]
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
 [connection signal="body_entered" from="PlanetArea" to="." method="_on_PlanetArea_body_entered"]
 [connection signal="body_exited" from="PlanetArea" to="." method="_on_PlanetArea_body_exited"]
 [connection signal="input_event" from="PlanetArea" to="." method="_on_PlanetArea_input_event"]

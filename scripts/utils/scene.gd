@@ -35,6 +35,7 @@ func _deferred_goto_scene(path: String, newGame: bool = false, saveFile: String 
 	get_tree().set_current_scene(current_scene)
 	
 	if current_scene.name == 'GameScene':
+		Voronoi.clear()
 		if newGame:
 			WorldGenerator.generate_world()
 		elif not newGame and saveFile.length() > 0:
