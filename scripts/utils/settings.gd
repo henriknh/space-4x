@@ -1,10 +1,11 @@
 extends Node
 
-var settings_file_path = "user://settings.conf"
+var settings_file_path = "user://settings.json"
 
 var settings = {
-	'show_orbit_circles': false,
-	'show_planet_area': false,
+	'show_orbit_circles': true,
+	'show_planet_area': true,
+	'show_fps': false,
 	'is_debug': false
 }
 
@@ -31,6 +32,13 @@ func set_show_planet_area(show_planet_area: bool) -> void:
 	
 func get_show_planet_area() -> bool:
 	return settings['show_planet_area']
+
+func set_show_fps(show_fps: bool) -> void:
+	settings['show_fps'] = show_fps
+	_after_change()
+	
+func get_show_fps() -> bool:
+	return settings['show_fps']
 
 func set_is_debug(is_debug: bool) -> void:
 	settings['is_debug'] = is_debug

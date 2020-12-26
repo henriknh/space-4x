@@ -6,7 +6,7 @@ func _ready():
 	pass # Replace with function body.
 	
 func init():
-	MenuState.reset_over_ui()
+	MenuState.reset()
 	Nav.create_network()
 	redraw()
 	

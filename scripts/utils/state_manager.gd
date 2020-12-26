@@ -6,7 +6,7 @@ func has_save() -> bool:
 	var save_game = File.new()
 	return save_game.file_exists(save_file_path)
 
-func save_game() -> void:
+func save() -> void:
 	var save_game = File.new()
 	save_game.open(save_file_path, File.WRITE)
 	var save_nodes = get_tree().get_nodes_in_group("Persist")
@@ -27,6 +27,9 @@ func save_game() -> void:
 
 		# Store the save dictionary as a new line in the save file.
 		save_game.store_line(to_json(node_data))
+		
+	save_game.store_line(to_json({"game_state": GameState.get_state()}))
+	
 	save_game.close()
 
 func load_game() -> bool:
@@ -50,8 +53,9 @@ func load_game() -> bool:
 	while save_game.get_position() < save_game.get_len():
 		# Get the saved dictionary from the next line in the save file
 		var node_data = parse_json(save_game.get_line())
-		
-		if node_data['entity_type'] == Enums.entity_types.planet:
+		if node_data.has('game_state'):
+			GameState.set_state(node_data['game_state'])
+		elif node_data['entity_type'] == Enums.entity_types.planet:
 			node_data_planets.append(node_data)
 		else:
 			node_data_others.append(node_data)
@@ -108,6 +112,8 @@ func _instantiate_node_data(node_data):
 
 func delete_game_file() -> bool:
 	var save_game = File.new()
+	if not GameState.delete_file():
+		return false
 	if save_game.file_exists(save_file_path):
 		var dir = Directory.new()
 		dir.remove(save_file_path)

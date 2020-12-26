@@ -38,10 +38,8 @@ func load_camera_state():
 		target_zoom = zoom.x
 		last_pos = position
 		last_zoom = zoom
-	else:
-		self.set_camera_state()
 
-func set_camera_state():
+func set_camera_state() -> void:
 	if last_pos != position or last_zoom != zoom:
 		GameState.set_camera_setting({
 			"pos_x": self.position.x,

@@ -23,7 +23,6 @@ func _update_ui():
 	$HBoxContainer/PanelContainer/VBoxContainer2/HBoxContainer/Resources.update_ui()
 	$HBoxContainer/PanelContainer/VBoxContainer2/HBoxContainer/Overview.update_ui()
 
-
 func _on_toggle_overview():
 	var overview = $HBoxContainer/PanelContainer/VBoxContainer2/HBoxContainer/Overview
 	overview.visible = !overview.visible

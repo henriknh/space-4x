@@ -59,5 +59,6 @@ margin_bottom = 196.0
 text = "Back"
 [connection signal="toggled" from="VBoxContainer/CheckButtonOrbitCircles" to="." method="_on_show_orbit_circles"]
 [connection signal="toggled" from="VBoxContainer/CheckButtonPlanetArea" to="." method="_on_show_planet_area"]
+[connection signal="toggled" from="VBoxContainer/CheckButtonFPS" to="." method="_on_show_fps"]
 [connection signal="toggled" from="VBoxContainer/CheckButtonDebug" to="." method="_on_is_debug"]
 [connection signal="pressed" from="VBoxContainer/ButtonBack" to="." method="_on_back"]

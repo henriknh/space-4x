@@ -16,20 +16,24 @@ func set_over_ui(is_over_ui: bool) -> void:
 	else:
 		_over_ui_semaphore = _over_ui_semaphore - 1
 	
-	_is_over_ui = _is_over_ui > 0
+	_is_over_ui = _over_ui_semaphore > 0
 
-func reset_over_ui():
+func reset() -> void:
 	_is_over_ui = false
 	_is_over_ui = 0
+	for menu in _menus:
+		if menu:
+			menu.queue_free()
+	_menus = []
 	
-func push(new_menu: Control):
+func push(new_menu: Control) -> void:
 	_menus.append(new_menu)
 	
 	if _menus.size() > 1:
 		for menu_idx in range(0, _menus.size() - 1):
 			_menus[menu_idx].visible = false
 
-func pop():
+func pop() -> void:
 	var menu = _menus.pop_back()
 	if menu:
 		menu.queue_free()

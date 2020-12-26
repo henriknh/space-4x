@@ -43,4 +43,4 @@ func update_ui():
 
 	
 func _on_back_to_galaxy():
-	GameState.show_planet_systems()
+	GameState.set_planet_system(-1)

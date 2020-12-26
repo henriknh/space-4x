@@ -73,18 +73,15 @@ func get_target_point():
 
 func _on_Area2D_body_entered(body):
 	pass # Replace with function body.
-	#print(body)
 
 func _on_Area2D_body_shape_entered(body_id, body, body_shape, area_shape):
 	pass # Replace with function body.
-	#print(body_id)
 
 func _on_PlanetArea_body_entered(body: KinematicBody2D):
 	pass # Replace with function body.
 
 func _on_PlanetArea_body_exited(body):
 	pass # Replace with function body.
-	#print(body)
 
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed and (event as InputEventMouseButton).button_index == BUTTON_LEFT:

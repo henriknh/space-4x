@@ -9,7 +9,7 @@ func _on_settings():
 	get_parent().add_child(settings.instance())
 
 func _on_save():
-	StateManager.save_game()
+	StateManager.save()
 
 func _on_main_menu():
 	Scene.goto_scene(Enums.scenes.main_menu)

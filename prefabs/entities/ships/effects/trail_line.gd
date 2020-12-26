@@ -72,9 +72,7 @@ func add_timed_point(point: Vector2, time: float) -> void:
 		var p3 = _points[0]
 		#y2 - y1 / x2- x1 = y3 - y1 / x3 - x1
 		
-		#print(get_point_count())
 		is_colinear = ((p2[1] - p1[1]) / (p2[0] - p1[0])) - ((p3[1] - p1[1]) / (p3[0] - p1[0])) < 0.001
-		#print(colinear)
 		
 	if is_colinear:
 		if is_colinear != is_colinear_before:

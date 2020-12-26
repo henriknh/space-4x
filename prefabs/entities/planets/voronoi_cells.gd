@@ -4,11 +4,15 @@ func _ready():
 	Settings.connect("settings_changed", self, "update")
 	
 func _draw():
+	print(Settings.get_is_debug())
 	if not Settings.get_is_debug():
 		return
 	
 	# Voronoi
-	var curr_vononoi = Voronoi.voronoi_registry.get_by_index(GameState.curr_planet_system)
+	var curr_vononoi = Voronoi.voronoi_registry.get_by_index(GameState.get_planet_system())
+	print(curr_vononoi)
+	if not curr_vononoi:
+		return
 	
 	draw_polyline(curr_vononoi.convex_hull, Color(1,1,1,1), 1, true)
 	
