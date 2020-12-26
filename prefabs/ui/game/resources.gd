@@ -29,7 +29,7 @@ func update_ui():
 	var water = 0
 	
 	for entity in planets:
-		if entity.planet_system == State.get_planet_system():
+		if entity.planet_system == GameState.get_planet_system():
 			metal += entity.metal
 			power += entity.power
 			food += entity.food
@@ -43,4 +43,4 @@ func update_ui():
 
 	
 func _on_back_to_galaxy():
-	State.show_planet_systems()
+	GameState.show_planet_systems()

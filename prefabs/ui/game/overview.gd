@@ -46,7 +46,7 @@ func update_ui():
 		entities += get_tree().get_nodes_in_group(show_list_item)
 	
 	for entity in entities:
-		if entity.planet_system == State.get_planet_system():
+		if entity.planet_system == GameState.get_planet_system():
 			var item = tree.create_item(root)
 			item.set_text(0, entity.get_name())
 			item.set_text(1, Formatter.round_to_dec(entity.metal, 2) as String)

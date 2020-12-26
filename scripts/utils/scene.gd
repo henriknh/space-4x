@@ -34,10 +34,11 @@ func _deferred_goto_scene(path: String, newGame: bool = false, saveFile: String 
 	# Optionally, to make it compatible with the SceneTree.change_scene() API.
 	get_tree().set_current_scene(current_scene)
 	
+	
 	if current_scene.name == 'GameScene':
 		if newGame:
 			WorldGenerator.generate_world()
 		elif not newGame and saveFile.length() > 0:
 			if StateManager.load_game():
-				State.set_planet_system(0)
+				GameState.set_planet_system(GameState.get_planet_system())
 		current_scene.init()

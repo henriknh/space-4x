@@ -17,4 +17,4 @@ func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		var button_event = event as InputEventMouseButton
 		if button_event.pressed and button_event.button_index == BUTTON_LEFT:
-			State.set_planet_system(planet_system)
+			GameState.set_planet_system(planet_system)

@@ -1,9 +1,11 @@
-extends CanvasLayer
+extends Control
 
-var settings = preload('res://prefabs/ui/settings/settings.tscn')
+var settings = preload('res://prefabs/ui/settings/settings_menu.tscn')
+	
+func _ready():
+	MenuState.push(self)
 
 func _on_settings():
-	queue_free()
 	get_parent().add_child(settings.instance())
 
 func _on_save():
@@ -16,4 +18,4 @@ func _on_quit():
 	get_tree().quit()
 
 func _on_back():
-	queue_free()
+	MenuState.pop()

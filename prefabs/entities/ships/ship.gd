@@ -83,7 +83,7 @@ func get_new_target():
 	var planets = get_tree().get_nodes_in_group("Planet")
 	var planets_in_planet_system = []
 	for planet in planets:
-		if planet.planet_system == State.get_planet_system():
+		if planet.planet_system == GameState.get_planet_system():
 			planets_in_planet_system.push_back(planet)
 
 	if planets_in_planet_system.size() > 0:

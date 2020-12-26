@@ -1,6 +1,7 @@
 extends Node
 
-var astar = AStar.new()
+var nav = AStar.new()
 
 func create_network():
+	nav = AStar.new()
 	pass

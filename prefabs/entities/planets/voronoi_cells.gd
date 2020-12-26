@@ -8,7 +8,7 @@ func _draw():
 		return
 	
 	# Voronoi
-	var curr_vononoi = Voronoi.voronoi_registry.get_by_index(State.curr_planet_system)
+	var curr_vononoi = Voronoi.voronoi_registry.get_by_index(GameState.curr_planet_system)
 	
 	draw_polyline(curr_vononoi.convex_hull, Color(1,1,1,1), 1, true)
 	

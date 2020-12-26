@@ -22,6 +22,6 @@ func create(gameScene: Node):
 				instance.set_script(script_transport)
 				
 		
-		instance.planet_system = State.get_planet_system()
+		instance.planet_system = GameState.get_planet_system()
 		instance.create()
 		gameScene.add_child(instance)

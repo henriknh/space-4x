@@ -1,17 +1,58 @@
 extends Camera2D
 
-onready var target_zoom = zoom.x
 const SMOOTH_SPEED = 5
-var is_dragging = false
-var camera_pos_change = Vector2.ZERO
 const CAMERA_SPEED = 500
-var is_over_ui = false
-
 const ZOOM_MIN = 2
 const ZOOM_MAX = 200
 
+var is_dragging = false
+var camera_pos_change = Vector2.ZERO
+onready var target_zoom = zoom.x
+
+var last_pos = position
+var last_zoom = zoom
+
+func _ready():
+	GameState.connect("state_changed", self, "load_camera_state")
+	
+	var timer = Timer.new()
+	timer.connect("timeout",self,"set_camera_state") 
+	timer.wait_time = 5
+	add_child(timer)
+	timer.start()
+	
+func load_camera_state():
+	var camera_state = GameState.get_camera_state()
+	var has_changed = false
+	
+	if camera_state.has('pos_x'):
+		position = Vector2(camera_state['pos_x'], camera_state['pos_y'])
+		has_changed = true
+	
+	if camera_state.has('zoom'):
+		zoom = Vector2(camera_state['zoom'], camera_state['zoom'])
+		has_changed = true
+	
+	if has_changed:
+		camera_pos_change = Vector2.ZERO
+		target_zoom = zoom.x
+		last_pos = position
+		last_zoom = zoom
+	else:
+		self.set_camera_state()
+
+func set_camera_state():
+	if last_pos != position or last_zoom != zoom:
+		GameState.set_camera_setting({
+			"pos_x": self.position.x,
+			"pos_y": self.position.y,
+			"zoom": self.zoom.x
+		})
+		last_pos = position
+		last_zoom = zoom
+
 func _input(event):
-	if State.is_over_ui:
+	if MenuState.is_over_ui():
 		return
 
 	if event is InputEventKey and event.pressed and event.scancode == KEY_A:
@@ -47,7 +88,6 @@ func _input(event):
 		if is_dragging:
 			position -= event.relative * zoom.x
 			camera_pos_change = Vector2.ZERO
-
 
 func _process(delta):
 	var zoom_difference = target_zoom - zoom.x

@@ -55,7 +55,7 @@ func _draw():
 	if Settings.get_show_planet_area():
 		draw_polyline(self.planet_convex_hull, Color(1,1,1,0.01), 1, true)
 	
-	if self in State.get_selection():
+	if self in GameState.get_selection():
 		draw_polygon(self.planet_convex_hull, [Color(1, 1, 0, 0.1)])
 		draw_polyline(self.planet_convex_hull, Color(1, 1, 0, 0.25), 1, true)
 	elif is_hover:
@@ -79,9 +79,8 @@ func _on_Area2D_body_shape_entered(body_id, body, body_shape, area_shape):
 	pass # Replace with function body.
 	#print(body_id)
 
-func _on_PlanetArea_body_entered(body):
+func _on_PlanetArea_body_entered(body: KinematicBody2D):
 	pass # Replace with function body.
-	#print(body)
 
 func _on_PlanetArea_body_exited(body):
 	pass # Replace with function body.
@@ -89,7 +88,7 @@ func _on_PlanetArea_body_exited(body):
 
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed and (event as InputEventMouseButton).button_index == BUTTON_LEFT:
-		State.set_selection(self)
+		GameState.set_selection(self)
 
 func _on_hover_enter():
 	is_hover = true

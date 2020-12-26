@@ -127,12 +127,13 @@ Enums="*res://scripts/utils/enums.gd"
 NameGenerator="*res://scripts/utils/name_generator.gd"
 WorldGenerator="*res://scripts/utils/world_generator.gd"
 Scene="*res://scripts/utils/scene.gd"
-State="*res://scripts/utils/state.gd"
+GameState="*res://scripts/utils/game_state.gd"
 StateManager="*res://scripts/utils/state_manager.gd"
 Formatter="*res://scripts/utils/formatter.gd"
-PathNavigation="*res://scripts/utils/path_navigation.gd"
+Nav="*res://scripts/utils/navigation.gd"
 Voronoi="*res://scripts/voronoi/voronoi.gd"
 Settings="*res://scripts/utils/settings.gd"
+MenuState="*res://scripts/utils/menu_state.gd"
 
 [display]
 

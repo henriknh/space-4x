@@ -13,7 +13,7 @@ signal settings_changed
 func _ready():
 	if not _load():
 		_save()
-		
+	
 func _after_change():
 	_save()
 	emit_signal("settings_changed")
