@@ -20,7 +20,7 @@ func create():
 	
 func ready():
 	get_node("InfoUI").set_label(label)
-	(get_node("PlanetArea/PlanetCollision") as CollisionPolygon2D).polygon = Voronoi.site_registry.get_convex_hull_of_node(self)
+	(get_node("PlanetArea/PlanetCollision") as CollisionPolygon2D).polygon = self.planet_convex_hull
 	
 	var instance = null
 	match planet_type:
@@ -50,14 +50,14 @@ func _process(delta):
 		.get_node("Sprite").rotation_degrees += rotation_speed * delta
 		
 func _draw():
+	draw_polyline(self.planet_convex_hull, Color(1,1,1,0.01), 1, true)
+	
 	if self in State.get_selection():
-		var polygon = Voronoi.site_registry.get_convex_hull_of_node(self)
-		draw_polygon(polygon, [Color(1, 1, 0, 0.1)])
-		draw_polyline(polygon, Color(1, 1, 0, 0.25), 1, true)
+		draw_polygon(self.planet_convex_hull, [Color(1, 1, 0, 0.1)])
+		draw_polyline(self.planet_convex_hull, Color(1, 1, 0, 0.25), 1, true)
 	elif is_hover:
-		var polygon = Voronoi.site_registry.get_convex_hull_of_node(self)
-		draw_polygon(polygon, [Color(1, 1, 1, 0.01)])
-		draw_polyline(polygon, Color(1, 1, 1, 0.05), 1, true)
+		draw_polygon(self.planet_convex_hull, [Color(1, 1, 1, 0.01)])
+		draw_polyline(self.planet_convex_hull, Color(1, 1, 1, 0.05), 1, true)
 
 func get_target_point():
 	var angle = 2 * PI * randf()

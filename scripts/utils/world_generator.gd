@@ -18,15 +18,33 @@ func set_seed(seed_value: int) -> void:
 	rng.set_seed(_seed)
 
 func generate_world():
-	print('generate world with seed: %d' % rng.get_seed())
+	print('Generate world with seed: %d' % rng.get_seed())
+	
+	var planet_system_count = 2 #WorldGenerator.rng.randi_range(2, 2)
+	print('Planet systems: %d' % planet_system_count)
 	
 	var spawner_planet_systems = load('res://scripts/spawners/spawner_planet_systems.gd').new()
 	var spawner_planets = load('res://scripts/spawners/spawner_planets.gd').new()
 	var spawner_objects = load('res://scripts/spawners/spawner_objects.gd').new()
 	var gameScene = get_node('/root/GameScene')
-	for planet_system_idx in range(2):
+	for planet_system_idx in range(planet_system_count):
+		# Spawn planet systems
 		spawner_planet_systems.create(gameScene, planet_system_idx)
+		
+		# Spawn planets
 		var planet_system_size = spawner_planets.create(gameScene, planet_system_idx)
+		
+		var planets = []
+		for planet in get_tree().get_nodes_in_group('Planet'):
+			if planet.planet_system == planet_system_idx:
+				planets.append(planet)
+				
+		var voronoi = Voronoi.voronoi_registry.register_voronoi(planet_system_idx, planets)
+		
+		for planet in planets:
+			planet.planet_convex_hull = voronoi.site_registry.get_convex_hull_of_node(planet)
+			
+		# Spawn objects
 		spawner_objects.create(gameScene, planet_system_idx, planet_system_size)
-	
+		
 	State.set_planet_system(0)

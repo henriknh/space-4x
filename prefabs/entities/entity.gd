@@ -26,6 +26,7 @@ var water_max: int = -1
 var planet_type: int = -1
 var planet_size: float = 1.0
 var planet_orbit_distance = 0
+var planet_convex_hull = []
 
 # Ship specific variables
 var ship_type: int = -1
@@ -46,7 +47,7 @@ func set_visible(in_data):
 		visible = planet_system == in_data
 
 func save():
-	return {
+	var data = {
 		"filename": get_filename(),
 		"script": get_script().get_path(),
 		"pos_x" : position.x,
@@ -85,3 +86,12 @@ func save():
 		"ship_target_x": ship_target.x if ship_target else null,
 		"ship_target_y": ship_target.y if ship_target else null,
 	}
+	
+	var i = 0
+	for point in planet_convex_hull:
+		data['planet_convex_hull_%d_x' % i] = point.x
+		data['planet_convex_hull_%d_y' % i] = point.y
+		i = i + 1
+	
+	return data
+

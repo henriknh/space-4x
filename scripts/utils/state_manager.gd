@@ -55,6 +55,17 @@ func load_game() -> bool:
 		new_object.visible = false
 		new_object.color = Color(node_data['color'])
 		new_object.position = Vector2(node_data["pos_x"], node_data["pos_y"])
+		
+		# Planet specific data
+		var planet_convex_hull_str = 'planet_convex_hull_%d_%s'
+		var planet_convex_hull_idx = 0
+		while node_data.has(planet_convex_hull_str % [planet_convex_hull_idx, 'x']):
+			var x = node_data[planet_convex_hull_str % [planet_convex_hull_idx, 'x']]
+			var y = node_data[planet_convex_hull_str % [planet_convex_hull_idx, 'y']]
+			new_object.planet_convex_hull.append(Vector2(x, y))
+			planet_convex_hull_idx = planet_convex_hull_idx + 1
+		
+		# Ship specific data
 		if node_data["ship_target_x"] and node_data["ship_target_y"]:
 			new_object.ship_target = Vector2(node_data["ship_target_x"], node_data["ship_target_y"])
 		else:
@@ -65,6 +76,12 @@ func load_game() -> bool:
 			var special_keys = ['filename', 'script', 'color', 'parent', 'pos_x', 'pos_y', 'ship_target_x', 'ship_target_y']
 			if special_keys.has(i):
 				continue
+			
+			var begins_with_keys = ['planet_convex_hull_']
+			for begins_with_key in begins_with_keys:
+				if i.begins_with(begins_with_key):
+					continue
+			
 			new_object.set(i, node_data[i])
 			
 		if new_object.has_method('ready'):
