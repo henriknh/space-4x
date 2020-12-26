@@ -45,53 +45,66 @@ func load_game() -> bool:
 	# Load the file line by line and process that dictionary to restore
 	# the object it represents.
 	save_game.open(save_file_path, File.READ)
+	var node_data_planets = []
+	var node_data_others = []
 	while save_game.get_position() < save_game.get_len():
 		# Get the saved dictionary from the next line in the save file
 		var node_data = parse_json(save_game.get_line())
-
-		# Firstly, we need to create the object and add it to the tree and set its position.
-		var new_object: KinematicBody2D = load(node_data["filename"]).instance()
-		new_object.set_script(load(node_data["script"]))
-		new_object.visible = false
-		new_object.color = Color(node_data['color'])
-		new_object.position = Vector2(node_data["pos_x"], node_data["pos_y"])
 		
-		# Planet specific data
-		var planet_convex_hull_str = 'planet_convex_hull_%d_%s'
-		var planet_convex_hull_idx = 0
-		while node_data.has(planet_convex_hull_str % [planet_convex_hull_idx, 'x']):
-			var x = node_data[planet_convex_hull_str % [planet_convex_hull_idx, 'x']]
-			var y = node_data[planet_convex_hull_str % [planet_convex_hull_idx, 'y']]
-			new_object.planet_convex_hull.append(Vector2(x, y))
-			planet_convex_hull_idx = planet_convex_hull_idx + 1
-		
-		# Ship specific data
-		if node_data["ship_target_x"] and node_data["ship_target_y"]:
-			new_object.ship_target = Vector2(node_data["ship_target_x"], node_data["ship_target_y"])
+		if node_data['entity_type'] == Enums.entity_types.planet:
+			node_data_planets.append(node_data)
 		else:
-			new_object.ship_target = null
-
-		# Now we set the remaining variables.
-		for i in node_data.keys():
-			var special_keys = ['filename', 'script', 'color', 'parent', 'pos_x', 'pos_y', 'ship_target_x', 'ship_target_y']
-			if special_keys.has(i):
-				continue
-			
-			var begins_with_keys = ['planet_convex_hull_']
-			for begins_with_key in begins_with_keys:
-				if i.begins_with(begins_with_key):
-					continue
-			
-			new_object.set(i, node_data[i])
-			
-		if new_object.has_method('ready'):
-			new_object.ready()
-		
-		get_node("/root/GameScene").add_child(new_object)
+			node_data_others.append(node_data)
 
 	save_game.close()
 	
+	for node_data_planet in node_data_planets:
+		self._instantiate_node_data(node_data_planet)
+	for node_data_other in node_data_others:
+		self._instantiate_node_data(node_data_other)
+	
 	return true
+
+func _instantiate_node_data(node_data):
+	
+	var new_object: KinematicBody2D = load(node_data["filename"]).instance()
+	new_object.set_script(load(node_data["script"]))
+	new_object.visible = false
+	new_object.color = Color(node_data['color'])
+	new_object.position = Vector2(node_data["pos_x"], node_data["pos_y"])
+	
+	# Planet specific data
+	var planet_convex_hull_str = 'planet_convex_hull_%d_%s'
+	var planet_convex_hull_idx = 0
+	while node_data.has(planet_convex_hull_str % [planet_convex_hull_idx, 'x']):
+		var x = node_data[planet_convex_hull_str % [planet_convex_hull_idx, 'x']]
+		var y = node_data[planet_convex_hull_str % [planet_convex_hull_idx, 'y']]
+		new_object.planet_convex_hull.append(Vector2(x, y))
+		planet_convex_hull_idx = planet_convex_hull_idx + 1
+	
+	# Ship specific data
+	if node_data["ship_target_x"] and node_data["ship_target_y"]:
+		new_object.ship_target = Vector2(node_data["ship_target_x"], node_data["ship_target_y"])
+	else:
+		new_object.ship_target = null
+
+	# Now we set the remaining variables.
+	for i in node_data.keys():
+		var special_keys = ['filename', 'script', 'color', 'parent', 'pos_x', 'pos_y', 'ship_target_x', 'ship_target_y']
+		if special_keys.has(i):
+			continue
+		
+		var begins_with_keys = ['planet_convex_hull_']
+		for begins_with_key in begins_with_keys:
+			if i.begins_with(begins_with_key):
+				continue
+		
+		new_object.set(i, node_data[i])
+		
+	if new_object.has_method('ready'):
+		new_object.ready()
+	
+	get_node("/root/GameScene").add_child(new_object)
 
 func delete_game_file() -> bool:
 	var save_game = File.new()
