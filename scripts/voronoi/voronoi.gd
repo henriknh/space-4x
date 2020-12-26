@@ -179,18 +179,14 @@ func _extend_sites(planets):
 			elif event.has('circle') and event.circle.position == convex_point:
 				var prev_convex_idx = (idx - 1 + convex_hull.size()) % (convex_hull.size())
 				var next_convex_idx = (idx + 1 + convex_hull.size()) % (convex_hull.size())
+				
 				var prev_convex_point = convex_hull[prev_convex_idx]
 				var next_convex_point = convex_hull[next_convex_idx]
 				
-				print('1 . . . . .')
+				var prev_node = Voronoi.site_registry.get_edge_node_by_points([prev_convex_point, convex_point])
+				var next_node = Voronoi.site_registry.get_edge_node_by_points([next_convex_point, convex_point])
 				
-				var prev_nodes = Voronoi.site_registry.get_edge_node_by_points([prev_convex_point, convex_point])
-				var next_nodes = Voronoi.site_registry.get_edge_node_by_points([next_convex_point, convex_point])
-				print(prev_nodes)
-				print(next_nodes)
-				print('2 . . . . .')
-				
-				var midpoint = _get_midpoint(prev_nodes[0].position, next_nodes[0].position)
+				var midpoint = _get_midpoint(prev_node.position, next_node.position)
 				var opposite = event.circle.position + (event.circle.position - midpoint) * 20000
 				
 				edges2.append([midpoint, convex_point, opposite])
