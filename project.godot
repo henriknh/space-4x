@@ -131,6 +131,7 @@ StateManager="*res://scripts/utils/state_manager.gd"
 Formatter="*res://scripts/utils/formatter.gd"
 PathNavigation="*res://scripts/utils/path_navigation.gd"
 Voronoi="*res://scripts/voronoi/voronoi.gd"
+Settings="*res://scripts/utils/settings.gd"
 
 [display]
 

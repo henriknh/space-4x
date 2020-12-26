@@ -22,6 +22,8 @@ func ready():
 	get_node("InfoUI").set_label(label)
 	(get_node("PlanetArea/PlanetCollision") as CollisionPolygon2D).polygon = self.planet_convex_hull
 	
+	Settings.connect("settings_changed", self, "update")
+	
 	var instance = null
 	match planet_type:
 		Enums.planet_types.lava:
@@ -50,7 +52,8 @@ func _process(delta):
 		.get_node("Sprite").rotation_degrees += rotation_speed * delta
 		
 func _draw():
-	draw_polyline(self.planet_convex_hull, Color(1,1,1,0.01), 1, true)
+	if Settings.get_show_planet_area():
+		draw_polyline(self.planet_convex_hull, Color(1,1,1,0.01), 1, true)
 	
 	if self in State.get_selection():
 		draw_polygon(self.planet_convex_hull, [Color(1, 1, 0, 0.1)])

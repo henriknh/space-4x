@@ -1,6 +1,12 @@
 extends Node2D
 
+func _ready():
+	Settings.connect("settings_changed", self, "update")
+	
 func _draw():
+	if not Settings.get_is_debug():
+		return
+	
 	# Voronoi
 	var curr_vononoi = Voronoi.voronoi_registry.get_by_index(State.curr_planet_system)
 	
