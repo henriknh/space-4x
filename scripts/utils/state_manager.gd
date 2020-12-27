@@ -112,8 +112,6 @@ func _instantiate_node_data(node_data):
 
 func delete_game_file() -> bool:
 	var save_game = File.new()
-	if not GameState.delete_file():
-		return false
 	if save_game.file_exists(save_file_path):
 		var dir = Directory.new()
 		dir.remove(save_file_path)
