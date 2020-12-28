@@ -2,6 +2,8 @@ extends Node
 
 onready var voronoi_registry = VoronoiRegistry.new()
 
+const BOUND_SIZE = 20000
+
 class Edge:
 	var nodes = []
 	var p1 = Vector2.ZERO
@@ -46,6 +48,14 @@ class Site:
 		if not point in self.points:
 			self.points.append(point)
 			self.convex_hull = Geometry.convex_hull_2d(self.points)
+		
+	func remove_point(point: Vector2) -> bool:
+		if Utils.array_has(point, self.points):
+			self.points.erase(point)
+			self.convex_hull = Geometry.convex_hull_2d(self.points)
+			return true
+		
+		return false
 	
 class SiteRegistry:
 	
@@ -61,6 +71,13 @@ class SiteRegistry:
 		for site in sites:
 			if site.node == node:
 				site.add_point(point)
+				
+	func remove_point(node: Node2D, point: Vector2) -> bool:
+		for site in sites:
+			if site.node == node:
+				return site.remove_point(point)
+		
+		return false
 		
 	func get_convex_hull_of_node(node: Node2D) -> Array:
 		for site in self.sites:
@@ -71,11 +88,12 @@ class SiteRegistry:
 	func get_edge_node_by_points(points: Array) -> Node2D:
 		var node = null
 		var furthest_dist = 0
+		
 		for site in sites:
 			var has_point = 0
 			
 			for point in points:
-				if (point - site.node.position) in site.points:
+				if Utils.array_has(point - site.node.position, site.points):
 					has_point = has_point + 1
 			
 			if has_point == points.size():
@@ -90,7 +108,7 @@ class SiteRegistry:
 				var avg_y = sum_y / site.points.size()
 				
 				var curr_dist = Vector2(avg_x, avg_y).distance_squared_to(Vector2.ZERO)
-				if curr_dist > furthest_dist:
+				if curr_dist >= furthest_dist:
 					node = site.node
 
 		return node
@@ -219,6 +237,7 @@ class Voronoi:
 	func _extend_sites():
 		
 		var idx = 0
+		
 		for convex_point in self.convex_hull:
 			for event in self.events:
 				if event.has('edgepoint') and event.edgepoint == convex_point:
@@ -230,12 +249,21 @@ class Voronoi:
 							elif event_circle.circle.position.distance_squared_to(event.edgepoint) < closest_circle.circle.position.distance_squared_to(event.edgepoint):
 								closest_circle = event_circle
 					
-					var opposite = event.edgepoint + (event.edgepoint - closest_circle.circle.position) * 20000
+					var opposite = (event.edgepoint + (event.edgepoint - closest_circle.circle.position) * BOUND_SIZE)
 					
 					self.debug_edgepoints.append([closest_circle.circle.position, convex_point, opposite])
 					
-					self.site_registry.add_point(event.nodes[0], opposite - event.nodes[0].position)
-					self.site_registry.add_point(event.nodes[1], opposite - event.nodes[1].position)
+					var n1 = event.nodes[0]
+					var n2 = event.nodes[1]
+					
+					self.site_registry.add_point(n1, opposite - n1.position)
+					self.site_registry.add_point(n2, opposite - n2.position)
+					self.site_registry.remove_point(n1, event.edgepoint - n1.position)
+					self.site_registry.remove_point(n2, event.edgepoint - n2.position)
+					self.convex_hull[idx] = opposite
+					event.edgepoint = opposite - n1.position
+					
+					break
 					
 				elif event.has('circle') and event.circle.position == convex_point:
 					var prev_convex_idx = (idx - 1 + convex_hull.size()) % (convex_hull.size())
@@ -248,7 +276,7 @@ class Voronoi:
 					var next_node = self.site_registry.get_edge_node_by_points([next_convex_point, convex_point])
 					
 					var midpoint = self._get_midpoint(prev_node.position, next_node.position)
-					var opposite = event.circle.position + (event.circle.position - midpoint) * 20000
+					var opposite = (event.circle.position + (event.circle.position - midpoint) * BOUND_SIZE)
 					
 					self.debug_circles_line.append([midpoint, convex_point, opposite])
 					self.debug_circles_origin.append([prev_convex_point, midpoint, next_convex_point])
@@ -261,15 +289,27 @@ class Voronoi:
 					var d2 = (opposite as Vector2).distance_squared_to(n2.position)
 					var d3 = (opposite as Vector2).distance_squared_to(n3.position)
 					
+					# Investigate if below uncommented code is needed
 					if d1 <= d3 and d2 <= d3:
 						self.site_registry.add_point(n1, opposite - n1.position)
 						self.site_registry.add_point(n2, opposite - n2.position)
+						#self.site_registry.remove_point(n1, event.circle.position - n1.position)
+						#self.site_registry.remove_point(n2, event.circle.position - n2.position)
 					elif d1 <= d2 and d3 <= d2:
 						self.site_registry.add_point(n1, opposite - n1.position)
 						self.site_registry.add_point(n3, opposite - n3.position)
+						#self.site_registry.remove_point(n1, event.circle.position - n1.position)
+						#self.site_registry.remove_point(n3, event.circle.position - n3.position)
 					elif d2 <= d1 and d3 <= d1:
 						self.site_registry.add_point(n2, opposite - n2.position)
 						self.site_registry.add_point(n3, opposite - n3.position)
+						#self.site_registry.remove_point(n2, event.circle.position - n2.position)
+						#self.site_registry.remove_point(n3, event.circle.position - n3.position)
+						
+					#self.convex_hull[idx] = opposite
+					#event.circle.position = opposite - n1.position
+					
+					break
 			
 			idx = idx + 1
 	

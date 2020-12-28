@@ -47,4 +47,4 @@ func generate_world():
 		# Spawn objects
 		spawner_objects.create(gameScene, planet_system_idx)
 		
-	GameState.set_planet_system(0)
+	GameState.set_planet_system(1)
