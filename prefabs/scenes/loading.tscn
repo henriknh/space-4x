@@ -17,8 +17,8 @@ margin_bottom = 582.0
 max_value = 1.0
 
 [node name="Label" type="Label" parent="."]
-margin_top = 586.0
-margin_right = 1024.0
-margin_bottom = 600.0
+margin_top = 202.0
+margin_right = 384.0
+margin_bottom = 216.0
 text = "Loading..."
 align = 2
