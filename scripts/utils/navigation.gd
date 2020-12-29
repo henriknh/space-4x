@@ -44,10 +44,27 @@ func create_network():
 				if planet_system_idx == 1:
 					debug.append(segment['segment'])
 				
-				var point_id_1 = map.get_available_point_id()
-				var point_id_2 = map.get_available_point_id()
+				var point_id_1 = segment['nodes'][0].id
+				var point_id_2 = segment['nodes'][1].id
 				map.add_point(point_id_1, segment['nodes'][0].position)
 				map.add_point(point_id_2, segment['nodes'][1].position)
 				map.connect_points(point_id_1, point_id_2)
 				
 		maps[planet_system_idx] = map
+
+func get_route(caller: entity, target_id: int):
+	var route = []
+	if true:
+		var map = maps[caller.planet_system] as AStar2D
+		var closest_id = map.get_closest_point(caller.position)
+		var path = map.get_id_path(closest_id, target_id)
+		for part_idx in range(1, path.size()):
+			route.append({
+				"id": path[part_idx],
+				"position": map.get_point_position(path[part_idx])
+			})
+	else:
+		print('TODO: Handle get_route for multiple planet systems')
+	
+	return route
+

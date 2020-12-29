@@ -2,6 +2,8 @@ extends entity
 
 class_name ship
 
+var nav_route = []
+var ship_target_obj = null
 var model: Sprite = null
 var trail: Node2D = null
 var _delta: float = 0
@@ -25,7 +27,7 @@ func create():
 		water_max = 5
 	if ship_cargo_size < 0:
 		ship_cargo_size = metal_max + power_max + food_max + water_max
-	ready()
+	.create()
 	
 func ready():
 	model = get_node("Sprite") as Sprite
@@ -33,6 +35,7 @@ func ready():
 	
 	model.self_modulate = color
 	trail.set_color(color)
+	.ready()
 	
 func _physics_process(delta):
 
@@ -43,15 +46,21 @@ func _physics_process(delta):
 	if not visible and _delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
-		if ship_target:
+		print("target_id: %d" % ship_target_id)
+		print("nav_route size: %d" % nav_route.size())
+		if not ship_target_id or ship_target_id == -1:
+			call_deferred("get_new_target")
+		elif ship_target_id and nav_route.size() == 0:
+			nav_route = Nav.get_route(self, ship_target_id)
+		elif ship_target_id and nav_route.size() > 0:
 			call_deferred("_move", _delta)
 		else:
-			call_deferred("get_new_target")
+			pass
 
 		_delta = 0
 		
 func _move(delta):
-	rotation += get_angle_to(ship_target) * turn_speed * delta
+	rotation += get_angle_to(nav_route[0].position) * turn_speed * delta
 
 	var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
 
@@ -61,12 +70,16 @@ func _move(delta):
 	
 
 func _calc_speed(delta):
-	var distance_to_target = global_transform.origin.distance_squared_to(ship_target)
+	var distance_to_target = global_transform.origin.distance_squared_to(nav_route[0].position)
 	if distance_to_target < pow(160, 2):
 		if ship_speed > 0:
 			ship_speed -= ship_speed_max / 10 * delta * 10
-		ship_target = null
-		trail.set_emitting(false)
+		if nav_route.size() > 1:
+			nav_route.pop_front()
+		else:
+			nav_route = []
+			ship_target_id = -1
+			trail.set_emitting(false)
 
 	elif ship_speed < min_speed:
 		ship_speed = min_speed
@@ -84,11 +97,11 @@ func get_new_target():
 	var planets_in_planet_system = []
 	for planet in planets:
 		if planet.planet_system == GameState.get_planet_system():
-			planets_in_planet_system.push_back(planet)
+			planets_in_planet_system.append(planet)
 
 	if planets_in_planet_system.size() > 0:
 		var target_planet = planets_in_planet_system[randi() % planets_in_planet_system.size()]
-		ship_target = target_planet.get_target_point()
+		ship_target_id = target_planet.id
 		if visible:
 			trail.set_emitting(true)
 

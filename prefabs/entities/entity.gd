@@ -3,6 +3,7 @@ extends KinematicBody2D
 class_name entity
 
 # Gernal
+var id = -1
 var entity_type = -1
 var label = ''
 var hitpoints = 1
@@ -32,8 +33,15 @@ var planet_convex_hull = []
 var ship_type: int = -1
 var ship_speed: float = 0.0
 var ship_speed_max: int = 500
-var ship_target = Vector2.ZERO
+var ship_target_id: int = -1
 var ship_cargo_size: int = 20
+
+func create():
+	id = WorldGenerator.get_new_id()
+	ready()
+	
+func ready():
+	pass
 
 func is_dead() -> bool:
 	if indestructible:
@@ -55,6 +63,7 @@ func save():
 		"rotation": rotation,
 		
 		# General
+		"id": id,
 		"entity_type": entity_type,
 		"label": label,
 		"hitpoints": hitpoints,
@@ -83,8 +92,7 @@ func save():
 		"ship_type": ship_type,
 		"ship_speed": ship_speed,
 		"ship_speed_max": ship_speed_max,
-		"ship_target_x": ship_target.x if ship_target else null,
-		"ship_target_y": ship_target.y if ship_target else null,
+		"ship_target_id": ship_target_id
 	}
 	
 	var i = 0

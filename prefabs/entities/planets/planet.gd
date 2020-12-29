@@ -16,7 +16,7 @@ func create():
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
 	label = NameGenerator.get_name_planet()
 	indestructible = true
-	ready()
+	.create()
 	
 func ready():
 	get_node("InfoUI").set_label(label)
@@ -46,6 +46,7 @@ func ready():
 	(instance as Control).set_position(Vector2(-100 * planet_size, -100 * planet_size))
 
 	add_child(instance)
+	.ready()
 	
 func _process(delta):
 	if self.visible:

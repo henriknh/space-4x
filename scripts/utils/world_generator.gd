@@ -2,6 +2,7 @@ extends Node
 
 var _world_size: int = 1
 var _seed: int = 0
+var _unique_id = 0
 
 onready var rng: RandomNumberGenerator = null
 
@@ -16,6 +17,10 @@ func set_seed(seed_value: int) -> void:
 	_seed = seed_value
 	rng = RandomNumberGenerator.new()
 	rng.set_seed(_seed)
+	
+func get_new_id() -> int:
+	_unique_id += 1
+	return _unique_id
 
 func generate_world():
 	print('Generate world with seed: %d' % rng.get_seed())

@@ -2,7 +2,6 @@ extends Control
 
 func _ready():
 	_update_view_state()
-	_on_create()
 	
 func _update_view_state():
 	$VBoxContainer/ButtonCreate.disabled = StateManager.has_save()

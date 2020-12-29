@@ -4,7 +4,7 @@ class_name object
 
 func create():
 	entity_type = Enums.entity_types.object
-	ready()
+	.create()
 	
 func ready():
-	pass
+	.ready()

@@ -85,16 +85,10 @@ func _instantiate_node_data(node_data):
 		var y = node_data[planet_convex_hull_str % [planet_convex_hull_idx, 'y']]
 		new_object.planet_convex_hull.append(Vector2(x, y))
 		planet_convex_hull_idx = planet_convex_hull_idx + 1
-	
-	# Ship specific data
-	if node_data["ship_target_x"] and node_data["ship_target_y"]:
-		new_object.ship_target = Vector2(node_data["ship_target_x"], node_data["ship_target_y"])
-	else:
-		new_object.ship_target = null
 
 	# Now we set the remaining variables.
 	for i in node_data.keys():
-		var special_keys = ['filename', 'script', 'color', 'parent', 'pos_x', 'pos_y', 'ship_target_x', 'ship_target_y']
+		var special_keys = ['filename', 'script', 'color', 'parent', 'pos_x', 'pos_y']
 		if special_keys.has(i):
 			continue
 		

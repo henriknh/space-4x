@@ -6,6 +6,7 @@ func create():
 	label = NameGenerator.get_name_galaxy()
 	indestructible = true
 	visible = false
+	.create()
 	
 func _ready():
 	# Make node clickable with mouse

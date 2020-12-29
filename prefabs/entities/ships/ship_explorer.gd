@@ -7,9 +7,6 @@ enum STATES {
 	moving
 }
 
-func ready():
-	add_to_group('Explorer')
-	.ready()
 
 func create():
 	color = Color(1, 1, 1, 1)
@@ -18,3 +15,7 @@ func create():
 	ship_cargo_size = 200
 	power_max = 40
 	.create()
+	
+func ready():
+	add_to_group('Explorer')
+	.ready()
