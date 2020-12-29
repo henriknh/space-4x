@@ -2,7 +2,7 @@ extends ship
 
 class_name ship_miner
 
-var mining_power = 200
+var mining_power = 10
 
 var mining_target: entity
 var mining_charging: bool = false
@@ -12,7 +12,7 @@ func create():
 	color = Color(1, 0.8, 0.4, 1)
 	ship_type = Enums.ship_types.miner
 	ship_speed_max = 1000
-	metal_max = 500
+	metal_max = 100
 	.create()
 	
 func ready():
@@ -58,12 +58,11 @@ func deliver():
 
 func _get_next_mining_target() -> void:
 	var asteroids = (parent as planet).get_asteroids()
-	var closest: entity = null
-	var closest_dist = INF
-	print("asteroids for planet: %d" % asteroids.size())
-	for asteroid in asteroids:
-		var _dist = self.position.distance_squared_to(asteroid.position)
-		if _dist < closest_dist and not asteroid.is_dead():
-			closest = asteroid
-			closest_dist = _dist
-	mining_target = closest
+	asteroids.sort_custom(self, "sort_asteroids")
+	var asteroid_idx = WorldGenerator.rng.randi_range(0, min(1, asteroids.size() - 1))
+	mining_target = asteroids[asteroid_idx]
+	
+func sort_asteroids(a: entity, b: entity) -> bool:
+	var dist_a = self.position.distance_squared_to(a.position)
+	var dist_b = self.position.distance_squared_to(b.position)
+	return dist_a < dist_b
