@@ -56,11 +56,16 @@ func _get_closest_enemy() -> entity:
 	for child in parent.children:
 		if child.ship_type >= 0 and child.faction != faction:
 			enemies.append(child)
-			
-	enemies.sort_custom(Utils, "sort_entities")
+	
+	enemies.sort_custom(self, "sort_enemies")
 	
 	return enemies[0]
-
+	
+func sort_enemies(a: entity, b: entity) -> bool:
+	var dist_a = self.position.distance_squared_to(a.position)
+	var dist_b = self.position.distance_squared_to(b.position)
+	return dist_a < dist_b
+	
 func _get_next_patrolling_position():
 	var bound_left = INF
 	var bound_right = -INF

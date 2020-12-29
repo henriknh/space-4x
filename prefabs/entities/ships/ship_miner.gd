@@ -68,7 +68,12 @@ func _get_next_mining_target() -> void:
 		if (child as entity).object_type == Enums.object_types.asteroid:
 			asteroids.append(child)
 	
-	asteroids.sort_custom(Utils, "sort_entities")
+	asteroids.sort_custom(self, "sort_asteroids")
 	
 	var asteroid_idx = WorldGenerator.rng.randi_range(0, min(1, asteroids.size() - 1))
 	mining_target = asteroids[asteroid_idx]
+	
+func sort_asteroids(a: entity, b: entity) -> bool:
+	var dist_a = self.position.distance_squared_to(a.position)
+	var dist_b = self.position.distance_squared_to(b.position)
+	return dist_a < dist_b
