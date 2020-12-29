@@ -38,6 +38,12 @@ func process():
 	else:
 		.process()
 
+func clear():
+	mining_target = null
+	mining_charging = false
+	mining_timer.stop()
+	.clear()
+	
 func charge_mine():
 	print('Charging mine')
 	mining_charging = true
@@ -45,7 +51,7 @@ func charge_mine():
 
 func do_mine():
 	mining_charging = false
-	if mining_target.metal > 0:
+	if mining_target and not mining_target.is_dead() and mining_target.metal > 0:
 		var can_mine = min(mining_power, metal_max - metal)
 		var mine_amount = min(mining_target.metal, can_mine)
 		metal += mine_amount
@@ -55,14 +61,14 @@ func do_mine():
 func deliver():
 	parent.metal += metal
 	metal = 0
-
+	
 func _get_next_mining_target() -> void:
-	var asteroids = (parent as planet).get_asteroids()
-	asteroids.sort_custom(self, "sort_asteroids")
+	var asteroids = []
+	for child in parent.children:
+		if (child as entity).object_type == Enums.object_types.asteroid:
+			asteroids.append(child)
+	
+	asteroids.sort_custom(Utils, "sort_entities")
+	
 	var asteroid_idx = WorldGenerator.rng.randi_range(0, min(1, asteroids.size() - 1))
 	mining_target = asteroids[asteroid_idx]
-	
-func sort_asteroids(a: entity, b: entity) -> bool:
-	var dist_a = self.position.distance_squared_to(a.position)
-	var dist_b = self.position.distance_squared_to(b.position)
-	return dist_a < dist_b

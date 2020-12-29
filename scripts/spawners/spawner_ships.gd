@@ -21,8 +21,11 @@ func create(gameScene: Node):
 			Enums.ship_types.transport:
 				instance.set_script(script_transport)
 				
-		instance.set_script(script_miner)
+		instance.set_script(script_combat)
 		
 		instance.planet_system = GameState.get_planet_system()
 		instance.create()
+		
+		instance.faction = instance.id % 2
+		print("faction %d" % instance.faction)
 		gameScene.add_child(instance)

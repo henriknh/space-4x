@@ -20,3 +20,6 @@ func ready():
 
 func process():
 	.process()
+
+func clear():
+	.clear()

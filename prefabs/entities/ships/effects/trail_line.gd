@@ -116,8 +116,8 @@ func remove_older() -> void:
 
 
 func set_emitting(emitting: bool) -> void:
-	print("emitting")
-	print(emitting)
+	#print("emitting")
+	#print(emitting)
 	is_emitting = emitting
 	if Engine.editor_hint:
 		return

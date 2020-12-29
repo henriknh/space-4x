@@ -14,6 +14,8 @@ export(int) var turn_speed: int = 4
 func create():
 	entity_type = Enums.entity_types.ship
 	label = NameGenerator.get_name_ship()
+	faction = 0
+	
 	if metal_max < 0:
 		metal_max = 0
 	if power_max < 0:
@@ -41,24 +43,29 @@ func process():
 		_update_route()
 	else:
 		print('idle')
+		
+func clear():
+	ship_target_id = -1
+	nav_route = [Nav.get_route(self, ship_target_id)]
 
 func set_target_id(id: int):
-	self.ship_target_id = id
-	self.nav_route = Nav.get_route(self, ship_target_id)
+	clear()
+	ship_target_id = id
+	nav_route = Nav.get_route(self, ship_target_id)
 	if visible:
 		trail.set_emitting(true)
 
-func move(target_position: Vector2) -> bool:
+func move(target_position: Vector2, decrease_speed: bool = true) -> bool:
 	rotation += get_angle_to(target_position) * turn_speed * delta
 
 	var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
 
 	position += ship_forward_dir * ship_speed * delta
 
-	return _calc_speed(target_position)
+	return _calc_speed(target_position, decrease_speed)
 
-func _calc_speed(target_position: Vector2) -> bool:
-	if close_to_target(target_position):
+func _calc_speed(target_position: Vector2, decrease_speed: bool) -> bool:
+	if decrease_speed and close_to_target(target_position):
 		if nav_route.size() <= 1 and ship_speed >= 0:
 			ship_speed -= ship_speed_max / 10 * delta * 10
 		if ship_speed < 0:
@@ -69,12 +76,12 @@ func _calc_speed(target_position: Vector2) -> bool:
 		ship_speed = ship_speed_max
 	elif ship_speed < ship_speed_max:
 		ship_speed += ship_speed_max / 10 * delta
-	else:
-		ship_speed -= ship_speed_max / 10 * delta * 10
+	#else:
+	#	ship_speed -= ship_speed_max / 10 * delta * 10
 		
 	if ship_speed == 0 and trail.is_emitting():
 		trail.set_emitting(false)
-	elif ship_speed != 0 and not trail.is_emitting():
+	elif ship_speed != 0 and visible and not trail.is_emitting():
 		trail.set_emitting(true)
 		
 	return ship_speed != 0
@@ -103,11 +110,12 @@ func get_new_target():
 			
 func close_to_target(target_position: Vector2) -> bool:
 	var distance_to_target = global_transform.origin.distance_squared_to(target_position)
-	return distance_to_target < pow(1.1 * ship_speed, 2)
+	return distance_to_target <= pow(max(160, ship_speed), 2)
 	
 func set_visible(in_data) -> void:
 	if typeof(in_data) == TYPE_BOOL:
 		visible = in_data
 	else:
 		visible = planet_system == in_data
+	print(visible)
 	trail.set_emitting(visible)

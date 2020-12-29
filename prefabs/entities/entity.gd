@@ -3,7 +3,7 @@ extends KinematicBody2D
 class_name entity
 
 const ACTIVE_TIME_PERIOD: float = 0.0166
-const INACTIVE_TIME_PERIOD: float = 0.5
+const INACTIVE_TIME_PERIOD: float = 0.05
 
 # Temporary
 var delta: float = 0
@@ -15,7 +15,7 @@ var entity_type: int = -1
 var label: String = ''
 var hitpoints: int = 1
 var indestructible: bool = false
-var faction: int = 0
+var faction: int = -1
 var planet_system: int = -1
 var rotation_speed: float = 0
 var color: Color = Color(1,1,1,1)

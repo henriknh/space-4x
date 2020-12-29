@@ -18,6 +18,7 @@ func create():
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
 	label = NameGenerator.get_name_planet()
 	indestructible = true
+	faction = 0
 	.create()
 	
 func ready():
@@ -97,10 +98,3 @@ func _on_hover_enter():
 func _on_hover_leave():
 	is_hover = false
 	update()
-
-func get_asteroids() -> Array:
-	var asteroids = []
-	for child in children:
-		if (child as entity).entity_type == Enums.entity_types.object and (child as entity).object_type == Enums.object_types.asteroid:
-			asteroids.append(child)
-	return asteroids
