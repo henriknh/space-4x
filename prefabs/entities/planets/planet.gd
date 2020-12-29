@@ -4,6 +4,8 @@ class_name planet
 
 var is_hover = false
 
+var children = []
+
 var prefab_lava = preload('res://assets/PixelPlanets/LavaWorld/LavaWorld.tscn')
 var prefab_iron = preload('res://assets/PixelPlanets/GasPlanet/GasPlanet.tscn')
 var prefab_earth_1 = preload('res://assets/PixelPlanets/LandMasses/LandMasses.tscn')
@@ -72,21 +74,21 @@ func get_target_point():
 	
 	return position #Vector2(x, y)
 
-func _on_Area2D_body_entered(body):
-	pass # Replace with function body.
+func _on_PlanetArea_body_entered(entity: entity):
+	if self.planet_system == entity.planet_system:
+		children.append(entity)
+		entity.parent = self
 
-func _on_Area2D_body_shape_entered(body_id, body, body_shape, area_shape):
-	pass # Replace with function body.
-
-func _on_PlanetArea_body_entered(body: KinematicBody2D):
-	pass # Replace with function body.
-
-func _on_PlanetArea_body_exited(body):
-	pass # Replace with function body.
+func _on_PlanetArea_body_exited(entity: entity):
+	if self.planet_system == entity.planet_system:
+		children.erase(entity)
 
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed and (event as InputEventMouseButton).button_index == BUTTON_LEFT:
 		GameState.set_selection(self)
+		for ship in get_tree().get_nodes_in_group('Ship'):
+			if ship.planet_system == self.planet_system and ship.has_method("set_target_id"):
+				ship.set_target_id(self.id)
 
 func _on_hover_enter():
 	is_hover = true
@@ -95,3 +97,10 @@ func _on_hover_enter():
 func _on_hover_leave():
 	is_hover = false
 	update()
+
+func get_asteroids() -> Array:
+	var asteroids = []
+	for child in children:
+		if (child as entity).entity_type == Enums.entity_types.object and (child as entity).object_type == Enums.object_types.asteroid:
+			asteroids.append(child)
+	return asteroids

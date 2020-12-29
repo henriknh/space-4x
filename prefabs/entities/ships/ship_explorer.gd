@@ -19,3 +19,6 @@ func create():
 func ready():
 	add_to_group('Explorer')
 	.ready()
+
+func process():
+	.process()

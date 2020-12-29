@@ -7,6 +7,7 @@ var sprite_medium = preload("res://assets/asteroid_medium.png")
 var sprite_large = preload("res://assets/asteroid_large.png")
 
 func create():
+	object_type = Enums.object_types.asteroid
 	label = NameGenerator.get_name_asteroid()
 	color = Color.from_hsv(0, WorldGenerator.rng.randf_range(20, 40) / 100, WorldGenerator.rng.randf_range(70, 100) / 100)
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10

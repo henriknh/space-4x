@@ -2,16 +2,17 @@ extends KinematicBody2D
 
 class_name entity
 
-# Gernal
-var id = -1
-var entity_type = -1
-var label = ''
-var hitpoints = 1
-var indestructible = false
-var faction = 0
-var planet_system = -1
-var rotation_speed = 0
-var color = Color(1,1,1,1)
+# General
+var id: int = -1
+var parent: entity
+var entity_type: int = -1
+var label: String = ''
+var hitpoints: int = 1
+var indestructible: bool = false
+var faction: int = 0
+var planet_system: int = -1
+var rotation_speed: float = 0
+var color: Color = Color(1,1,1,1)
 
 # Resources
 var metal: float = 0
@@ -22,6 +23,9 @@ var food: float = 0
 var food_max: int = -1
 var water: float = 0
 var water_max: int = -1
+
+# Object specific variables
+var object_type: int = -1
 
 # Planet specific variables
 var planet_type: int = -1
@@ -82,6 +86,9 @@ func save():
 		"food_max": food_max,
 		"water": water,
 		"water_max": water_max,
+		
+		# Object
+		"object_type": object_type,
 		
 		# Planet
 		"planet_type": planet_type,

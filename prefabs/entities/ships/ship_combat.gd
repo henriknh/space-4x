@@ -18,3 +18,6 @@ func create():
 func ready():
 	add_to_group('Combat')
 	.ready()
+
+func process():
+	.process()

@@ -6,6 +6,10 @@ enum entity_types {
 	object
 }
 
+enum object_types {
+	asteroid
+}
+
 enum planet_types {
 	lava,
 	iron,

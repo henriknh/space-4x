@@ -18,3 +18,9 @@ func create():
 func ready():
 	add_to_group('Miner')
 	.ready()
+
+func process():
+	if not ship_target_id:
+		pass
+	else:
+		.process()

@@ -17,3 +17,6 @@ func create():
 func ready():
 	add_to_group('Transport')
 	.ready()
+
+func process():
+	.process()
