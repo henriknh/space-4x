@@ -47,12 +47,9 @@ var ship_target_id: int = -1
 var ship_cargo_size: int = 20
 
 func _physics_process(_delta):
-
 	delta += _delta
-
-	if visible and _delta < ACTIVE_TIME_PERIOD:
-		return
-	if not visible and _delta < INACTIVE_TIME_PERIOD:
+	
+	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
 		process()
