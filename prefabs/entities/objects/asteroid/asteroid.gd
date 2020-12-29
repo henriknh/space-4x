@@ -2,6 +2,7 @@ extends object
 
 class_name asteroid
 
+var sprite_size = 0
 var sprite_small = preload("res://assets/asteroid_small.png")
 var sprite_medium = preload("res://assets/asteroid_medium.png")
 var sprite_large = preload("res://assets/asteroid_large.png")
@@ -18,20 +19,23 @@ func create():
 func ready():
 	if metal < 400:
 		$Sprite.texture = sprite_small
-		($CollisionShape2D.shape as CircleShape2D).radius = 4
+		sprite_size = 4
 	elif metal < 700:
 		$Sprite.texture = sprite_medium
-		($CollisionShape2D.shape as CircleShape2D).radius = 8
+		sprite_size = 8
 	else:
 		$Sprite.texture = sprite_large
-		($CollisionShape2D.shape as CircleShape2D).radius = 16
+		sprite_size = 16
+		
+	($CollisionShape2D.shape as CircleShape2D).radius = sprite_size
 	$Sprite.self_modulate = color
+	
 	.ready()
-
+	
 func process():
-	.process()
 	if metal == 0:
 		kill()
+	.process()
 
 func _process(delta):
 	if visible:
