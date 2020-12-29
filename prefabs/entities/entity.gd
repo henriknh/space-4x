@@ -2,6 +2,12 @@ extends KinematicBody2D
 
 class_name entity
 
+const ACTIVE_TIME_PERIOD: float = 0.0166
+const INACTIVE_TIME_PERIOD: float = 0.5
+
+# Temporary
+var delta: float = 0
+
 # General
 var id: int = -1
 var parent: entity
@@ -40,12 +46,31 @@ var ship_speed_max: int = 500
 var ship_target_id: int = -1
 var ship_cargo_size: int = 20
 
+func _physics_process(_delta):
+
+	delta += _delta
+
+	if visible and _delta < ACTIVE_TIME_PERIOD:
+		return
+	if not visible and _delta < INACTIVE_TIME_PERIOD:
+		return
+	else:
+		process()
+		delta = 0
+		
 func create():
 	id = WorldGenerator.get_new_id()
 	ready()
 	
 func ready():
 	pass
+
+func process():
+	pass
+
+func kill():
+	hitpoints = 0
+	queue_free()
 
 func is_dead() -> bool:
 	if indestructible:

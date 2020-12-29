@@ -8,3 +8,6 @@ func create():
 	
 func ready():
 	.ready()
+	
+func process():
+	pass

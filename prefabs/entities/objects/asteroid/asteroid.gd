@@ -12,7 +12,7 @@ func create():
 	color = Color.from_hsv(0, WorldGenerator.rng.randf_range(20, 40) / 100, WorldGenerator.rng.randf_range(70, 100) / 100)
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
 	
-	metal = WorldGenerator.rng.randf_range(100, 1000)
+	metal = WorldGenerator.rng.randf_range(150, 150)
 	.create()
 	
 func ready():
@@ -27,7 +27,12 @@ func ready():
 		($CollisionShape2D.shape as CircleShape2D).radius = 16
 	$Sprite.self_modulate = color
 	.ready()
-	
+
+func process():
+	.process()
+	if metal == 0:
+		kill()
+
 func _process(delta):
 	if visible:
 		$Sprite.rotation_degrees += rotation_speed * delta
