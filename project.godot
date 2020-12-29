@@ -138,8 +138,8 @@ MenuState="*res://scripts/utils/menu_state.gd"
 
 [display]
 
-window/size/width=384
-window/size/height=216
+window/size/width=480
+window/size/height=270
 window/vsync/use_vsync=false
 window/stretch/mode="viewport"
 window/stretch/aspect="keep_width"
