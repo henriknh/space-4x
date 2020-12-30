@@ -21,7 +21,7 @@ func create(gameScene: Node):
 			Enums.ship_types.transport:
 				instance.set_script(script_transport)
 				
-		instance.set_script(script_combat)
+		instance.set_script(script_explorer)
 		
 		instance.planet_system = GameState.get_planet_system()
 		instance.create()
