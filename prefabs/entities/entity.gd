@@ -13,8 +13,8 @@ var id: int = -1
 var parent: entity
 var entity_type: int = -1
 var label: String = ''
-var hitpoints_max: int = -1
 var hitpoints: int = 1
+var hitpoints_max: int = -1
 var indestructible: bool = false
 var faction: int = -1
 var planet_system: int = -1
@@ -99,6 +99,7 @@ func save():
 		"entity_type": entity_type,
 		"label": label,
 		"hitpoints": hitpoints,
+		"hitpoints_max": hitpoints_max,
 		"indestructible": indestructible,
 		"faction": faction,
 		"planet_system": planet_system,
