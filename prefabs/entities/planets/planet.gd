@@ -68,11 +68,11 @@ func _draw():
 	
 	var polyline_color = Enums.player_colors[faction]
 	var polyline_alpha = 0
-	if is_hover:
-		polyline_color = Color(1,1,1)
-		polyline_alpha = 0.1
-	elif self in GameState.get_selection():
+	if self in GameState.get_selection():
 		polyline_color = Color(1,1,0)
+		polyline_alpha = 0.25
+	elif is_hover:
+		polyline_color = Color(1,1,1)
 		polyline_alpha = 0.1
 	elif Settings.get_show_planet_area():
 		polyline_alpha = 0.025
@@ -115,11 +115,14 @@ func _on_PlanetArea_body_exited(entity: entity):
 		children.erase(entity)
 
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
-	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed and (event as InputEventMouseButton).button_index == BUTTON_LEFT:
-		GameState.set_selection(self)
-		for ship in get_tree().get_nodes_in_group('Ship'):
-			if ship.planet_system == self.planet_system and ship.has_method("set_target_id"):
-				ship.set_target_id(self.id)
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		if (event as InputEventMouseButton).button_index == BUTTON_LEFT:
+			GameState.set_selection(self)
+		elif (event as InputEventMouseButton).button_index == BUTTON_RIGHT:
+			var curr_selection = GameState.get_selection()[0]
+			for ship in get_tree().get_nodes_in_group('Ship'):
+				if ship.planet_system == self.planet_system and ship.has_method("set_target_id") and ship.faction == curr_selection.faction and ship.parent == curr_selection:
+					ship.set_target_id(self.id)
 
 func _on_hover_enter():
 	is_hover = true

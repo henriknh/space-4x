@@ -9,6 +9,7 @@ var state = {
 	"camera_states": {}
 }
 signal state_changed
+signal selection_changed
 
 func set_planet_system(planet_system: int) -> void:
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
@@ -32,6 +33,8 @@ func set_selection(objects = null):
 	
 	for object in _selection + old_selection:
 		object.update()
+	
+	emit_signal("selection_changed")
 	
 func get_selection():
 	return _selection

@@ -59,7 +59,6 @@ func process():
 			if not weapon_ready:
 				_wait_for_weapon()
 			else:
-				print(target_enemy.position.distance_squared_to(position))
 				move(target_enemy.position, false, -1)
 		elif ship_target_id == -1 and patrolling_position != Vector2.INF:
 			ship_speed_max = 500
