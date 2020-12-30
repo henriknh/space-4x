@@ -1,6 +1,9 @@
 extends Control
 
+var settings = preload('res://prefabs/ui/settings/settings_menu.tscn')
+
 func _ready():
+	MenuState.push(self)
 	_update_view_state()
 	
 func _update_view_state():
@@ -26,6 +29,9 @@ func _on_load():
 func _on_delete_save():
 	if StateManager.delete_game_file():
 		_update_view_state()
+
+func _on_settings():
+	get_parent().add_child(settings.instance())
 
 func _on_exit():
 	get_tree().quit()

@@ -20,7 +20,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 14.0
 text = "Space 4X"
 align = 1
@@ -28,66 +28,76 @@ uppercase = true
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 margin_top = 18.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 66.0
 rect_min_size = Vector2( 0, 48 )
 
 [node name="ButtonCreate" type="Button" parent="VBoxContainer"]
 margin_top = 70.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 90.0
 text = "Create"
 
 [node name="SliderWorldSize" type="HSlider" parent="VBoxContainer"]
 margin_top = 94.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 110.0
 max_value = 2.0
 value = 1.0
 
 [node name="LabelWorldSize" type="Label" parent="VBoxContainer"]
 margin_top = 114.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 128.0
 text = "LabelWorldSize"
 
 [node name="SpinBoxSeed" type="SpinBox" parent="VBoxContainer"]
 margin_top = 132.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 156.0
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 margin_top = 160.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 208.0
 rect_min_size = Vector2( 0, 48 )
 
 [node name="ButtonLoad" type="Button" parent="VBoxContainer"]
 margin_top = 212.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 232.0
 text = "Load"
 
 [node name="ButtonDeleteSave" type="Button" parent="VBoxContainer"]
 margin_top = 236.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 256.0
 text = "Delete save"
 
 [node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
 margin_top = 260.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 0, 48 )
 
-[node name="ButtonExit" type="Button" parent="VBoxContainer"]
+[node name="ButtonSettings" type="Button" parent="VBoxContainer"]
 margin_top = 312.0
-margin_right = 230.0
+margin_right = 288.0
 margin_bottom = 332.0
+text = "Settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonExit" type="Button" parent="VBoxContainer"]
+margin_top = 336.0
+margin_right = 288.0
+margin_bottom = 356.0
 text = "Exit"
 [connection signal="pressed" from="VBoxContainer/ButtonCreate" to="." method="_on_create"]
 [connection signal="value_changed" from="VBoxContainer/SliderWorldSize" to="." method="_on_world_size_changed"]
 [connection signal="value_changed" from="VBoxContainer/SpinBoxSeed" to="." method="_on_seed_changed"]
 [connection signal="pressed" from="VBoxContainer/ButtonLoad" to="." method="_on_load"]
 [connection signal="pressed" from="VBoxContainer/ButtonDeleteSave" to="." method="_on_delete_save"]
+[connection signal="pressed" from="VBoxContainer/ButtonSettings" to="." method="_on_settings"]
 [connection signal="pressed" from="VBoxContainer/ButtonExit" to="." method="_on_exit"]
