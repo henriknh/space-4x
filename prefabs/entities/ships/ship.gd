@@ -48,8 +48,6 @@ func process():
 		var target_position: Vector2 = nav_route[0].position
 		move(target_position)
 		_update_route()
-	else:
-		print('idle')
 	.process()
 	
 func kill():
@@ -68,7 +66,6 @@ func set_target_id(id: int):
 		trail.set_emitting(true)
 
 func move(target_position: Vector2, decrease_speed: bool = true, turn_direction: int = 0) -> bool:
-	print(get_angle_to(target_position))
 	if turn_direction == 0:
 		rotation += get_angle_to(target_position) * turn_speed * delta
 	elif turn_direction < 0:
@@ -137,3 +134,32 @@ func set_visible(in_data) -> void:
 	print(visible)
 	trail.set_emitting(visible)
 
+func get_random_point_in_site() -> Vector2:
+	var bound_left = INF
+	var bound_right = -INF
+	var bound_top = INF
+	var bound_bottom = -INF
+	
+	var polygon_shrinked = []
+	for point in parent.planet_convex_hull:
+		var point_shrinked = Utils.get_midpoint(point, Vector2.ZERO)
+		polygon_shrinked.append(point_shrinked)
+		
+		if point_shrinked.x < bound_left:
+			bound_left = point_shrinked.x
+		if point_shrinked.x > bound_left:
+			bound_right = point_shrinked.x
+		if point_shrinked.y < bound_left:
+			bound_top = point_shrinked.y
+		if point_shrinked.y > bound_left:
+			bound_bottom = point_shrinked.y
+	
+	var random_point: Vector2 = Vector2.INF
+	while random_point == Vector2.INF:
+		var x = WorldGenerator.rng.randf_range(bound_left, bound_right)
+		var y = WorldGenerator.rng.randf_range(bound_top, bound_bottom)
+		var _random_point: Vector2 = Vector2(x, y)
+		if Geometry.is_point_in_polygon(_random_point, polygon_shrinked):
+			random_point = _random_point
+	return random_point + parent.position
+	

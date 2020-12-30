@@ -42,20 +42,20 @@ func ready():
 	.ready()
 
 func process():
-	if parent:
+	if ship_target_id == -1 and parent:
 		if not target_enemy and _has_enemies_in_site():
-			
 			target_enemy = _get_closest_enemy()
 		
 		if patrolling_position.distance_squared_to(position) < pow(ship_speed, 2):
 			patrolling_position = Vector2.INF
 			
 		if patrolling_position == Vector2.INF:
-			
-			_get_next_patrolling_position()
+			ship_speed_max = 500
+			patrolling_position = get_random_point_in_site()
+		else:
+			ship_speed_max = 2000
 			
 		if target_enemy:
-			ship_speed_max = 2000
 			if not weapon_ready:
 				_wait_for_weapon()
 			else:
@@ -64,9 +64,8 @@ func process():
 		elif ship_target_id == -1 and patrolling_position != Vector2.INF:
 			ship_speed_max = 500
 			move(patrolling_position, false)
-		else:
-			ship_speed_max = 2000
-			.process()
+			
+	.process()
 
 func clear():
 	patrolling_position = Vector2.INF
@@ -132,29 +131,3 @@ func sort_distance(a: entity, b: entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b
-	
-func _get_next_patrolling_position():
-	var bound_left = INF
-	var bound_right = -INF
-	var bound_top = INF
-	var bound_bottom = -INF
-	
-	var polygon_shrinked = []
-	for point in parent.planet_convex_hull:
-		var point_shrinked = Utils.get_midpoint(point, Vector2.ZERO)
-		polygon_shrinked.append(point_shrinked)
-		if point_shrinked.x < bound_left:
-			bound_left = point_shrinked.x
-		if point_shrinked.x > bound_left:
-			bound_right = point_shrinked.x
-		if point_shrinked.y < bound_left:
-			bound_top = point_shrinked.y
-		if point_shrinked.y > bound_left:
-			bound_bottom = point_shrinked.y
-	
-	while patrolling_position == Vector2.INF:
-		var x = WorldGenerator.rng.randf_range(bound_left, bound_right)
-		var y = WorldGenerator.rng.randf_range(bound_top, bound_bottom)
-		var point = Vector2(x, y)
-		if Geometry.is_point_in_polygon(point, polygon_shrinked):
-			patrolling_position = point + parent.position
