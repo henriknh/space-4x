@@ -63,17 +63,38 @@ func kill():
 func _process(delta):
 	if self.visible:
 		.get_node("Sprite").rotation_degrees += rotation_speed * delta
-		
+
 func _draw():
-	if Settings.get_show_planet_area():
-		draw_polyline(self.planet_convex_hull, Color(1,1,1,0.025), 1, true)
 	
-	if self in GameState.get_selection():
-		draw_polygon(self.planet_convex_hull, [Color(1, 1, 0, 0.1)])
-		draw_polyline(self.planet_convex_hull, Color(1, 1, 0, 0.25), 1, true)
-	elif is_hover:
-		draw_polygon(self.planet_convex_hull, [Color(1, 1, 1, 0.01)])
-		draw_polyline(self.planet_convex_hull, Color(1, 1, 1, 0.05), 1, true)
+	var polyline_color = Enums.player_colors[faction]
+	var polyline_alpha = 0
+	if is_hover:
+		polyline_color = Color(1,1,1)
+		polyline_alpha = 0.1
+	elif self in GameState.get_selection():
+		polyline_color = Color(1,1,0)
+		polyline_alpha = 0.1
+	elif Settings.get_show_planet_area():
+		polyline_alpha = 0.025
+	
+	if polyline_alpha > 0:
+		polyline_color.a = polyline_alpha
+		draw_polyline(self.planet_convex_hull, polyline_color, 1, true)
+	
+	var polylgon_color = Enums.player_colors[faction]
+	var polygon_alpha = 0
+	#if self in GameState.get_selection():
+	#	polylgon_color = Color(1,1,0)
+	#	polygon_alpha = 0.2
+	#elif is_hover:
+	#	polygon_alpha = 0.1
+	if faction >= 0:
+		polygon_alpha = 0.025
+	
+	if polygon_alpha > 0:
+		
+		polylgon_color.a = polygon_alpha
+		draw_polygon(self.planet_convex_hull, [polylgon_color])
 
 func get_target_point():
 	var angle = 2 * PI * randf()
