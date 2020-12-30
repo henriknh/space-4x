@@ -15,6 +15,8 @@ func create():
 	entity_type = Enums.entity_types.ship
 	label = NameGenerator.get_name_ship()
 	faction = 0
+	if hitpoints_max == -1:
+		hitpoints_max = 50
 	
 	if metal_max < 0:
 		metal_max = 0
@@ -32,8 +34,13 @@ func ready():
 	model = get_node("Sprite") as Sprite
 	trail = get_node("Trail") as Node2D
 	
-	model.self_modulate = color
-	trail.set_color(color)
+	if faction == 0:
+		model.self_modulate = color
+		trail.set_color(color)
+	else:
+		var enemy_color = Color(0,0,0,1)
+		model.self_modulate = enemy_color
+		trail.set_color(enemy_color)
 	.ready()
 		
 func process():
@@ -43,6 +50,11 @@ func process():
 		_update_route()
 	else:
 		print('idle')
+	.process()
+	
+func kill():
+	hitpoints = 0
+	queue_free()
 		
 func clear():
 	ship_target_id = -1
@@ -55,8 +67,13 @@ func set_target_id(id: int):
 	if visible:
 		trail.set_emitting(true)
 
-func move(target_position: Vector2, decrease_speed: bool = true) -> bool:
-	rotation += get_angle_to(target_position) * turn_speed * delta
+func move(target_position: Vector2, decrease_speed: bool = true, turn_direction: int = 0) -> bool:
+	print(get_angle_to(target_position))
+	if turn_direction == 0:
+		rotation += get_angle_to(target_position) * turn_speed * delta
+	elif turn_direction < 0:
+		
+		rotation += get_angle_to(target_position) * turn_speed * delta
 
 	var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
 
@@ -119,3 +136,4 @@ func set_visible(in_data) -> void:
 		visible = planet_system == in_data
 	print(visible)
 	trail.set_emitting(visible)
+

@@ -50,7 +50,7 @@ func _process(delta: float) -> void:
 	# Adding new points if necessary.
 	var desired_point := to_local(target.global_position)
 	var distance: float = _last_point.distance_squared_to(desired_point)
-	if camera and distance > pow(max(resolution, resolution * camera.zoom.x * 0.5), 2):
+	if camera and distance > pow(max(resolution, resolution * camera.zoom.x * 0.025), 2):
 		add_timed_point(desired_point, _clock)
 
 

@@ -7,6 +7,8 @@ enum STATES {
 	moving
 }
 
+var explore_mode = true
+
 
 func create():
 	color = Color(1, 1, 1, 1)

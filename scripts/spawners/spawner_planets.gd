@@ -40,6 +40,7 @@ func create(gameScene: Node, planet_system_idx: int) -> void:
 		instance.planet_system = planet_system_idx
 		instance.planet_orbit_distance = orbit_distance
 		instance.visible = false
+		instance.faction = 1
 		instance.create()
 		gameScene.add_child(instance)
 

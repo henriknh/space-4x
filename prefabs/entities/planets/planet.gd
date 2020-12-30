@@ -18,12 +18,12 @@ func create():
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
 	label = NameGenerator.get_name_planet()
 	indestructible = true
-	faction = 0
+	hitpoints_max = 250
 	.create()
 	
 func ready():
 	get_node("InfoUI").set_label(label)
-	(get_node("PlanetArea/PlanetCollision") as CollisionPolygon2D).polygon = self.planet_convex_hull
+	(get_node("PlanetArea/PlanetAreaCollision") as CollisionPolygon2D).polygon = self.planet_convex_hull
 	
 	Settings.connect("settings_changed", self, "update")
 	
@@ -45,11 +45,20 @@ func ready():
 			instance = prefab_ice.instance()
 			add_to_group('Ice')
 			
+	var radius = (planet_size * 200) / 2
 	(instance as Control).rect_scale = Vector2(planet_size, planet_size)
-	(instance as Control).set_position(Vector2(-100 * planet_size, -100 * planet_size))
+	(instance as Control).set_position(Vector2(-radius, -radius))
+	($PlanetCollision.shape as CircleShape2D).radius = radius
 
 	add_child(instance)
 	.ready()
+
+func process():
+	.process()
+	
+func kill():
+	faction = -1
+	hitpoints = hitpoints_max
 	
 func _process(delta):
 	if self.visible:

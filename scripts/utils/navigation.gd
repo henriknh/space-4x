@@ -68,3 +68,5 @@ func get_route(caller: entity, target_id: int):
 	
 	return route
 
+func get_map(caller: entity) -> AStar2D:
+	return maps[caller.planet_system]

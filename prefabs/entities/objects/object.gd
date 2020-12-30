@@ -11,3 +11,7 @@ func ready():
 	
 func process():
 	pass
+
+func kill():
+	hitpoints = 0
+	queue_free()

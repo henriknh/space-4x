@@ -28,4 +28,5 @@ func create(gameScene: Node):
 		
 		instance.faction = instance.id % 2
 		print("faction %d" % instance.faction)
+		instance.position = Vector2(0, (WorldGenerator.rng.randi() % 5) * 2000)
 		gameScene.add_child(instance)

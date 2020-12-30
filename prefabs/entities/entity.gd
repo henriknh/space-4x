@@ -13,6 +13,7 @@ var id: int = -1
 var parent: entity
 var entity_type: int = -1
 var label: String = ''
+var hitpoints_max: int = -1
 var hitpoints: int = 1
 var indestructible: bool = false
 var faction: int = -1
@@ -52,11 +53,17 @@ func _physics_process(_delta):
 	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
-		process()
+		if hitpoints <= 0:
+			kill()
+		else:
+			process()
 		delta = 0
 		
 func create():
 	id = WorldGenerator.get_new_id()
+	if hitpoints_max == -1:
+		hitpoints_max = 1
+	hitpoints = hitpoints_max
 	ready()
 	
 func ready():
@@ -66,8 +73,7 @@ func process():
 	pass
 
 func kill():
-	hitpoints = 0
-	queue_free()
+	pass
 
 func is_dead() -> bool:
 	if indestructible:

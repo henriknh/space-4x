@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://prefabs/entities/ships/effects/trail_line.gd" type="Script" id=1]
+[ext_resource path="res://prefabs/entities/ships/effects/trail_line_backup.gd" type="Script" id=1]
 [ext_resource path="res://prefabs/entities/ships/effects/trail.gd" type="Script" id=2]
 [ext_resource path="res://sketches/ship.png" type="Texture" id=3]
 
@@ -47,8 +47,6 @@ default_color = Color( 1, 1, 1, 1 )
 gradient = SubResource( 2 )
 antialiased = true
 script = ExtResource( 1 )
-lifetime = 1
-max_points = 10
 
 [node name="Particles2D" type="Particles2D" parent="."]
 visible = false

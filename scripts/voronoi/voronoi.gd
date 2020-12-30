@@ -169,15 +169,15 @@ class Voronoi:
 									
 									self.events.append({
 										"nodes": [n1, n2],
-										"midpoint": self._get_midpoint(n1.position, n2.position)
+										"midpoint": Utils.get_midpoint(n1.position, n2.position)
 									})
 									self.events.append({
 										"nodes": [n1, n3],
-										"midpoint": self._get_midpoint(n1.position, n3.position)
+										"midpoint": Utils.get_midpoint(n1.position, n3.position)
 									})
 									self.events.append({
 										"nodes": [n2, n3],
-										"midpoint":  self._get_midpoint(n2.position, n3.position)
+										"midpoint":  Utils.get_midpoint(n2.position, n3.position)
 									})
 									
 									self.events.append({
@@ -275,7 +275,7 @@ class Voronoi:
 					var prev_node = self.site_registry.get_edge_node_by_points([prev_convex_point, convex_point])
 					var next_node = self.site_registry.get_edge_node_by_points([next_convex_point, convex_point])
 					
-					var midpoint = self._get_midpoint(prev_node.position, next_node.position)
+					var midpoint = Utils.get_midpoint(prev_node.position, next_node.position)
 					var opposite = (event.circle.position + (event.circle.position - midpoint) * BOUND_SIZE)
 					
 					self.debug_circles_line.append([midpoint, convex_point, opposite])
@@ -355,9 +355,6 @@ class Voronoi:
 			"position": Vector2(cx, cy), 
 			"radius": radius
 		}
-		
-	func _get_midpoint(p1: Vector2, p2: Vector2) -> Vector2:
-		return Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
 		
 class VoronoiRegistry:
 	

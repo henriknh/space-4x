@@ -16,3 +16,6 @@ func array_has(obj, array: Array, elipse = 100) -> bool:
 		
 	else:
 		return obj in array
+		
+func get_midpoint(p1: Vector2, p2: Vector2) -> Vector2:
+	return Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
