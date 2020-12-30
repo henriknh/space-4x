@@ -35,8 +35,7 @@ func process():
 		elif mining_target:
 			if not move(mining_target.position) and not mining_charging:
 				charge_mine()
-	else:
-		.process()
+	.process()
 
 func clear():
 	mining_target = null
