@@ -18,7 +18,7 @@ func redraw():
 			
 	self.update()
 	$OrbitLines.update()
-	$VoronoiCells.update()
+	$VoronoiSites.update()
 		
 func _draw():
 	if Settings.get_is_debug():

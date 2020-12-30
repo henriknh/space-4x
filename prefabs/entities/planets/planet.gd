@@ -66,7 +66,7 @@ func _process(delta):
 		
 func _draw():
 	if Settings.get_show_planet_area():
-		draw_polyline(self.planet_convex_hull, Color(1,1,1,0.01), 1, true)
+		draw_polyline(self.planet_convex_hull, Color(1,1,1,0.025), 1, true)
 	
 	if self in GameState.get_selection():
 		draw_polygon(self.planet_convex_hull, [Color(1, 1, 0, 0.1)])
