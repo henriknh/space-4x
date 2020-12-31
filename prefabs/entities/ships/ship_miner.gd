@@ -44,7 +44,6 @@ func clear():
 	.clear()
 	
 func charge_mine():
-	print('Charging mine')
 	mining_charging = true
 	mining_timer.start()
 
@@ -55,7 +54,6 @@ func do_mine():
 		var mine_amount = min(mining_target.metal, can_mine)
 		metal += mine_amount
 		mining_target.metal -= mine_amount
-		print('Mined: %d' % metal)
 
 func deliver():
 	parent.metal += metal

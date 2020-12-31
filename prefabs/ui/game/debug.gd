@@ -1,5 +1,6 @@
 extends VBoxContainer
 
+var info = preload('res://prefabs/ui/game/info/info.tscn')
 var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
 var script_combat = load(Enums.ship_scripts.combat)
 var script_explorer = load(Enums.ship_scripts.explorer)
@@ -21,14 +22,15 @@ func _ready():
 	add_child(menu)
 
 func _update_ui():
-	$BtnCreateShip.disabled = GameState.get_selection().size() == 0
+	$BtnCreateShip.disabled = GameState.get_selection() == null
+	$BtnInfo.disabled = GameState.get_selection() == null
 	
 func _on_create_ship():
 	menu.popup()
 
 func _create_ship(ship_type: int):
 
-	var curr_selection = GameState.get_selection()[0]
+	var curr_selection = GameState.get_selection()
 	var instance = prefab_ship.instance()
 		
 	match ship_type:
@@ -50,3 +52,6 @@ func _create_ship(ship_type: int):
 
 func _physics_process(delta):
 	$LabelFps.text = 'FPS: %d' % Engine.get_frames_per_second()
+
+func _on_info():
+	get_parent().add_child(info.instance())

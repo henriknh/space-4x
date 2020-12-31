@@ -8,6 +8,7 @@ const ZOOM_MAX = 200
 var is_dragging = false
 var camera_pos_change = Vector2.ZERO
 onready var target_zoom = zoom.x
+onready var target_position = Vector2.ZERO
 
 var last_pos = position
 var last_zoom = zoom
@@ -66,6 +67,8 @@ func _input(event):
 		camera_pos_change.y = 1
 	elif event is InputEventKey and not event.pressed and (event.scancode == KEY_W or event.scancode == KEY_S):
 		camera_pos_change.y = 0
+		
+	target_position += camera_pos_change * zoom.x * 10
 
 	if event is InputEventMouseButton:
 		match event.button_index:
@@ -91,8 +94,8 @@ func _process(delta):
 	var zoom_difference = target_zoom - zoom.x
 	var smoothed_zoom = (zoom_difference * SMOOTH_SPEED * delta)
 	zoom += Vector2(smoothed_zoom, smoothed_zoom)
-
-	position += camera_pos_change * zoom.x * CAMERA_SPEED * delta
+	
+	position = lerp(position, target_position, 0.5)
 
 func update_limit(distance: int):
 	limit_left = -int(distance + get_viewport().size.x)

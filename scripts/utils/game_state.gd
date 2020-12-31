@@ -1,7 +1,7 @@
 extends Node
 
 # Temporary
-var _selection = []
+var selection: entity
 
 # Persistent
 var state = {
@@ -22,22 +22,19 @@ func set_planet_system(planet_system: int) -> void:
 func get_planet_system() -> int:
 	return state['curr_planet_system']
 
-func set_selection(objects = null):
-	if objects == null:
-		objects = []
-	elif typeof(objects) == TYPE_OBJECT:
-		objects = [objects]
-		
-	var old_selection = _selection
-	_selection = objects
+func set_selection(_selection: entity = null):
+	var old_selection = selection
+	selection = _selection
 	
-	for object in _selection + old_selection:
-		object.update()
+	if selection:
+		selection.update()
+	if old_selection:
+		old_selection.update()
 	
 	emit_signal("selection_changed")
 	
 func get_selection():
-	return _selection
+	return selection
 
 func _update_visible():
 	get_tree().call_group('Persist', 'set_visible', state['curr_planet_system'])
