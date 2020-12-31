@@ -1,6 +1,6 @@
 extends VBoxContainer
 
-var info = preload('res://prefabs/ui/game/info/info.tscn')
+var info = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
 var script_combat = load(Enums.ship_scripts.combat)
 var script_explorer = load(Enums.ship_scripts.explorer)

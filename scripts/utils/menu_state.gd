@@ -4,8 +4,10 @@ var _is_over_ui = false
 var _over_ui_semaphore = 0
 var _menus = []
 
+signal menu_changed
+
 func is_over_ui() -> bool:
-	if _menus.size() > 0:
+	if _menus.size() > 1:
 		return true
 	else: 
 		return _is_over_ui
@@ -25,13 +27,14 @@ func reset() -> void:
 		if menu:
 			menu.queue_free()
 	_menus = []
+	emit_signal("menu_changed")
 	
 func push(new_menu: Control) -> void:
 	_menus.append(new_menu)
-	
 	if _menus.size() > 1:
 		for menu_idx in range(0, _menus.size() - 1):
 			_menus[menu_idx].visible = false
+	emit_signal("menu_changed")
 
 func pop() -> void:
 	var menu = _menus.pop_back()
@@ -40,6 +43,7 @@ func pop() -> void:
 		
 	if _menus.size() > 0:
 		_menus[_menus.size() - 1].visible = true
+	emit_signal("menu_changed")
 		
 func menus_size() -> int:
 	return _menus.size()

@@ -1,31 +1,62 @@
-extends CanvasLayer
+extends Control
 
+var planet_details_prefab = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
 
+var total_metal: int = 0
+var total_power: int = 0
+var total_food: int = 0
+var total_water: int = 0
+
 func _ready():
-	$HBoxContainer/PanelContainer.connect("mouse_entered", MenuState, "set_over_ui", [true])
-	$HBoxContainer/PanelContainer.connect("mouse_exited", MenuState, "set_over_ui", [false])
+	MenuState.push(self)
 	
+	GameState.connect("selection_changed", self, "_update_ui")
+	Settings.connect("settings_changed", self, "_update_ui")
+
 	var timer = Timer.new()
 	timer.connect("timeout",self,"_update_ui")
-	timer.wait_time = 0.5
+	timer.wait_time = 1
 	add_child(timer)
 	timer.start()
 
-func _input(event):
-	if event is InputEventKey and event.is_pressed() and event.scancode == KEY_ESCAPE:
-		if MenuState.menus_size() == 0:
-			add_child(game_menu_prefab.instance())
-		else:
-			MenuState.pop()
+func _physics_process(delta):
+	$MainMenu/LabelFPS.text = '%d' % Engine.get_frames_per_second()
 	
 func _update_ui():
-	$HBoxContainer/PanelContainer/VBoxContainer2/HBoxContainer/Resources.update_ui()
-	$HBoxContainer/PanelContainer/VBoxContainer2/HBoxContainer/Overview.update_ui()
-
-func _on_toggle_overview():
-	var overview = $HBoxContainer/PanelContainer/VBoxContainer2/HBoxContainer/Overview
-	overview.visible = !overview.visible
 	
-	if overview.visible:
-		overview.update_ui()
+	$MainMenu/LabelFPS.visible = Settings.get_show_fps()
+	$Bottom/BtnPlanetDetails.disabled = GameState.get_selection() == null
+	
+	_update_resources()
+	$Resources/LabelMetal.text = Utils.format_number(total_metal)
+	$Resources/LabelPower.text = Utils.format_number(total_power)
+	$Resources/LabelFood.text = Utils.format_number(total_food)
+	$Resources/LabelWater.text = Utils.format_number(total_water)
+		
+func _update_resources():
+	total_metal = 0
+	total_power = 0
+	total_food = 0
+	total_water = 0
+	
+	var planets = get_tree().get_nodes_in_group("Planet")
+	
+	for planet in planets:
+		if planet.planet_system == GameState.get_planet_system():
+			total_metal += planet.metal
+			total_power += planet.power
+			total_food += planet.food
+			total_water += planet.water
+
+func _on_game_menu():
+	get_parent().add_child(game_menu_prefab.instance())
+
+func _on_go_to_galaxy():
+	pass # Replace with function body.
+
+func _on_overview():
+	print('TODO: Implement planet system overview')
+
+func _on_planet_details():
+	get_parent().add_child(planet_details_prefab.instance())

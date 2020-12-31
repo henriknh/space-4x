@@ -23,17 +23,19 @@ func _deferred_goto_loading_scene(path: String, newGame: bool = false, saveFile:
 
 func _deferred_goto_scene(path: String, newGame: bool = false, saveFile: String = '') -> void:
 	# Load the new scene.
+	
+	MenuState.reset()
+	
 	var s = ResourceLoader.load(path)
-
+	
 	# Instance the new scene.
 	current_scene = s.instance()
-
+	
 	# Add it to the active scene, as child of root.
 	get_tree().get_root().add_child(current_scene)
-
+	
 	# Optionally, to make it compatible with the SceneTree.change_scene() API.
 	get_tree().set_current_scene(current_scene)
-	
 	
 	if current_scene.name == 'GameScene':
 		if newGame:
