@@ -131,7 +131,6 @@ func set_visible(in_data) -> void:
 		visible = in_data
 	else:
 		visible = planet_system == in_data
-	print(visible)
 	trail.set_emitting(visible)
 
 func get_random_point_in_site() -> Vector2:

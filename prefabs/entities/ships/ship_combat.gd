@@ -77,7 +77,6 @@ func _on_entity_in_range(entity: entity):
 		_shot()
 	
 func _shot():
-	print('shot %d' % faction)
 	target_enemy.hitpoints -= weapon_damage
 	weapon_ready = false
 	weapon_timer.start()
