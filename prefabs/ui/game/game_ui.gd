@@ -53,7 +53,7 @@ func _on_game_menu():
 	get_parent().add_child(game_menu_prefab.instance())
 
 func _on_go_to_galaxy():
-	pass # Replace with function body.
+	GameState.set_planet_system(-1)
 
 func _on_overview():
 	print('TODO: Implement planet system overview')
