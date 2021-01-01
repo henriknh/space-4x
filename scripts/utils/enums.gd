@@ -1,6 +1,5 @@
 extends Node
 
-
 const player_colors = {
 	-1: Color(0.5, 0.5, 0.5),
 	0: Color(1, 1, 1),
@@ -8,6 +7,7 @@ const player_colors = {
 	2: Color(0, 1, 0),
 	3: Color(1, 0, 0)
 }
+
 enum entity_types {
 	ship,
 	planet,

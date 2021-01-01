@@ -7,7 +7,7 @@ const ZOOM_MAX = 200
 
 var is_dragging = false
 var camera_pos_change = Vector2.ZERO
-onready var target_zoom = zoom.x
+onready var target_zoom = 10
 onready var target_position = Vector2.ZERO
 
 var last_pos = position
@@ -21,6 +21,9 @@ func _ready():
 	timer.wait_time = 5
 	add_child(timer)
 	timer.start()
+	
+	position = target_position
+	zoom = Vector2(target_zoom, target_zoom)
 	
 func load_camera_state():
 	var camera_state = GameState.get_camera_state()

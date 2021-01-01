@@ -52,4 +52,33 @@ func generate_world():
 		# Spawn objects
 		spawner_objects.create(gameScene, planet_system_idx)
 		
+	var players = [1]
+	for player in players:
+		var start_planet = _get_start_planet()
+		start_planet.faction = player
+		_set_start_resouces(start_planet)
+		
+	var start_planet = _get_start_planet()
+	start_planet.faction = 0
+	_set_start_resouces(start_planet)
+	
 	GameState.set_planet_system(0)
+	
+	var camera = get_node('/root/GameScene/Camera') as Camera2D
+	camera.target_position = start_planet.position
+	camera.position = start_planet.position
+
+func _get_start_planet() -> entity:
+	var possible_planets = []
+	for planet in get_tree().get_nodes_in_group('Planet'):
+		if planet.planet_system == 0 and planet.faction == -1:
+			possible_planets.append(planet)
+	
+	return possible_planets[WorldGenerator.rng.randi() % possible_planets.size()]
+
+func _set_start_resouces(planet: entity):
+	planet.metal = 1000
+	planet.power = 1000
+	planet.food = 1000
+	planet.water = 1000
+	
