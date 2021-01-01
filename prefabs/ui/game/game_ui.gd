@@ -43,7 +43,7 @@ func _update_resources():
 	var planets = get_tree().get_nodes_in_group("Planet")
 	
 	for planet in planets:
-		if planet.planet_system == GameState.get_planet_system():
+		if planet.faction == 0 and (GameState.get_planet_system() == -1 or GameState.get_planet_system() == planet.planet_system):
 			total_metal += planet.metal
 			total_power += planet.power
 			total_food += planet.food
