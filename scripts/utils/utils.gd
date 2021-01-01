@@ -21,11 +21,11 @@ func get_midpoint(p1: Vector2, p2: Vector2) -> Vector2:
 	return Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
 
 func format_number(number: float) -> String:
-	if number > 1000000000:
+	if number >= 1000000000:
 		return "%db" % int(number / 1000000000)
-	elif number > 1000000:
+	elif number >= 1000000:
 		return "%dm" % int(number / 1000000)
-	elif number > 1000:
+	elif number >= 1000:
 		return "%dk" % int(number / 1000)
 	else:
 		return number as String
