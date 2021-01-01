@@ -7,13 +7,16 @@ var script_miner = load(Enums.ship_scripts.miner)
 var script_transport = load(Enums.ship_scripts.transport)
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
+onready var selection: entity = GameState.get_selection()
 
 var real_camera_position: Vector2
 var real_camera_zoom: float
 
 func _ready():
-	update_ui()
+	_update_ui()
 	MenuState.push(self)
+	
+	selection.connect("entity_changed", self, "_update_ui")	
 
 	var viewport_size = get_viewport_rect().size
 	var offset = Vector2(viewport_size.x * 0.4, 0)
@@ -31,8 +34,8 @@ func queue_free():
 func _on_close():
 	MenuState.pop()
 
-func update_ui():
-	var selection: entity = GameState.get_selection()
+func _update_ui():
+	
 	$VBoxContainer/Info/LabelSelection.text = selection.label
 	
 	$VBoxContainer/Resources1/LabelMetal.text = selection.metal as String

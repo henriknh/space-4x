@@ -7,6 +7,7 @@ const INACTIVE_TIME_PERIOD: float = 0.05
 
 # Temporary
 var delta: float = 0
+signal entity_changed
 
 # General
 var id: int = -1

@@ -11,6 +11,7 @@ var total_water: int = 0
 func _ready():
 	MenuState.push(self)
 	
+	GameState.connect("state_changed", self, "_update_ui")
 	GameState.connect("selection_changed", self, "_update_ui")
 	Settings.connect("settings_changed", self, "_update_ui")
 

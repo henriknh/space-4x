@@ -57,6 +57,7 @@ func do_mine():
 
 func deliver():
 	parent.metal += metal
+	parent.emit_signal("entity_changed")
 	metal = 0
 	
 func _get_next_mining_target() -> void:
