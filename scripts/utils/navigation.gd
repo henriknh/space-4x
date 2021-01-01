@@ -13,7 +13,7 @@ func create_network():
 			planet_systems[planet.planet_system] = []
 		planet_systems[planet.planet_system].append(planet)
 	
-	for planet_system_idx in planet_systems.keys().slice(1,1):
+	for planet_system_idx in planet_systems.keys():
 		var segments = []
 		
 		for planet in planet_systems[planet_system_idx]:
