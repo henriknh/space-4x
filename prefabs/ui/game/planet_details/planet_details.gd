@@ -35,13 +35,12 @@ func _on_close():
 	MenuState.pop()
 
 func _update_ui():
-	
 	$VBoxContainer/Info/LabelSelection.text = selection.label
 	
-	$VBoxContainer/Resources1/LabelMetal.text = selection.metal as String
-	$VBoxContainer/Resources1/LabelPower.text = selection.power as String
-	$VBoxContainer/Resources2/LabelFood.text = selection.food as String
-	$VBoxContainer/Resources2/LabelWater.text = selection.water as String
+	$VBoxContainer/Resources1/LabelMetal.text = Utils.format_number(selection.metal)
+	$VBoxContainer/Resources1/LabelPower.text = Utils.format_number(selection.power)
+	$VBoxContainer/Resources2/LabelFood.text = Utils.format_number(selection.food)
+	$VBoxContainer/Resources2/LabelWater.text = Utils.format_number(selection.water)
 
 func _create_ship(ship_type: int):
 
