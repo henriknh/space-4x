@@ -1,6 +1,6 @@
 extends Node
 
-func array_has(obj, array: Array, elipse = 100) -> bool:
+func array_has(obj, array: Array, elipse = 0.01) -> bool:
 	if typeof(obj) == TYPE_VECTOR2:
 		for a in array:
 			if (a as Vector2).distance_squared_to(obj) < pow(elipse, 2):
