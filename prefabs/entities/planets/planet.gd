@@ -8,8 +8,7 @@ var children = []
 
 var prefab_lava = preload('res://assets/PixelPlanets/LavaWorld/LavaWorld.tscn')
 var prefab_iron = preload('res://assets/PixelPlanets/GasPlanet/GasPlanet.tscn')
-var prefab_earth_1 = preload('res://assets/PixelPlanets/LandMasses/LandMasses.tscn')
-var prefab_earth_2 = preload('res://assets/PixelPlanets/Rivers/Rivers.tscn')
+var prefab_earth = preload('res://assets/PixelPlanets/LandMasses/LandMasses.tscn')
 var prefab_ice = preload('res://assets/PixelPlanets/IceWorld/IceWorld.tscn')
 
 func create():
@@ -31,19 +30,12 @@ func ready():
 	match planet_type:
 		Enums.planet_types.lava:
 			instance = prefab_lava.instance()
-			add_to_group('Lava')
 		Enums.planet_types.iron:
 			instance = prefab_iron.instance()
-			add_to_group('Iron')
 		Enums.planet_types.earth:
-			if WorldGenerator.rng.randi() % 2 == 0:
-				instance = prefab_earth_1.instance()
-			else:
-				instance = prefab_earth_2.instance()
-			add_to_group('Earth')
+			instance = prefab_earth.instance()
 		Enums.planet_types.ice:
 			instance = prefab_ice.instance()
-			add_to_group('Ice')
 			
 	var radius = (planet_size * 200) / 2
 	(instance as Control).rect_scale = Vector2(planet_size, planet_size)
