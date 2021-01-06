@@ -1,5 +1,9 @@
 extends Node
 
+# Galaxy
+const galaxy_min = 1
+const galaxy_max = 1
+
 # Planet system
 const planet_system_base_distance_to_sun = 2500
 const planet_system_radius = 30000

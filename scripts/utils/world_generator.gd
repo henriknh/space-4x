@@ -25,7 +25,7 @@ func get_new_id() -> int:
 func generate_world():
 	print('Generate world with seed: %d' % rng.get_seed())
 	
-	var planet_system_count = 2 #WorldGenerator.rng.randi_range(2, 2)
+	var planet_system_count = WorldGenerator.rng.randi_range(Consts.galaxy_min, Consts.galaxy_max)
 	print('Planet systems: %d' % planet_system_count)
 	
 	var spawner_planet_systems = load('res://scripts/spawners/spawner_planet_systems.gd').new()
