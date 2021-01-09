@@ -121,8 +121,8 @@ func _clamp_targets():
 	
 	if target_zoom.x < Consts.CAMERA_ZOOM_MIN:
 		target_zoom = Vector2(Consts.CAMERA_ZOOM_MIN, Consts.CAMERA_ZOOM_MIN)
-	elif target_zoom.x > Consts.CAMERA_Consts.CAMERA_ZOOM_MAX:
-		target_zoom = Vector2(Consts.CAMERA_Consts.CAMERA_ZOOM_MAX, Consts.CAMERA_Consts.CAMERA_ZOOM_MAX)
+	elif target_zoom.x > Consts.CAMERA_ZOOM_MAX:
+		target_zoom = Vector2(Consts.CAMERA_ZOOM_MAX, Consts.CAMERA_ZOOM_MAX)
 	
 	if target_position.x < -Consts.planet_system_radius:
 		target_position.x = -Consts.planet_system_radius
