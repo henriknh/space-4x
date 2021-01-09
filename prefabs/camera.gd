@@ -1,17 +1,13 @@
 extends Camera2D
 
-const SMOOTH_SPEED = 5
-const CAMERA_SPEED = 500
-const ZOOM_MIN = 2
-const ZOOM_MAX = 200
-
-var is_dragging = false
 var camera_pos_change = Vector2.ZERO
-onready var target_zoom = 10
+onready var target_zoom = Vector2(10, 10)
 onready var target_position = Vector2.ZERO
 
 var last_pos = position
 var last_zoom = zoom
+
+var touches = {}
 
 func _ready():
 	GameState.connect("state_changed", self, "load_camera_state")
@@ -23,7 +19,7 @@ func _ready():
 	timer.start()
 	
 	position = target_position
-	zoom = Vector2(target_zoom, target_zoom)
+	zoom = target_zoom
 	
 func load_camera_state():
 	var camera_state = GameState.get_camera_state()
@@ -39,7 +35,7 @@ func load_camera_state():
 	
 	if has_changed:
 		camera_pos_change = Vector2.ZERO
-		target_zoom = zoom.x
+		target_zoom = zoom
 		last_pos = position
 		last_zoom = zoom
 
@@ -54,9 +50,48 @@ func set_camera_state() -> void:
 		last_zoom = zoom
 
 func _input(event):
+	
 	if MenuState.is_over_ui():
 		return
+	
+	if Utils.is_mobile:
+		self._handle_touch(event)
+	else:
+		self._handle_mouse(event)
 
+func _handle_touch(event: InputEvent):
+	if event is InputEventScreenTouch:
+		print('InputEventScreenTouch')
+		print(event.index)
+		print(event.position)
+		if event.pressed:
+			touches[event.index] = event.position
+		else:
+			touches.erase(event.index)
+	elif event is InputEventScreenDrag:
+		if touches.keys().size() == 1:
+			target_position -= event.relative * zoom.x
+		elif touches.keys().size() == 2:
+			print('pinch')
+			if touches.has(0) and touches.has(1):
+				var prev_dist = (touches[0] as Vector2).distance_squared_to(touches[1])
+				var curr_dist = prev_dist
+				
+				if event.index == 0:
+					curr_dist = (event.position as Vector2).distance_squared_to(touches[1])
+				elif event.index == 1:
+					curr_dist = (event.position as Vector2).distance_squared_to(touches[0])
+
+				var offset = clamp(prev_dist - curr_dist, -1, 1)
+				target_zoom = target_zoom + Vector2(offset, offset)
+				
+		touches[event.index] = event.position
+		
+		get_tree().set_input_as_handled()
+		
+		self._clamp_targets()
+		
+func _handle_mouse(event: InputEvent):
 	if event is InputEventKey and event.pressed and event.scancode == KEY_A:
 		camera_pos_change.x = -1
 	if event is InputEventKey and event.pressed and event.scancode == KEY_D:
@@ -76,29 +111,31 @@ func _input(event):
 	if event is InputEventMouseButton:
 		match event.button_index:
 			BUTTON_WHEEL_UP:
-				target_zoom -= 1
-				if target_zoom < ZOOM_MIN:
-					target_zoom = ZOOM_MIN
+				target_zoom -= Vector2.ONE
 			BUTTON_WHEEL_DOWN:
-				target_zoom += 1
-				if target_zoom > ZOOM_MAX:
-					target_zoom = ZOOM_MAX
-			BUTTON_MIDDLE:
-				if event.pressed:
-					is_dragging = true
-				else:
-					is_dragging = false
-	elif event is InputEventMouseMotion:
-		if is_dragging:
-			position -= event.relative * zoom.x
-			camera_pos_change = Vector2.ZERO
+				target_zoom += Vector2.ONE
+	
+	self._clamp_targets()
+
+func _clamp_targets():
+	
+	if target_zoom.x < Consts.CAMERA_ZOOM_MIN:
+		target_zoom = Vector2(Consts.CAMERA_ZOOM_MIN, Consts.CAMERA_ZOOM_MIN)
+	elif target_zoom.x > Consts.CAMERA_Consts.CAMERA_ZOOM_MAX:
+		target_zoom = Vector2(Consts.CAMERA_Consts.CAMERA_ZOOM_MAX, Consts.CAMERA_Consts.CAMERA_ZOOM_MAX)
+	
+	if target_position.x < -Consts.planet_system_radius:
+		target_position.x = -Consts.planet_system_radius
+	elif target_position.x > Consts.planet_system_radius:
+		target_position.x = Consts.planet_system_radius
+	if target_position.y < -Consts.planet_system_radius:
+		target_position.y = -Consts.planet_system_radius
+	elif target_position.y > Consts.planet_system_radius:
+		target_position.y = Consts.planet_system_radius
 
 func _process(delta):
-	var zoom_difference = target_zoom - zoom.x
-	var smoothed_zoom = (zoom_difference * SMOOTH_SPEED * delta)
-	zoom += Vector2(smoothed_zoom, smoothed_zoom)
-	
-	position = lerp(position, target_position, 0.5)
+	zoom = lerp(zoom, target_zoom, Consts.CAMERA_LERPTIME_POS * delta)
+	position = lerp(position, target_position, 1 if Utils.is_mobile else Consts.CAMERA_LERPTIME_POS * delta)
 
 func update_limit(distance: int):
 	limit_left = -int(distance + get_viewport().size.x)
