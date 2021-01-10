@@ -22,10 +22,13 @@ func _ready():
 	timer.start()
 
 func _physics_process(delta):
-	$MainMenu/LabelFPS.text = '%d' % Engine.get_frames_per_second()
+	var mouse_pos = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
+	$Debug/LabelMousePos.text = mouse_pos as String
+	$MainMenu/LabelFPS.text = Engine.get_frames_per_second() as String
 	
 func _update_ui():
 	
+	$Debug/LabelMousePos.visible = Settings.is_debug()
 	$MainMenu/LabelFPS.visible = Settings.get_show_fps()
 	$Bottom/BtnPlanetDetails.disabled = GameState.get_selection() == null
 	

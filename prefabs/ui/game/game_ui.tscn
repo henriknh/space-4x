@@ -101,6 +101,19 @@ margin_right = 480.0
 margin_bottom = 24.0
 texture_normal = ExtResource( 9 )
 
+[node name="Debug" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+margin_top = 24.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelMousePos" type="Label" parent="Debug"]
+margin_right = 480.0
+margin_bottom = 14.0
+text = "(vector2_mouse_pos)"
+
 [node name="Bottom" type="HBoxContainer" parent="."]
 anchor_top = 1.0
 anchor_right = 1.0

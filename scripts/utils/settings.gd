@@ -6,7 +6,7 @@ var settings = {
 	'show_orbit_circles': true,
 	'show_planet_area': true,
 	'show_fps': false,
-	'is_debug': false
+	'debug': false
 }
 
 signal settings_changed
@@ -40,12 +40,12 @@ func set_show_fps(show_fps: bool) -> void:
 func get_show_fps() -> bool:
 	return settings['show_fps']
 
-func set_is_debug(is_debug: bool) -> void:
-	settings['is_debug'] = is_debug
+func set_debug(debug: bool) -> void:
+	settings['debug'] = debug
 	_after_change()
 	
-func get_is_debug() -> bool:
-	return settings['is_debug']
+func is_debug() -> bool:
+	return settings['debug']
 
 func _load() -> bool:
 	var load_settings = File.new()
@@ -53,7 +53,10 @@ func _load() -> bool:
 		return false# Error! We don't have a save to load.
 
 	load_settings.open(settings_file_path, File.READ)
-	settings = parse_json(load_settings.get_line())
+	var json: Dictionary = parse_json(load_settings.get_line())
+	
+	for key in json.keys():
+		settings[key] = json[key]
 	
 	load_settings.close()
 	

@@ -24,7 +24,7 @@ func _ready():
 	real_camera_position = camera.target_position
 	real_camera_zoom = camera.target_zoom
 	camera.target_position = GameState.get_selection().position + offset
-	camera.target_zoom = 1
+	camera.target_zoom = Vector2.ONE
 	
 func queue_free():
 	camera.target_position = real_camera_position
