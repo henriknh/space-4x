@@ -7,6 +7,12 @@ onready var target_position = Vector2.ZERO
 var last_pos = position
 var last_zoom = zoom
 
+var keys = {
+	KEY_A: false,
+	KEY_D: false,
+	KEY_W: false,
+	KEY_S: false,
+}
 var touches = {}
 
 func _ready():
@@ -92,21 +98,29 @@ func _handle_touch(event: InputEvent):
 		self._clamp_targets()
 		
 func _handle_mouse(event: InputEvent):
-	if event is InputEventKey and event.pressed and event.scancode == KEY_A:
-		camera_pos_change.x = -1
-	if event is InputEventKey and event.pressed and event.scancode == KEY_D:
-		camera_pos_change.x = 1
-	elif event is InputEventKey and not event.pressed and (event.scancode == KEY_A or event.scancode == KEY_D):
-		camera_pos_change.x = 0
-
-	if event is InputEventKey and event.pressed and event.scancode == KEY_W:
-		camera_pos_change.y = -1
-	elif event is InputEventKey and event.pressed and event.scancode == KEY_S:
-		camera_pos_change.y = 1
-	elif event is InputEventKey and not event.pressed and (event.scancode == KEY_W or event.scancode == KEY_S):
-		camera_pos_change.y = 0
+	if event is InputEventKey:
 		
-	target_position += camera_pos_change * zoom.x * 10
+		keys[event.scancode] = true if event.pressed else false
+		
+		if keys[KEY_A] and keys[KEY_D]:
+			camera_pos_change.x = 0
+		elif keys[KEY_A]:
+			camera_pos_change.x = -1
+		elif keys[KEY_D]:
+			camera_pos_change.x = 1
+		else:
+			camera_pos_change.x = 0
+		
+		if keys[KEY_W] and keys[KEY_S]:
+			camera_pos_change.y = 0
+		elif keys[KEY_W]:
+			camera_pos_change.y = -1
+		elif keys[KEY_S]:
+			camera_pos_change.y = 1
+		else:
+			camera_pos_change.y = 0
+		
+	target_position = position + camera_pos_change * zoom.x * 10
 
 	if event is InputEventMouseButton:
 		match event.button_index:
