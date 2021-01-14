@@ -57,9 +57,9 @@ class Site:
 		
 		return false
 		
-	func replace_global_point(old_gloal_point: Vector2, new_global_point: Vector2) -> bool:
-		var old_local_point = old_gloal_point - self.node.position
-		var index = self.points.find(old_local_point)
+	func replace_global_point(old_global_point: Vector2, new_global_point: Vector2) -> bool:
+		var old_local_point = old_global_point - self.node.position
+		var index = Utils.array_idx(old_local_point, self.points)
 		if index >= 0:
 			self.points[index] = new_global_point - self.node.position
 			self.convex_hull = Geometry.convex_hull_2d(self.points)
@@ -130,7 +130,7 @@ class SiteRegistry:
 	func replace_global_point(old_global_point: Vector2, new_global_point: Vector2) -> bool:
 		var replaced = false
 		for site in sites:
-			replaced = replaced || site.replace_global_point(old_global_point, new_global_point)
+			replaced = site.replace_global_point(old_global_point, new_global_point) || replaced
 		return replaced
 	
 	func get_sites_with_point(point: Vector2, excluding_site: Site = null) -> Site:
@@ -183,9 +183,13 @@ class Voronoi:
 		self._calc_events()
 		self._calc_sites()
 		self._calc_convex_hull()
+		print(self.convex_hull.size())
 		self._extend_non_convex_points()
 		self._calc_convex_hull()
+		print(self.convex_hull.size())
 		self._extend_sites()
+		self._calc_convex_hull()
+		print(self.convex_hull.size())
 		
 	func clear():
 		self.edge_registry = EdgeRegistry.new()
@@ -267,17 +271,14 @@ class Voronoi:
 			self.site_registry.register_site(node, local_points)
 	
 	func _calc_convex_hull():
-		return
 		var convex_points = []
 		
-		for node in self.nodes:
-			for event in self.events:
-				if node in event.nodes:
-					if event.has('edgepoint'):
-						convex_points.append(event.edgepoint)
-					elif event.has('circle'):
-						convex_points.append(event.circle.position)
-		
+		for site in self.site_registry.sites:
+			for point in site.points:
+				var site_point = point + site.node.position
+				if not Utils.array_has(site_point, convex_points):
+					convex_points.append(site_point)
+
 		self.convex_hull = Geometry.convex_hull_2d(convex_points)
 		self.convex_hull.remove(0)
 		
@@ -294,7 +295,7 @@ class Voronoi:
 		var visited_sites = [prev_site]
 		
 		var convex_hull = Utils.array_remove_duplicates(self.convex_hull)
-		var first_idx = Utils.array_idx(first_point, convex_hull)
+		var first_idx = Utils.array_idx(first_point, convex_hull) % convex_hull.size()
 		var curr_idx = first_idx
 		var next_idx
 		while next_idx != first_idx:
@@ -332,20 +333,26 @@ class Voronoi:
 						sites_to_extend.append(site)
 				self.site_registry.add_point(sites_to_extend[0].node, point_to_extend_to - sites_to_extend[0].node.position)
 				self.site_registry.add_point(sites_to_extend[1].node, point_to_extend_to - sites_to_extend[1].node.position)
-
+				self.events.append({
+					"nodes": [sites_to_extend[0].node, sites_to_extend[1].node],
+					"edgepoint": point_to_extend_to
+				})
+			
 			prev_site = next_site
 			prev_point = next_point
 			visited_points.append(prev_point)
 			visited_sites.append(prev_site)
-			curr_idx += 1
+			curr_idx = (curr_idx + 1) % convex_hull.size()
 			
 	func _extend_sites():
+		
+		print('extend sites')
 		
 		var idx = 0
 		
 		for convex_point in self.convex_hull:
 			for event in self.events:
-				if event.has('edgepoint') and event.edgepoint == convex_point and false:
+				if event.has('edgepoint') and Utils.point_on_polyline(event.edgepoint, self.convex_hull) and true:
 					var closest_circle = null
 					for event_circle in self.events:
 						if event_circle.has('circle'):
@@ -353,20 +360,14 @@ class Voronoi:
 								closest_circle = event_circle
 							elif event_circle.circle.position.distance_squared_to(event.edgepoint) < closest_circle.circle.position.distance_squared_to(event.edgepoint):
 								closest_circle = event_circle
-					
 					var opposite = (event.edgepoint + (event.edgepoint - closest_circle.circle.position) * BOUND_SIZE)
 					
-					self.debug_edgepoints.append([closest_circle.circle.position, convex_point, opposite])
+					self.debug_edgepoints.append([closest_circle.circle.position, event.edgepoint, opposite])
 					
-					var n1 = event.nodes[0]
-					var n2 = event.nodes[1]
-					print(22222)
 					self.site_registry.replace_global_point(event.edgepoint, opposite)
 					self.convex_hull[idx] = opposite
 					
-					break
-					
-				elif event.has('circle') and event.circle.position == convex_point and true:
+				elif event.has('circle') and event.circle.position == convex_point and false:
 					print('- - -')
 					var prev_convex_idx = (idx - 1 + convex_hull.size()) % (convex_hull.size())
 					var next_convex_idx = (idx + 1 + convex_hull.size()) % (convex_hull.size())
