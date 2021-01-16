@@ -16,13 +16,13 @@ func array_remove_duplicates(array: Array) -> Array:
 			new_array.append(object)
 	return new_array
 	
-func array_idx(obj, array: Array, elipse = 100) -> int:
+func array_idx(obj, array: Array, elipse = 0.01) -> int:
 	for i in range(array.size()):
 		if Utils.equals(obj, array[i], elipse):
 			return i
 	return -1
 		
-func array_has(obj, array: Array, elipse = 100) -> bool:
+func array_has(obj, array: Array, elipse = 0.01) -> bool:
 	if typeof(obj) == TYPE_VECTOR2:
 		for a in array:
 			if Utils.equals(obj, a, elipse):
