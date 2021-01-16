@@ -48,7 +48,29 @@ class Voronoi:
 				if not Utils.array_has(site_point, points):
 					points.append(site_point)
 		
-		print(points.size())
+		var two_site_intersections = {}
+		for point in points:
+			if Utils.array_has(point, edge_points_handled):
+				continue
+			
+			var sites = self.site_registry.get_sites_with_point(point)
+			if sites.size() == 2:
+				two_site_intersections[point] = sites
+		
+		for point in two_site_intersections.keys():
+			var closest_circle = null
+			for event_circle in self.events:
+				if event_circle.has('circle'):
+					if not closest_circle:
+						closest_circle = event_circle
+					elif event_circle.circle.position.distance_squared_to(point) < closest_circle.circle.position.distance_squared_to(point):
+						closest_circle = event_circle
+			var opposite = (point + (point - closest_circle.circle.position) * BOUND_SIZE)
+				
+			self.debug_edgepoints.append([closest_circle.circle.position, point, opposite])
+				
+			self.site_registry.replace_global_point(point, opposite)
+			self.edge_points_handled.append(opposite)
 		
 	func _look_for_edge_sites():
 		for site in self.site_registry.sites:
@@ -74,6 +96,7 @@ class Voronoi:
 					"edgepoint": prev_opposite
 				})
 				edge_points_handled.append(prev_opposite)
+				self.debug_edgepoints.append([prev_midpoint, prev_point, prev_opposite])
 				
 				var next_midpoint = Utils.get_midpoint(next_site.node.position, site.node.position)
 				var next_opposite = (next_point + (next_point - next_midpoint)) * BOUND_SIZE
@@ -84,6 +107,7 @@ class Voronoi:
 					"edgepoint": next_opposite
 				})
 				edge_points_handled.append(next_opposite)
+				self.debug_edgepoints.append([next_midpoint, next_point, next_opposite])
 		
 	func clear():
 		self.site_registry = Site.SiteRegistry.new()
