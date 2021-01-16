@@ -62,7 +62,8 @@ func _draw():
 	var polyline_alpha = 0
 	if GameState.get_selection() == self:
 		polyline_color = Color(1,1,0)
-		polyline_alpha = 0.25
+		polyline_color = Color(1,1,1)
+		polyline_alpha = 0.3
 	elif is_hover:
 		polyline_color = Color(1,1,1)
 		polyline_alpha = 0.1
@@ -81,7 +82,7 @@ func _draw():
 	#elif is_hover:
 	#	polygon_alpha = 0.1
 	if faction >= 0:
-		polygon_alpha = 0.025
+		polygon_alpha = 0.08
 	
 	if polygon_alpha > 0:
 		
