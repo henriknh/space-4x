@@ -10,13 +10,13 @@ onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 onready var selection: entity = GameState.get_selection()
 
 var real_camera_position: Vector2
-var real_camera_zoom: float
+var real_camera_zoom: Vector2
 
 func _ready():
 	_update_ui()
 	MenuState.push(self)
 	
-	selection.connect("entity_changed", self, "_update_ui")	
+	selection.connect("entity_changed", self, "_update_ui")
 
 	var viewport_size = get_viewport_rect().size
 	var offset = Vector2(viewport_size.x * 0.4, 0)
