@@ -6,8 +6,8 @@ const CAMERA_LERPTIME_POS = 50
 const CAMERA_LERPTIME_ZOOM = 15
 
 # Galaxy
-const galaxy_min = 1
-const galaxy_max = 1
+const galaxy_min = 2
+const galaxy_max = 4
 
 # Planet system
 const planet_system_base_distance_to_sun = 2500

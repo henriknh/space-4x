@@ -4,7 +4,7 @@ const Site = preload("res://scripts/voronoi/site.gd")
 
 onready var voronoi_registry = VoronoiRegistry.new()
 
-const BOUND_SIZE = 1
+const BOUND_SIZE = 100000
 
 class Voronoi:
 	
@@ -26,88 +26,15 @@ class Voronoi:
 		self.nodes = nodes
 		
 		self.clear()
+		
 		self._calc_events()
 		self._calc_sites()
+		
 		self._look_for_edge_sites()
-		self._calc_convex_hull()
-		print(self.edge_points_handled)
-		
 		self._extend_two_site_intersections()
-		print(self.edge_points_handled)
-		#self._extend_non_convex_points()
-		#self._calc_convex_hull()
-		#self._extend_sites()
-		#self._calc_convex_hull()
-	
-	func _extend_two_site_intersections():
+		self._extend_three_site_intersections()
 		
-		var points = []
-		for site in self.site_registry.sites:
-			for point in site.points:
-				var site_point = point + site.node.position
-				if not Utils.array_has(site_point, points):
-					points.append(site_point)
-		
-		var two_site_intersections = {}
-		for point in points:
-			if Utils.array_has(point, edge_points_handled):
-				continue
-			
-			var sites = self.site_registry.get_sites_with_point(point)
-			if sites.size() == 2:
-				two_site_intersections[point] = sites
-		
-		for point in two_site_intersections.keys():
-			var closest_circle = null
-			for event_circle in self.events:
-				if event_circle.has('circle'):
-					if not closest_circle:
-						closest_circle = event_circle
-					elif event_circle.circle.position.distance_squared_to(point) < closest_circle.circle.position.distance_squared_to(point):
-						closest_circle = event_circle
-			var opposite = (point + (point - closest_circle.circle.position) * BOUND_SIZE)
-				
-			self.debug_edgepoints.append([closest_circle.circle.position, point, opposite])
-				
-			self.site_registry.replace_global_point(point, opposite)
-			self.edge_points_handled.append(opposite)
-		
-	func _look_for_edge_sites():
-		for site in self.site_registry.sites:
-			if site.points.size() == 2:
-				print(site.points.size())
-				
-				var prev_point = site.points[0] + site.node.position
-				var next_point = site.points[1] + site.node.position
-				
-				var prev_sites = self.site_registry.get_sites_with_point(prev_point, site)
-				var next_sites = self.site_registry.get_sites_with_point(next_point, site)
-				var prev_site = prev_sites[0] if not prev_sites[0] in next_sites else prev_sites[1]
-				var next_site = next_sites[0] if not next_sites[0] in prev_sites else next_sites[1]
-				print(prev_site)
-				print(next_site)
-				
-				var prev_midpoint = Utils.get_midpoint(prev_site.node.position, site.node.position)
-				var prev_opposite = (prev_point + (prev_point - prev_midpoint)) * BOUND_SIZE
-				site.add_point(prev_opposite - site.node.position)
-				prev_site.add_point(prev_opposite - prev_site.node.position)
-				self.events.append({
-					"nodes": [prev_site, site],
-					"edgepoint": prev_opposite
-				})
-				edge_points_handled.append(prev_opposite)
-				self.debug_edgepoints.append([prev_midpoint, prev_point, prev_opposite])
-				
-				var next_midpoint = Utils.get_midpoint(next_site.node.position, site.node.position)
-				var next_opposite = (next_point + (next_point - next_midpoint)) * BOUND_SIZE
-				site.add_point(next_opposite - site.node.position)
-				next_site.add_point(next_opposite - next_site.node.position)
-				self.events.append({
-					"nodes": [next_site, site],
-					"edgepoint": next_opposite
-				})
-				edge_points_handled.append(next_opposite)
-				self.debug_edgepoints.append([next_midpoint, next_point, next_opposite])
+		self._calc_convex_hull()
 		
 	func clear():
 		self.site_registry = Site.SiteRegistry.new()
@@ -199,178 +126,154 @@ class Voronoi:
 
 		self.convex_hull = Geometry.convex_hull_2d(convex_points)
 		print('calc convex hull: %d' % self.convex_hull.size())
-		#self.convex_hull.remove(0)
 		
-	func _extend_non_convex_points():
-		
-		var first_site = self.site_registry.get_southern_most_site()
-		var first_point = first_site.get_southern_most_point()
-		var prev_site = first_site
-		var prev_point = first_point
-		var next_site
-		var next_point
-		
-		var visited_points = [prev_point]
-		var visited_sites = [prev_site]
-		
-		var convex_hull = Utils.array_remove_duplicates(self.convex_hull)
-		var first_idx = Utils.array_idx(first_point, convex_hull) % convex_hull.size()
-		var curr_idx = first_idx
-		var next_idx
-		while next_idx != first_idx:
-			next_idx = (curr_idx + 1) % convex_hull.size()
-			var potential_sites = self.site_registry.get_sites_with_point(prev_point, prev_site)
-			
-			# Get site closest to convex hull point
-			next_site = null
-			var closest_point_dist = INF
-			for curr_convex_hull_point in convex_hull:
-				for site in potential_sites:
-					if site in visited_sites:
-						continue
-					for _site_point in site.convex_hull:
-						var site_point = _site_point + site.node.position
-						if Utils.array_has(site_point, visited_points):
-							continue
-						
-						var dist = site_point.distance_squared_to(curr_convex_hull_point)
-						dist = Utils.min_distance_point_to_segment(site_point, convex_hull[curr_idx], convex_hull[next_idx])
-						
-						if dist < closest_point_dist and not Utils.array_has(site_point, visited_points):
-							closest_point_dist = dist
-							next_site = site
-							next_point = site_point
-			
-			if closest_point_dist > 1:
-				print('handle distance to convex hull')
-				var point_to_extend_to = Utils.point_position_on_segment(next_point, convex_hull[curr_idx], convex_hull[next_idx])
-				var potential_sites_to_extend = self.site_registry.get_sites_with_point(next_point)
-				var sites_to_extend = []
-				for site in potential_sites_to_extend:
-					if Utils.array_has(convex_hull[curr_idx] - site.node.position, site.convex_hull) or Utils.array_has(convex_hull[next_idx] - site.node.position, site.convex_hull): 
-						sites_to_extend.append(site)
-				self.site_registry.add_point(sites_to_extend[0].node, point_to_extend_to - sites_to_extend[0].node.position)
-				self.site_registry.add_point(sites_to_extend[1].node, point_to_extend_to - sites_to_extend[1].node.position)
+	func _look_for_edge_sites():
+		for site in self.site_registry.sites:
+			if site.points.size() == 2:
+				
+				var prev_point = site.points[0] + site.node.position
+				var next_point = site.points[1] + site.node.position
+				
+				var prev_sites = self.site_registry.get_sites_with_point(prev_point, site)
+				var next_sites = self.site_registry.get_sites_with_point(next_point, site)
+				var prev_site = prev_sites[0] if not prev_sites[0] in next_sites else prev_sites[1]
+				var next_site = next_sites[0] if not next_sites[0] in prev_sites else next_sites[1]
+				
+				var prev_midpoint = Utils.get_midpoint(prev_site.node.position, site.node.position)
+				#var prev_opposite = (prev_point + (prev_point - prev_midpoint) * BOUND_SIZE)
+				var prev_opposite = site.node.position
+				if prev_point.distance_squared_to(Vector2.ZERO) > prev_midpoint.distance_squared_to(Vector2.ZERO):
+					prev_opposite = (prev_point + (prev_point - prev_midpoint) * BOUND_SIZE)
+				else:
+					prev_opposite = (prev_midpoint + (prev_midpoint - prev_point) * BOUND_SIZE)
+				site.add_point(prev_opposite - site.node.position)
+				prev_site.add_point(prev_opposite - prev_site.node.position)
 				self.events.append({
-					"nodes": [sites_to_extend[0].node, sites_to_extend[1].node],
-					"edgepoint": point_to_extend_to
+					"nodes": [prev_site, site],
+					"edgepoint": prev_opposite
 				})
-			
-			prev_site = next_site
-			prev_point = next_point
-			visited_points.append(prev_point)
-			visited_sites.append(prev_site)
-			curr_idx = (curr_idx + 1) % convex_hull.size()
-			
-	func _extend_sites():
-		print('extend sites')
-		var iter = 0
+				edge_points_handled.append(prev_opposite)
+				self.debug_edgepoints.append([prev_midpoint, prev_point, prev_opposite])
+				
+				var next_midpoint = Utils.get_midpoint(next_site.node.position, site.node.position)
+				#var next_opposite = (next_point + (next_point - next_midpoint) * BOUND_SIZE)
+				var next_opposite = site.node.position
+				if next_point.distance_squared_to(Vector2.ZERO) > next_midpoint.distance_squared_to(Vector2.ZERO):
+					next_opposite = (next_point + (next_point - next_midpoint) * BOUND_SIZE)
+				else:
+					next_opposite = (next_midpoint + (next_midpoint - next_point) * BOUND_SIZE)
+				site.add_point(next_opposite - site.node.position)
+				next_site.add_point(next_opposite - next_site.node.position)
+				self.events.append({
+					"nodes": [next_site, site],
+					"edgepoint": next_opposite
+				})
+				edge_points_handled.append(next_opposite)
+				self.debug_edgepoints.append([next_midpoint, next_point, next_opposite])
+	
+	func _extend_two_site_intersections():
 		
-		for event in self.events:
-			if event.has('edgepoint') and Utils.point_on_polyline(event.edgepoint, self.convex_hull) and true:
-				var closest_circle = null
-				for event_circle in self.events:
-					if event_circle.has('circle'):
-						if not closest_circle:
-							closest_circle = event_circle
-						elif event_circle.circle.position.distance_squared_to(event.edgepoint) < closest_circle.circle.position.distance_squared_to(event.edgepoint):
-							closest_circle = event_circle
-				var opposite = (event.edgepoint + (event.edgepoint - closest_circle.circle.position) * BOUND_SIZE)
-				
-				self.debug_edgepoints.append([closest_circle.circle.position, event.edgepoint, opposite])
-				
-				self.site_registry.replace_global_point(event.edgepoint, opposite)
-		self._calc_convex_hull()
-
+		var points = []
+		for site in self.site_registry.sites:
+			for point in site.points:
+				var site_point = point + site.node.position
+				if not Utils.array_has(site_point, points):
+					points.append(site_point)
 		
-		var visited_points = []
-		for event in self.events:
-			if event.has('circle') and Utils.point_on_polyline(event.circle.position, self.convex_hull) and true:
+		var two_site_intersections = {}
+		for point in points:
+			if Utils.array_has(point, edge_points_handled):
+				continue
+			
+			var sites = self.site_registry.get_sites_with_point(point)
+			if sites.size() == 2:
+				two_site_intersections[point] = sites
+		
+		for point in two_site_intersections.keys():
+			var closest_circle = null
+			for event_circle in self.events:
+				if event_circle.has('circle'):
+					if not closest_circle:
+						closest_circle = event_circle
+					elif event_circle.circle.position.distance_squared_to(point) < closest_circle.circle.position.distance_squared_to(point):
+						closest_circle = event_circle
+			var opposite = point
+			if point.distance_squared_to(Vector2.ZERO) > closest_circle.circle.position.distance_squared_to(Vector2.ZERO):
+				opposite = (point + (point - closest_circle.circle.position) * BOUND_SIZE)
+			else:
+				opposite = (point + (point - closest_circle.circle.position) * BOUND_SIZE)
 				
-				if Utils.array_has(event.circle.position, visited_points):
-					continue
+			self.debug_edgepoints.append([closest_circle.circle.position, point, opposite])
 				
-				visited_points.append(event.circle.position)
-				
-				print('extent circle point')
-				print(event.circle.position)
-				
-				var idx = Utils.array_idx(event.circle.position, self.convex_hull)
-				var prev_convex_idx = idx
-				var prev_convex_point = event.circle.position
-				while Utils.equals(prev_convex_point, event.circle.position):
-					prev_convex_idx = (prev_convex_idx - 1 + self.convex_hull.size()) % (self.convex_hull.size())
-					prev_convex_point = self.convex_hull[prev_convex_idx]
-				var next_convex_idx = idx
-				var next_convex_point = event.circle.position
-				while Utils.equals(next_convex_point, event.circle.position):
-					next_convex_idx = (next_convex_idx + 1 + self.convex_hull.size()) % (self.convex_hull.size())
-					next_convex_point = self.convex_hull[next_convex_idx]
-				#var prev_convex_idx = (idx - 1 + self.convex_hull.size()) % (self.convex_hull.size())
-				#var next_convex_idx = (idx + 1 + self.convex_hull.size()) % (self.convex_hull.size())
-				
-				#var prev_convex_point = self.convex_hull[prev_convex_idx]
-				#var next_convex_point = self.convex_hull[next_convex_idx]
-				
-				print(prev_convex_point)
-				print(next_convex_point)
-				
-				var potential_sites = self.site_registry.get_sites_with_point(event.circle.position)
-				print(potential_sites)
-				
-				var prev_site = null
-				var prev_node_dist = INF
-				for site in potential_sites:
-					for point in site.points:
-						var site_point = point + site.node.position
-						if Utils.array_has(site_point, visited_points):
-							continue
-						var dist = Utils.min_distance_point_to_segment(site_point, event.circle.position, prev_convex_point)
-						if dist < prev_node_dist:
-							prev_node_dist = dist
-							prev_site = site
-						
-				var next_site = null
-				var next_node_dist = INF
-				for site in potential_sites:
-					for point in site.points:
-						var site_point = point + site.node.position
-						if Utils.array_has(site_point, visited_points):
-							continue
-						var dist = Utils.min_distance_point_to_segment(site_point, event.circle.position, next_convex_point)
-						if dist < next_node_dist:
-							next_node_dist = dist
-							next_site = site
-				
-				print(prev_site.node.position)
-				print(next_site.node.position)
-				
-				
-				
-				#var prev_node = self.site_registry.get_edge_node_by_points([prev_convex_point, event.circle.position])
-				#var next_node = self.site_registry.get_edge_node_by_points([next_convex_point, event.circle.position])
-				
-				if not prev_site or not next_site:
+			self.site_registry.replace_global_point(point, opposite)
+			self.edge_points_handled.append(opposite)
+		
+	func _extend_three_site_intersections():
+		
+		var points = []
+		for site in self.site_registry.sites:
+			for point in site.points:
+				var site_point = point + site.node.position
+				if not Utils.array_has(site_point, points):
+					points.append(site_point)
+		
+		var three_site_intersections = {}
+		for point in points:
+			if Utils.array_has(point, edge_points_handled):
+				continue
+			
+			var sites = self.site_registry.get_sites_with_point(point)
+			if sites.size() == 3:
+				three_site_intersections[point] = sites
+		
+		for point in three_site_intersections.keys():
+			var sites = three_site_intersections.get(point)
+			var edge_sites = []
+			if sites.size() == 3:
+				for site in sites:
 					
-					pass
+					var site_convex_hull = site.convex_hull.slice(0, site.convex_hull.size())
+					site_convex_hull.remove(0)
+					
+					var point_idx = Utils.array_idx(point - site.node.position, site_convex_hull)
+					var prev_idx = (point_idx - 1 + site_convex_hull.size()) % site_convex_hull.size()
+					var next_idx = (point_idx + 1 + site_convex_hull.size()) % site_convex_hull.size()
+					
+					# Prev
+					var prev_sites = self.site_registry.get_sites_with_point(site_convex_hull[prev_idx] + site.node.position, site)
+					var prev_has_other_site = false
+					for other_site in sites:
+						if other_site == site:
+							continue
+						if other_site in prev_sites:
+							prev_has_other_site = true
+					if not prev_has_other_site and not Utils.array_has(site, edge_sites):
+						edge_sites.append(site)
+					
+					# Next 
+					var next_sites = self.site_registry.get_sites_with_point(site_convex_hull[next_idx] + site.node.position, site)
+					var next_has_other_site = false
+					for other_site in sites:
+						if other_site == site:
+							continue
+						if other_site in next_sites:
+							next_has_other_site = true
+					if not next_has_other_site and not Utils.array_has(site, edge_sites):
+						edge_sites.append(site)
+			
+			if edge_sites.size() == 2:
+				var midpoint = Utils.get_midpoint(edge_sites[0].node.position, edge_sites[1].node.position)
+				var opposite = point
+				if point.distance_squared_to(Vector2.ZERO) > midpoint.distance_squared_to(Vector2.ZERO):
+					opposite = (point + (point - midpoint) * BOUND_SIZE)
+				else:
+					opposite = (midpoint + (midpoint - point) * BOUND_SIZE)
 				
-				var midpoint = Utils.get_midpoint(prev_site.node.position, next_site.node.position)
-				var opposite = (event.circle.position + (event.circle.position - midpoint) * BOUND_SIZE)
-				
-				self.debug_circles_line.append([midpoint, event.circle.position, opposite])
-				self.debug_circles_origin.append([prev_convex_point, midpoint, next_convex_point])
-				
-				if iter == 3:
-					print(11111)
-					print([event.circle.position, opposite])
-				#self.site_registry.replace_global_point(event.circle.position, opposite)
-				next_site.add_point(opposite - next_site.node.position)
-				prev_site.add_point(opposite - prev_site.node.position)
-				self._calc_convex_hull()
-				
-				#self.convex_hull[idx] = opposite
-
-		
+				edge_sites[0].add_point(opposite - edge_sites[0].node.position)
+				edge_sites[1].add_point(opposite - edge_sites[1].node.position)
+				edge_points_handled.append(opposite)
+				self.debug_edgepoints.append([midpoint, point, opposite])
+	
 	func _point_in_circle(p: Vector2, circle) -> bool:
 		return pow(p[0] - circle.position[0], 2) + pow(p[1] - circle.position[1], 2) < pow(circle.radius, 2)
 		
