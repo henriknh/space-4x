@@ -1,175 +1,21 @@
 extends Node
 
+const Site = preload("res://scripts/voronoi/site.gd")
+
 onready var voronoi_registry = VoronoiRegistry.new()
 
-const BOUND_SIZE = 50
-
-class Edge:
-	var nodes = []
-	var p1 = Vector2.ZERO
-	var p2 = Vector2.ZERO
-	
-	func _init(n: Node2D, p1: Vector2, p2: Vector2):
-		self.nodes.append(n)
-		self.p1 = p1
-		self.p2 = p2
-	
-	func has_points(p1, p2) -> bool:
-		return self.p1 - p1 == Vector2.ZERO and self.p2 - p2 == Vector2.ZERO or self.p1 - p2 == Vector2.ZERO and self.p2 - p1 == Vector2.ZERO
-		
-	func add_node(n: Node2D) -> void:
-		self.nodes.append(n)
-	
-class EdgeRegistry:
-	
-	var edges = []
-	
-	func register_edge(n: Node2D, p1: Vector2, p2: Vector2) -> void:
-		for edge in edges:
-			if edge.has_points(p1, p2):
-				edge.add_node(n)
-				return
-		edges.append(Edge.new(n, p1, p2))
-		
-class Site:
-	var node: Node2D = null
-	var points: Array = []
-	var convex_hull: Array = []
-	
-	func _init(node: Node2D, _points: Array) -> void:
-		self.node = node
-		for point in _points:
-			if not point in self.points:
-				self.points.append(point)
-		
-		self.convex_hull = Geometry.convex_hull_2d(self.points)
-		
-	func add_point(point: Vector2) -> void:
-		if not point in self.points:
-			self.points.append(point)
-			self.convex_hull = Geometry.convex_hull_2d(self.points)
-		
-	func remove_point(point: Vector2) -> bool:
-		if Utils.array_has(point, self.points):
-			self.points.erase(point)
-			self.convex_hull = Geometry.convex_hull_2d(self.points)
-			return true
-		
-		return false
-		
-	func replace_global_point(old_global_point: Vector2, new_global_point: Vector2) -> bool:
-		var old_local_point = old_global_point - self.node.position
-		var index = Utils.array_idx(old_local_point, self.points)
-		if index >= 0:
-			self.points[index] = new_global_point - self.node.position
-			self.convex_hull = Geometry.convex_hull_2d(self.points)
-			return true
-		return false
-	
-	func get_southern_most_point() -> Vector2:
-		var southern_point = -Vector2.INF
-		for point in self.convex_hull:
-			if point.y > southern_point.y:
-				southern_point = point
-		return southern_point + self.node.position
-	
-class SiteRegistry:
-	
-	var sites = []
-	
-	func register_site(node: Node2D, local_points: Array) -> void:
-		if local_points.size() > 0:
-			
-			var site = Site.new(node, local_points)
-			self.sites.append(site)
-	
-	func add_point(node: Node2D, point: Vector2) -> void:
-		for site in sites:
-			if site.node == node:
-				site.add_point(point)
-				
-	func remove_point(node: Node2D, point: Vector2) -> bool:
-		for site in sites:
-			if site.node == node:
-				return site.remove_point(point)
-		
-		return false
-		
-	func get_convex_hull_of_node(node: Node2D) -> Array:
-		for site in self.sites:
-			if site.node == node:
-				return site.convex_hull
-		return []
-	
-	func get_edge_node_by_points(points: Array) -> Node2D:
-		var node = null
-		var furthest_dist = 0
-		
-		for site in sites:
-			var has_point = 0
-			
-			for point in points:
-				if Utils.array_has(point - site.node.position, site.points):
-					has_point = has_point + 1
-			if has_point == points.size():
-				var sum_x = 0
-				var sum_y = 0
-				
-				for point in site.points:
-					sum_x = sum_x + point.x
-					sum_y = sum_y + point.y
-				
-				var avg_x = sum_x / site.points.size()
-				var avg_y = sum_y / site.points.size()
-				
-				var curr_dist = Vector2(avg_x, avg_y).distance_squared_to(Vector2.ZERO)
-				if curr_dist >= furthest_dist:
-					node = site.node
-		return node
-		
-	func replace_global_point(old_global_point: Vector2, new_global_point: Vector2) -> bool:
-		var replaced = false
-		for site in sites:
-			replaced = site.replace_global_point(old_global_point, new_global_point) || replaced
-		return replaced
-	
-	func get_sites_with_point(point: Vector2, excluding_site: Site = null) -> Site:
-		var potential_sites = []
-		for site in self.sites:
-			if Utils.array_has(point - site.node.position, site.convex_hull) and site != excluding_site:
-				potential_sites.append(site)
-				
-		return potential_sites
-		if potential_sites.size() == 1:
-			return potential_sites[0]
-		else:
-			var furthest_site = null
-			var furthest_site_dist = 0
-			for site in potential_sites:
-				var dist = (site.node.position as Vector2).distance_squared_to(Vector2.ZERO)
-				if dist > furthest_site_dist:
-					furthest_site = site
-					furthest_site_dist = dist
-			return furthest_site
-		
-	func get_southern_most_site() -> Site:
-		var southern_site = null
-		var southern_site_position = -Vector2.INF
-		for site in self.sites:
-			if site.node.position.y > southern_site_position.y:
-				southern_site = site
-				southern_site_position = site.node.position
-		return southern_site
+const BOUND_SIZE = 1
 
 class Voronoi:
 	
-	onready var edge_registry = EdgeRegistry.new()
-	onready var site_registry = SiteRegistry.new()
+	onready var site_registry = Site.SiteRegistry.new()
 	
 	var index: int = 0
 	var nodes: Array = []
 	var events: Array = []
 	var convex_hull = []
+	
+	var edge_points_handled = []
 	
 	var debug_edgepoints = []
 	var debug_circles_line = []
@@ -183,11 +29,26 @@ class Voronoi:
 		self._calc_events()
 		self._calc_sites()
 		self._look_for_edge_sites()
-		#self._calc_convex_hull()
+		self._calc_convex_hull()
+		print(self.edge_points_handled)
+		
+		self._extend_two_site_intersections()
+		print(self.edge_points_handled)
 		#self._extend_non_convex_points()
 		#self._calc_convex_hull()
 		#self._extend_sites()
 		#self._calc_convex_hull()
+	
+	func _extend_two_site_intersections():
+		
+		var points = []
+		for site in self.site_registry.sites:
+			for point in site.points:
+				var site_point = point + site.node.position
+				if not Utils.array_has(site_point, points):
+					points.append(site_point)
+		
+		print(points.size())
 		
 	func _look_for_edge_sites():
 		for site in self.site_registry.sites:
@@ -212,6 +73,7 @@ class Voronoi:
 					"nodes": [prev_site, site],
 					"edgepoint": prev_opposite
 				})
+				edge_points_handled.append(prev_opposite)
 				
 				var next_midpoint = Utils.get_midpoint(next_site.node.position, site.node.position)
 				var next_opposite = (next_point + (next_point - next_midpoint)) * BOUND_SIZE
@@ -221,12 +83,13 @@ class Voronoi:
 					"nodes": [next_site, site],
 					"edgepoint": next_opposite
 				})
+				edge_points_handled.append(next_opposite)
 		
 	func clear():
-		self.edge_registry = EdgeRegistry.new()
-		self.site_registry = SiteRegistry.new()
+		self.site_registry = Site.SiteRegistry.new()
 		self.events = []
 		self.convex_hull = []
+		self.edge_points_handled = []
 		self.debug_edgepoints = []
 		self.debug_circles_line = []
 		self.debug_circles_origin = []
