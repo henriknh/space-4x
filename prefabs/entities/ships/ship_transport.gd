@@ -18,8 +18,8 @@ func ready():
 	add_to_group('Transport')
 	.ready()
 
-func process():
-	.process()
+func process(delta: float):
+	.process(delta)
 
 func clear():
 	.clear()

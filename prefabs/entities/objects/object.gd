@@ -9,8 +9,8 @@ func create():
 func ready():
 	.ready()
 	
-func process():
-	pass
+func process(delta: float):
+	.process(delta)
 
 func kill():
 	hitpoints = 0

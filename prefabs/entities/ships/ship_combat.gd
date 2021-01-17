@@ -41,7 +41,7 @@ func ready():
 	
 	.ready()
 
-func process():
+func process(delta: float):
 	if ship_target_id == -1 and parent:
 		if not target_enemy and _has_enemies_in_site():
 			target_enemy = _get_closest_enemy()
@@ -64,7 +64,7 @@ func process():
 			ship_speed_max = 500
 			move(patrolling_position, false)
 			
-	.process()
+	.process(delta)
 
 func clear():
 	patrolling_position = Vector2.INF

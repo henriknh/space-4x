@@ -57,7 +57,7 @@ func _physics_process(_delta):
 		if hitpoints <= 0:
 			kill()
 		else:
-			process()
+			process(delta)
 		delta = 0
 		
 func create():
@@ -70,7 +70,7 @@ func create():
 func ready():
 	pass
 
-func process():
+func process(delta: float):
 	pass
 
 func kill():

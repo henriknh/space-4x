@@ -45,8 +45,8 @@ func ready():
 	add_child(instance)
 	.ready()
 
-func process():
-	.process()
+func process(delta: float):
+	.process(delta)
 	
 func kill():
 	faction = -1

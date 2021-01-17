@@ -25,7 +25,7 @@ func ready():
 	
 	.ready()
 
-func process():
+func process(delta: float):
 	if ship_target_id == -1 and parent:
 		if metal == metal_max:
 			if not move(parent.position):
@@ -35,7 +35,7 @@ func process():
 		elif mining_target:
 			if not move(mining_target.position) and not mining_charging:
 				charge_mine()
-	.process()
+	.process(delta)
 
 func clear():
 	mining_target = null

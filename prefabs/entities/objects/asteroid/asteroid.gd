@@ -32,14 +32,14 @@ func ready():
 	
 	.ready()
 	
-func process():
+func process(delta: float):
 	if metal == 0:
 		kill()
-	.process()
-
-func _process(delta):
+		
 	if visible:
 		$Sprite.rotation_degrees += rotation_speed * delta
+	
+	.process(delta)
 
 func get_target_point():
 	var angle = 2 * PI * randf()

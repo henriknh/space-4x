@@ -16,7 +16,7 @@ func ready():
 	add_to_group('Explorer')
 	.ready()
 
-func process():
+func process(delta: float):
 	is_colonizing = true
 	if ship_target_id == -1 and parent:
 		if is_colonizing and parent.faction == -1:
@@ -36,7 +36,7 @@ func process():
 				
 			move(explore_position, false)
 			
-	.process()
+	.process(delta)
 
 func clear():
 	.clear()

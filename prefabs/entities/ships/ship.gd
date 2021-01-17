@@ -43,12 +43,13 @@ func ready():
 		trail.set_color(enemy_color)
 	.ready()
 		
-func process():
+func process(delta: float):
 	if ship_target_id >= 0 and nav_route.size() > 0:
 		var target_position: Vector2 = nav_route[0].position
 		move(target_position)
 		_update_route()
-	.process()
+	
+	.process(delta)
 	
 func kill():
 	hitpoints = 0
