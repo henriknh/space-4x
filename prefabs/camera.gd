@@ -42,8 +42,9 @@ func load_camera_state():
 	if has_changed:
 		camera_pos_change = Vector2.ZERO
 		target_zoom = zoom
-		last_pos = position
 		last_zoom = zoom
+		target_position = position
+		last_pos = position
 
 func set_camera_state() -> void:
 	if last_pos != position or last_zoom != zoom:

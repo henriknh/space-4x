@@ -50,8 +50,9 @@ func get_camera_state() -> Dictionary:
 	else: 
 		return {}
 
-func set_state(state: Dictionary) -> void:
+func set_loaded_game_state(state: Dictionary) -> void:
 	self.state = state
+	emit_signal("state_changed")
 	
 func get_state() -> Dictionary:
 	var camera = get_node('/root/GameScene/Camera') as Camera2D

@@ -54,7 +54,7 @@ func load_game() -> bool:
 		# Get the saved dictionary from the next line in the save file
 		var node_data = parse_json(save_game.get_line())
 		if node_data.has('game_state'):
-			GameState.set_state(node_data['game_state'])
+			GameState.set_loaded_game_state(node_data['game_state'])
 		elif node_data['entity_type'] == Enums.entity_types.planet:
 			node_data_planets.append(node_data)
 		else:
