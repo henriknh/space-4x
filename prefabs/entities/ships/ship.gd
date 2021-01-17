@@ -144,7 +144,7 @@ func get_random_point_in_site() -> Vector2:
 	var polygon_shrinked = []
 	for point in parent.planet_convex_hull:
 		var point_shrinked = Utils.get_midpoint(point, Vector2.ZERO)
-		polygon_shrinked.append(point_shrinked)
+		polygon_shrinked.append(point_shrinked + parent.position)
 		
 		bound_left = min(bound_left, point_shrinked.x)
 		bound_right = max(bound_right, point_shrinked.x)
@@ -158,5 +158,5 @@ func get_random_point_in_site() -> Vector2:
 		var _random_point: Vector2 = Vector2(x, y)
 		if Geometry.is_point_in_polygon(_random_point, polygon_shrinked):
 			random_point = _random_point
-	return random_point + parent.position
+	return random_point
 	
