@@ -8,7 +8,7 @@ signal menu_changed
 
 func is_over_ui() -> bool:
 	if _menus.size() > 1:
-		return true
+		return _menus[_menus.size() - 1].get('block_input') != false
 	else: 
 		return _is_over_ui
 	
