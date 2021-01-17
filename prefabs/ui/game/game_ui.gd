@@ -1,7 +1,8 @@
 extends Control
 
-var planet_details_prefab = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
+var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_movement.tscn')
+var planet_details_prefab = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 
 var total_metal: int = 0
 var total_power: int = 0
@@ -26,10 +27,19 @@ func _physics_process(delta):
 	$Debug/LabelMousePos.text = mouse_pos as String
 	$MainMenu/LabelFPS.text = Engine.get_frames_per_second() as String
 	
+
+func _ship_movement_disabled() -> bool:
+	if GameState.get_selection() == null:
+		return true
+	elif GameState.get_selection().get('faction') == null:
+		return true
+	else:
+		return GameState.get_selection().faction != 0
 func _update_ui():
 	
 	$Debug/LabelMousePos.visible = Settings.is_debug()
 	$MainMenu/LabelFPS.visible = Settings.get_show_fps()
+	$Bottom/BtnShipMovement.disabled = _ship_movement_disabled()
 	$Bottom/BtnPlanetDetails.disabled = GameState.get_selection() == null
 	
 	_update_resources()
@@ -64,3 +74,7 @@ func _on_overview():
 
 func _on_planet_details():
 	get_parent().add_child(planet_details_prefab.instance())
+
+func _on_ship_movement():
+	pass # Replace with function body.
+	get_parent().add_child(ship_movement_prefab.instance())
