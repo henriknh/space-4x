@@ -3,6 +3,7 @@ extends Control
 var movement_target_prefab = preload('res://prefabs/ui/game/ship_movement/movement_target.tscn')
 
 onready var move_selection = {
+	'origin_planet': null,
 	Enums.ship_types.combat: {
 		'selected': 0,
 		'total': 0
@@ -27,7 +28,8 @@ var real_camera_position: Vector2
 var real_camera_zoom: Vector2
 
 func _ready():
-	for child in GameState.selection['children']:
+	move_selection.origin_planet = GameState.get_selection()
+	for child in GameState.get_selection()['children']:
 		match (child as entity).ship_type:
 			Enums.ship_types.combat:
 				move_selection[Enums.ship_types.combat].total += 1
@@ -37,11 +39,10 @@ func _ready():
 				move_selection[Enums.ship_types.miner].total += 1
 			Enums.ship_types.transport:
 				move_selection[Enums.ship_types.transport].total += 1
-	
 	_update_ui()
 	MenuState.push(self)
 	
-	GameState.selection.connect("entity_changed", self, "_update_ui")
+	GameState.get_selection().connect("entity_changed", self, "_update_ui")
 
 	var viewport_size = get_viewport_rect().size
 	var offset = Vector2(-viewport_size.x / 2, -viewport_size.y / 2)
@@ -87,11 +88,12 @@ func _update_ui():
 	$Changes/Transport/BtnDecrease.disabled = move_selection[Enums.ship_types.transport].selected == 0 
 	$Changes/Transport/BtnIncrease.disabled = move_selection[Enums.ship_types.transport].selected == move_selection[Enums.ship_types.transport].total
 	
-	var sum_change = 0
-	for key in move_selection.keys():
-		sum_change += move_selection[key].selected
-
-	$Actions/BtnConfirmMove.disabled = sum_change == 0
+	var has_selection = false
+	has_selection = has_selection || move_selection[Enums.ship_types.combat].selected > 0
+	has_selection = has_selection || move_selection[Enums.ship_types.explorer].selected > 0
+	has_selection = has_selection || move_selection[Enums.ship_types.miner].selected  > 0
+	has_selection = has_selection || move_selection[Enums.ship_types.transport].selected  > 0
+	$Actions/BtnConfirmMove.disabled = not has_selection
 
 func _on_confirm_move():
 	MenuState.pop()
