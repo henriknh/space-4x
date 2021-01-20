@@ -49,7 +49,8 @@ func load_game() -> bool:
 	# the object it represents.
 	save_game.open(save_file_path, File.READ)
 	var node_data_planets = []
-	var node_data_others = []
+	var node_data_objects = []
+	var node_data_ships = []
 	while save_game.get_position() < save_game.get_len():
 		# Get the saved dictionary from the next line in the save file
 		var node_data = parse_json(save_game.get_line())
@@ -57,15 +58,19 @@ func load_game() -> bool:
 			GameState.set_loaded_game_state(node_data['game_state'])
 		elif node_data['entity_type'] == Enums.entity_types.planet:
 			node_data_planets.append(node_data)
+		elif node_data['entity_type'] == Enums.entity_types.object:
+			node_data_objects.append(node_data)
 		else:
-			node_data_others.append(node_data)
+			node_data_ships.append(node_data)
 
 	save_game.close()
 	
 	for node_data_planet in node_data_planets:
 		self._instantiate_node_data(node_data_planet)
-	for node_data_other in node_data_others:
-		self._instantiate_node_data(node_data_other)
+	for node_data_object in node_data_objects:
+		self._instantiate_node_data(node_data_object)
+	for node_data_ship in node_data_ships:
+		self._instantiate_node_data(node_data_ship)
 	
 	return true
 
