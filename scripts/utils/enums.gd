@@ -46,6 +46,7 @@ enum ship_types {
 
 enum ship_states {
 	idle,
+	rebase,
 	travel,
 	mine,
 	deliver,

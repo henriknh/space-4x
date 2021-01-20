@@ -34,7 +34,11 @@ func _ship_movement_disabled() -> bool:
 	elif GameState.get_selection().get('faction') == null:
 		return true
 	else:
-		return GameState.get_selection().faction != 0
+		for child in GameState.get_selection().children:
+			if child.entity_type == Enums.entity_types.ship and child.faction == 0:
+				return false
+		return true
+		
 func _update_ui():
 	
 	$Debug/LabelMousePos.visible = Settings.is_debug()

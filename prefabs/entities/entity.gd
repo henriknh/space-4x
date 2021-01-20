@@ -22,7 +22,7 @@ var planet_system: int = -1
 var rotation_speed: float = 0
 var color: Color = Color(1,1,1,1)
 var state: int = 0
-var state_queue = []
+var process_target_id: int
 
 # Resources
 var metal: float = 0
@@ -47,10 +47,14 @@ var planet_convex_hull = []
 var ship_type: int = -1
 var ship_speed: float = 0.0
 var ship_speed_max: int = 500
-var ship_target_id: int = -1
 var ship_cargo_size: int = 20
 
 func _physics_process(_delta):
+	
+	if entity_type != Enums.entity_types.planet:
+		if not parent:
+			return
+	
 	delta += _delta
 	
 	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
@@ -108,6 +112,8 @@ func save():
 		"planet_system": planet_system,
 		"rotation_speed": rotation_speed,
 		"color": color.to_html(true),
+		"state": state,
+		"process_target_id": process_target_id,
 		
 		# Resources
 		"metal": metal,
@@ -131,7 +137,7 @@ func save():
 		"ship_type": ship_type,
 		"ship_speed": ship_speed,
 		"ship_speed_max": ship_speed_max,
-		"ship_target_id": ship_target_id
+		"ship_cargo_size": ship_cargo_size
 	}
 	
 	var i = 0

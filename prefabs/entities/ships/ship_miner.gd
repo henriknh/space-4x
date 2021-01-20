@@ -26,25 +26,30 @@ func ready():
 	.ready()
 
 func process(delta: float):
-	if state == Enums.ship_states.idle:
+	
+	if state == Enums.ship_states.mine and not mining_target:
+		state = Enums.ship_states.idle
+	if state == Enums.ship_states.mine and mining_target.is_dead():
+		state = Enums.ship_states.idle
+		
+	if state == Enums.ship_states.idle and faction == parent.faction:
 		_get_next_mining_target()
 		if mining_target:
 			state = Enums.ship_states.mine
 	
-	elif state == Enums.ship_states.mine and not mining_target:
-		state = Enums.ship_states.idle
-	elif state == Enums.ship_states.mine and mining_target.is_dead():
-		state = Enums.ship_states.idle
-	elif state == Enums.ship_states.mine and metal == metal_max:
+	if state == Enums.ship_states.mine and metal == metal_max:
 		state = Enums.ship_states.deliver
-	elif state == Enums.ship_states.deliver:
+		
+	
+	if state == Enums.ship_states.deliver:
 		if not move(parent.position):
 			deliver()
 			state = Enums.ship_states.idle
 	elif state == Enums.ship_states.mine:
 		if not move(mining_target.position) and not mining_charging:
 			charge_mine()
-	.process(delta)
+	else:
+		.process(delta)
 
 func clear():
 	mining_target = null

@@ -30,7 +30,7 @@ var real_camera_zoom: Vector2
 func _ready():
 	move_selection.origin_planet = GameState.get_selection()
 	for child in GameState.get_selection()['children']:
-		match (child as entity).ship_type:
+		match child.ship_type:
 			Enums.ship_types.combat:
 				move_selection[Enums.ship_types.combat].total += 1
 			Enums.ship_types.explorer:

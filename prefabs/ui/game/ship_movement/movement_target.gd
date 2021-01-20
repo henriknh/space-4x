@@ -13,8 +13,13 @@ func _ready():
 	GameState.connect("state_changed", self, "_state_changed")
 
 func _selection_changed():
+	if selection:
+		selection.disconnect("entity_changed", self, "_update_ui")
+		
 	selection = GameState.get_selection()
-	GameState.get_selection().connect("entity_changed", self, "_update_ui")
+	
+	if selection:
+		selection.connect("entity_changed", self, "_update_ui")
 	_update_ui()
 
 func _is_confirm_disabled() -> bool:
@@ -39,4 +44,27 @@ func _on_cancel():
 	MenuState.pop()
 
 func _on_confirm():
-	print('_on_confirm')
+	var ships = {
+		Enums.ship_types.combat: [],
+		Enums.ship_types.miner: [],
+		Enums.ship_types.explorer: [],
+		Enums.ship_types.transport: [],
+	}
+
+	
+	var sorted_children = (move_selection.origin_planet as planet).get_children_sorted_by_distance()
+	for ship in sorted_children:
+		
+		if ship.ship_type == -1:
+			continue
+		
+		for ship_type in Enums.ship_types.values():
+			if ship.ship_type == ship_type and ships[ship_type].size() < move_selection[ship_type].selected:
+				ships[ship_type].append(ship)
+	
+	for ship_type in Enums.ship_types.values():
+		for ship in ships[ship_type]:
+			(ship as ship).state = Enums.ship_states.travel
+			(ship as ship).process_target_id = selection.id
+	
+	MenuState.pop()

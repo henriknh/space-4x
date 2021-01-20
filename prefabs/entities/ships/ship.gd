@@ -2,14 +2,12 @@ extends entity
 
 class_name ship
 
+# Temporary
 var nav_route = []
 var ship_target_obj = null
 var model: Sprite = null
 var trail: Node2D = null
-
-# States
 var idle_target: Vector2
-var travel_target: int
 
 export(int) var min_speed: int = 10
 export(int) var acceleration: int = 50
@@ -49,36 +47,31 @@ func ready():
 		
 func process(delta: float):
 	if state == Enums.ship_states.travel:
-		move(nav_route[0].position)
+		if nav_route.size() == 0 and process_target_id >= 0:
+			nav_route = Nav.get_route(self, process_target_id)
 		
+		move(nav_route[0].position)
 		_update_travel_route()
 		
 		if nav_route.size() == 0:
+			process_target_id = -1
 			state = Enums.ship_states.idle
 	
-		
 	elif state == Enums.ship_states.idle:
 		if not idle_target or close_to_target(idle_target):
 			idle_target = get_random_point_in_site()
 			
 		move(idle_target)
-	
-	.process(delta)
+	else:
+		.process(delta)
 	
 func kill():
 	hitpoints = 0
 	queue_free()
-		
+	
 func clear():
 	ship_target_id = -1
 	nav_route = [Nav.get_route(self, ship_target_id)]
-
-func set_target_id(id: int):
-	clear()
-	ship_target_id = id
-	nav_route = Nav.get_route(self, ship_target_id)
-	if visible:
-		trail.set_emitting(true)
 
 func move(target_position: Vector2, decrease_speed: bool = true, turn_direction: int = 0) -> bool:
 	if turn_direction == 0:
@@ -123,34 +116,21 @@ func _update_travel_route():
 			ship_target_id = -1
 			trail.set_emitting(false)
 
-func get_new_target():
-	var planets = get_tree().get_nodes_in_group("Planet")
-	var planets_in_planet_system = []
-	for planet in planets:
-		if planet.planet_system == GameState.get_planet_system():
-			planets_in_planet_system.append(planet)
-
-	if planets_in_planet_system.size() > 0:
-		var target_planet = planets_in_planet_system[randi() % planets_in_planet_system.size()]
-		ship_target_id = target_planet.id
-		if visible:
-			trail.set_emitting(true)
-			
 func close_to_target(target_position: Vector2) -> bool:
 	if not target_position:
 		return false
 	
 	var distance_to_target = global_transform.origin.distance_squared_to(target_position)
 	return distance_to_target <= pow(max(160, ship_speed), 2)
-	
+
 func set_visible(in_data) -> void:
 	if typeof(in_data) == TYPE_BOOL:
 		visible = in_data
 	else:
 		visible = planet_system == in_data
-	trail.set_emitting(visible)
 
 func get_random_point_in_site() -> Vector2:
+	
 	var bound_left = INF
 	var bound_right = -INF
 	var bound_top = INF
