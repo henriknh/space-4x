@@ -25,6 +25,11 @@ enum planet_types {
 	ice
 }
 
+enum planet_states {
+	idle,
+	produce
+}
+
 const planet_scripts = {
 	'earth': 'res://prefabs/entities/planets/planet_earth.gd',
 	'ice': 'res://prefabs/entities/planets/planet_ice.gd',
@@ -37,6 +42,16 @@ enum ship_types {
 	explorer,
 	miner,
 	transport
+}
+
+enum ship_states {
+	idle,
+	travel,
+	mine,
+	deliver,
+	combat,
+	explore,
+	colonize
 }
 
 const ship_scripts = {

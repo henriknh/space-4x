@@ -42,28 +42,18 @@ func ready():
 	.ready()
 
 func process(delta: float):
-	if ship_target_id == -1 and parent:
+	if state == Enums.ship_states.combat:
 		if not target_enemy and _has_enemies_in_site():
 			target_enemy = _get_closest_enemy()
-		
-		if patrolling_position.distance_squared_to(position) < pow(ship_speed, 2):
-			patrolling_position = Vector2.INF
 			
-		if patrolling_position == Vector2.INF:
-			ship_speed_max = 500
-			patrolling_position = get_random_point_in_site()
+		if not target_enemy:
+			state = Enums.ship_states.idle
 		else:
-			ship_speed_max = 2000
-			
-		if target_enemy:
 			if not weapon_ready:
 				_wait_for_weapon()
 			else:
 				move(target_enemy.position, false, -1)
-		elif ship_target_id == -1 and patrolling_position != Vector2.INF:
-			ship_speed_max = 500
-			move(patrolling_position, false)
-			
+		
 	.process(delta)
 
 func clear():

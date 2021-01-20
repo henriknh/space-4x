@@ -5,6 +5,7 @@ class_name planet
 var is_hover = false
 
 var children = []
+var asteroids = []
 
 var prefab_lava = preload('res://assets/PixelPlanets/LavaWorld/LavaWorld.tscn')
 var prefab_iron = preload('res://assets/PixelPlanets/GasPlanet/GasPlanet.tscn')
@@ -101,12 +102,15 @@ func get_target_point():
 func _on_PlanetArea_body_entered(entity: entity):
 	if self.planet_system == entity.planet_system:
 		children.append(entity)
+		if entity.object_type == Enums.object_types.asteroid:
+			asteroids.append(entity)
 		entity.parent = self
 
 func _on_PlanetArea_body_exited(entity: entity):
 	if self.planet_system == entity.planet_system:
 		children.erase(entity)
-
+		asteroids.append(entity)
+		
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
 		if (event as InputEventMouseButton).button_index == BUTTON_LEFT:

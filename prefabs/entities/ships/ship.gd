@@ -7,6 +7,10 @@ var ship_target_obj = null
 var model: Sprite = null
 var trail: Node2D = null
 
+# States
+var idle_target: Vector2
+var travel_target: int
+
 export(int) var min_speed: int = 10
 export(int) var acceleration: int = 50
 export(int) var turn_speed: int = 4
@@ -44,10 +48,20 @@ func ready():
 	.ready()
 		
 func process(delta: float):
-	if ship_target_id >= 0 and nav_route.size() > 0:
-		var target_position: Vector2 = nav_route[0].position
-		move(target_position)
-		_update_route()
+	if state == Enums.ship_states.travel:
+		move(nav_route[0].position)
+		
+		_update_travel_route()
+		
+		if nav_route.size() == 0:
+			state = Enums.ship_states.idle
+	
+		
+	elif state == Enums.ship_states.idle:
+		if not idle_target or close_to_target(idle_target):
+			idle_target = get_random_point_in_site()
+			
+		move(idle_target)
 	
 	.process(delta)
 	
@@ -70,7 +84,6 @@ func move(target_position: Vector2, decrease_speed: bool = true, turn_direction:
 	if turn_direction == 0:
 		rotation += get_angle_to(target_position) * turn_speed * delta
 	elif turn_direction < 0:
-		
 		rotation += get_angle_to(target_position) * turn_speed * delta
 
 	var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
@@ -101,7 +114,7 @@ func _calc_speed(target_position: Vector2, decrease_speed: bool) -> bool:
 		
 	return ship_speed != 0
 
-func _update_route():
+func _update_travel_route():
 	if close_to_target(nav_route[0].position):
 		if nav_route.size() > 1:
 			nav_route.pop_front()
@@ -124,6 +137,9 @@ func get_new_target():
 			trail.set_emitting(true)
 			
 func close_to_target(target_position: Vector2) -> bool:
+	if not target_position:
+		return false
+	
 	var distance_to_target = global_transform.origin.distance_squared_to(target_position)
 	return distance_to_target <= pow(max(160, ship_speed), 2)
 	

@@ -17,25 +17,16 @@ func ready():
 	.ready()
 
 func process(delta: float):
-	is_colonizing = true
-	if ship_target_id == -1 and parent:
-		if is_colonizing and parent.faction == -1:
-			if not move(parent.position):
-				parent.faction = faction
-				parent.update()
-				kill()
+	if state == Enums.ship_states.colonize:
+		if parent.faction != -1:
+			state = Enums.ship_states.idle
+		elif move(parent.position):
+			pass
 		else:
-			if explore_position.distance_squared_to(position) < pow(ship_speed, 2):
-				explore_position = Vector2.INF
-			
-			if explore_position == Vector2.INF:
-				ship_speed_max = 500
-				explore_position = get_random_point_in_site()
-			else:
-				ship_speed_max = 1000
-				
-			move(explore_position, false)
-			
+			parent.faction = faction
+			parent.update()
+			kill()
+	
 	.process(delta)
 
 func clear():

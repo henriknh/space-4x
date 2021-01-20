@@ -60,6 +60,7 @@ func _create_ship(ship_type: int):
 	instance.planet_system = curr_selection.planet_system
 	instance.faction = curr_selection.faction
 	instance.position = curr_selection.position
+	instance.parent = curr_selection
 	instance.create()
 
 	get_node('/root/GameScene').add_child(instance)

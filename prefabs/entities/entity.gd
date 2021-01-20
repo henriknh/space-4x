@@ -21,6 +21,8 @@ var faction: int = -1
 var planet_system: int = -1
 var rotation_speed: float = 0
 var color: Color = Color(1,1,1,1)
+var state: int = 0
+var state_queue = []
 
 # Resources
 var metal: float = 0

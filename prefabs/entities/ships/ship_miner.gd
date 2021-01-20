@@ -4,7 +4,7 @@ class_name ship_miner
 
 var mining_power = 10
 
-var mining_target: entity
+var mining_target: entity = null
 var mining_charging: bool = false
 var mining_timer: Timer
 
@@ -26,15 +26,24 @@ func ready():
 	.ready()
 
 func process(delta: float):
-	if ship_target_id == -1 and parent:
-		if metal == metal_max:
-			if not move(parent.position):
-				deliver()
-		elif not mining_target or mining_target and mining_target.is_dead():
-			_get_next_mining_target()
-		elif mining_target:
-			if not move(mining_target.position) and not mining_charging:
-				charge_mine()
+	if state == Enums.ship_states.idle:
+		_get_next_mining_target()
+		if mining_target:
+			state = Enums.ship_states.mine
+	
+	elif state == Enums.ship_states.mine and not mining_target:
+		state = Enums.ship_states.idle
+	elif state == Enums.ship_states.mine and mining_target.is_dead():
+		state = Enums.ship_states.idle
+	elif state == Enums.ship_states.mine and metal == metal_max:
+		state = Enums.ship_states.deliver
+	elif state == Enums.ship_states.deliver:
+		if not move(parent.position):
+			deliver()
+			state = Enums.ship_states.idle
+	elif state == Enums.ship_states.mine:
+		if not move(mining_target.position) and not mining_charging:
+			charge_mine()
 	.process(delta)
 
 func clear():
@@ -61,15 +70,14 @@ func deliver():
 	metal = 0
 	
 func _get_next_mining_target() -> void:
-	var asteroids = []
-	for child in parent.children:
-		if (child as entity).object_type == Enums.object_types.asteroid:
-			asteroids.append(child)
 	
-	asteroids.sort_custom(self, "sort_asteroids")
+	#asteroids.sort_custom(self, "sort_asteroids")
 	
-	var asteroid_idx = WorldGenerator.rng.randi_range(0, min(1, asteroids.size() - 1))
-	mining_target = asteroids[asteroid_idx]
+	if parent.asteroids.size() > 0:
+		var asteroid_idx = WorldGenerator.rng.randi() % parent.asteroids.size()
+		mining_target = parent.asteroids[asteroid_idx]
+	else:
+		mining_target = null
 	
 func sort_asteroids(a: entity, b: entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
