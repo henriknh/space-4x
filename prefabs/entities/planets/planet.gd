@@ -132,3 +132,12 @@ func _on_hover_enter():
 func _on_hover_leave():
 	is_hover = false
 	update()
+
+func get_children_sorted_by_distance() -> Array:
+	children.sort_custom(self, "sort_closest")
+	return children
+	
+func sort_closest(a: entity, b: entity) -> bool:
+	var dist_a = self.position.distance_squared_to(a.position)
+	var dist_b = self.position.distance_squared_to(b.position)
+	return dist_a < dist_b
