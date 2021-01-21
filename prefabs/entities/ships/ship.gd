@@ -70,8 +70,8 @@ func kill():
 	queue_free()
 	
 func clear():
-	ship_target_id = -1
-	nav_route = [Nav.get_route(self, ship_target_id)]
+	process_target_id = -1 
+	nav_route = [Nav.get_route(self, process_target_id)]
 
 func move(target_position: Vector2, decrease_speed: bool = true, turn_direction: int = 0) -> bool:
 	if turn_direction == 0:
@@ -113,7 +113,7 @@ func _update_travel_route():
 			nav_route.pop_front()
 		else:
 			nav_route = []
-			ship_target_id = -1
+			process_target_id = -1
 			trail.set_emitting(false)
 
 func close_to_target(target_position: Vector2) -> bool:
