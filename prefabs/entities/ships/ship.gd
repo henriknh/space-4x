@@ -47,17 +47,32 @@ func ready():
 		
 func process(delta: float):
 	if state == Enums.ship_states.travel:
-		if nav_route.size() == 0 and process_target_id >= 0:
-			nav_route = Nav.get_route(self, process_target_id)
+		if nav_route.size() == 0 and process_target >= 0:
+			nav_route = Nav.get_route(self, process_target)
 		
 		move(nav_route[0].position)
 		_update_travel_route()
 		
 		if nav_route.size() == 0:
-			process_target_id = -1
+			process_target = -1
 			state = Enums.ship_states.idle
+			
+	elif state == Enums.ship_states.rebuild:
+		if not move(parent.position):
+			print('rebuild')
+			print(ship_type)
+			if ship_type != Enums.ship_types.disabled:
+				ship_type = Enums.ship_types.disabled
+			
+			process_progress -= delta
+			print(process_progress)
+			if process_progress < 0:
+				print('done')
+				process_progress = 0
+				ship_type = process_target
+				state = Enums.ship_states.idle
 	
-	elif state == Enums.ship_states.idle:
+	elif state == Enums.ship_states.idle and ship_type != Enums.ship_types.disabled:
 		if not idle_target or close_to_target(idle_target):
 			idle_target = get_random_point_in_site()
 			
@@ -70,8 +85,8 @@ func kill():
 	queue_free()
 	
 func clear():
-	process_target_id = -1 
-	nav_route = [Nav.get_route(self, process_target_id)]
+	process_target = -1 
+	nav_route = [Nav.get_route(self, process_target)]
 
 func move(target_position: Vector2, decrease_speed: bool = true, turn_direction: int = 0) -> bool:
 	if turn_direction == 0:
@@ -113,7 +128,7 @@ func _update_travel_route():
 			nav_route.pop_front()
 		else:
 			nav_route = []
-			process_target_id = -1
+			process_target = -1
 			trail.set_emitting(false)
 
 func close_to_target(target_position: Vector2) -> bool:

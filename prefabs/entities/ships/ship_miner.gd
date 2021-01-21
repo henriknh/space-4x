@@ -40,7 +40,6 @@ func process(delta: float):
 	if state == Enums.ship_states.mine and metal == metal_max:
 		state = Enums.ship_states.deliver
 		
-	
 	if state == Enums.ship_states.deliver:
 		if not move(parent.position):
 			deliver()

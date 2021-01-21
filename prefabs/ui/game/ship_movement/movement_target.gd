@@ -65,6 +65,6 @@ func _on_confirm():
 	for ship_type in Enums.ship_types.values():
 		for ship in ships[ship_type]:
 			(ship as ship).state = Enums.ship_states.travel
-			(ship as ship).process_target_id = selection.id
+			(ship as ship).process_target = selection.id
 	
 	MenuState.pop()

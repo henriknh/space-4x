@@ -46,6 +46,7 @@ func _update_ui():
 	
 	var distribution_width = $VBoxContainer/DistributionSpectra.rect_size[0]
 	
+	var unallocated = 0
 	var combat = 0
 	var explorer = 0
 	var miner = 0
@@ -53,7 +54,12 @@ func _update_ui():
 	
 	for child in selection.children:
 		if child.ship_type >= 0 and child.faction == 0:
+			if child.state == Enums.ship_states.travel:
+				continue
+			
 			match(child.ship_type):
+				Enums.ship_types.disabled:
+					unallocated += 1
 				Enums.ship_types.combat:
 					combat += 1
 				Enums.ship_types.explorer:
@@ -63,7 +69,7 @@ func _update_ui():
 				Enums.ship_types.transport:
 					transport += 1
 					
-	var total: float = combat + explorer + miner + transport
+	var total: float = unallocated + combat + explorer + miner + transport
 	
 	$VBoxContainer/DistributionLabel/ShipCount.text = int(total) as String
 	$VBoxContainer/DistributionSpectra.visible = total > 0

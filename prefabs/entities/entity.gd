@@ -22,7 +22,8 @@ var planet_system: int = -1
 var rotation_speed: float = 0
 var color: Color = Color(1,1,1,1)
 var state: int = 0
-var process_target_id: int
+var process_target: int
+var process_progress: float
 
 # Resources
 var metal: float = 0
@@ -113,7 +114,8 @@ func save():
 		"rotation_speed": rotation_speed,
 		"color": color.to_html(true),
 		"state": state,
-		"process_target_id": process_target_id,
+		"process_target": process_target,
+		"process_progress": process_progress,
 		
 		# Resources
 		"metal": metal,

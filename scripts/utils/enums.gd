@@ -38,6 +38,7 @@ const planet_scripts = {
 }
 
 enum ship_types {
+	disabled,
 	combat,
 	explorer,
 	miner,
@@ -47,6 +48,7 @@ enum ship_types {
 enum ship_states {
 	idle,
 	rebase,
+	rebuild,
 	travel,
 	mine,
 	deliver,
