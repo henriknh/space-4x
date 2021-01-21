@@ -1,5 +1,7 @@
 extends Control
 
+var ship_distribution_prefab = preload('res://prefabs/ui/game/planet_details/ship_distribution/ship_distribution.tscn')
+
 var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
 var script_combat = load(Enums.ship_scripts.combat)
 var script_explorer = load(Enums.ship_scripts.explorer)
@@ -19,7 +21,7 @@ func _ready():
 	selection.connect("entity_changed", self, "_update_ui")
 
 	var viewport_size = get_viewport_rect().size
-	var offset = Vector2(viewport_size.x * 0.4, 0)
+	var offset = Vector2(viewport_size[0] * 0.4, 0)
 	
 	real_camera_position = camera.target_position
 	real_camera_zoom = camera.target_zoom
@@ -41,7 +43,52 @@ func _update_ui():
 	$VBoxContainer/Resources1/LabelPower.text = Utils.format_number(selection.power)
 	$VBoxContainer/Resources2/LabelFood.text = Utils.format_number(selection.food)
 	$VBoxContainer/Resources2/LabelWater.text = Utils.format_number(selection.water)
-
+	
+	var distribution_width = $VBoxContainer/DistributionSpectra.rect_size[0]
+	
+	var combat = 0
+	var explorer = 0
+	var miner = 0
+	var transport = 0
+	
+	for child in selection.children:
+		if child.ship_type >= 0 and child.faction == 0:
+			match(child.ship_type):
+				Enums.ship_types.combat:
+					combat += 1
+				Enums.ship_types.explorer:
+					explorer += 1
+				Enums.ship_types.miner:
+					miner += 1
+				Enums.ship_types.transport:
+					transport += 1
+					
+	var total: float = combat + explorer + miner + transport
+	
+	$VBoxContainer/DistributionLabel/ShipCount.text = int(total) as String
+	$VBoxContainer/DistributionSpectra.visible = total > 0
+	
+	var combat_size = $VBoxContainer/DistributionSpectra/ColorCombat.rect_min_size
+	var explorer_size = $VBoxContainer/DistributionSpectra/ColorExplorer.rect_min_size
+	var miner_size = $VBoxContainer/DistributionSpectra/ColorMiner.rect_min_size
+	var transport_size = $VBoxContainer/DistributionSpectra/ColorTransport.rect_min_size
+	
+	if total > 0:
+		combat_size[0] = (combat / total) * distribution_width
+		explorer_size[0] = (explorer / total) * distribution_width
+		miner_size[0] = (miner / total) * distribution_width
+		transport_size[0] = (transport / total) * distribution_width
+	else:
+		combat_size[0] = 0
+		explorer_size[0] = 0
+		miner_size[0] = 0
+		transport_size[0] = 0
+		
+	$VBoxContainer/DistributionSpectra/ColorCombat.rect_min_size = combat_size
+	$VBoxContainer/DistributionSpectra/ColorExplorer.rect_min_size = explorer_size
+	$VBoxContainer/DistributionSpectra/ColorMiner.rect_min_size = miner_size
+	$VBoxContainer/DistributionSpectra/ColorTransport.rect_min_size = transport_size
+	
 func _create_ship(ship_type: int):
 
 	var curr_selection = GameState.get_selection()
@@ -64,3 +111,18 @@ func _create_ship(ship_type: int):
 	instance.create()
 
 	get_node('/root/GameScene').add_child(instance)
+
+func _on_production_ship():
+	var menu = $VBoxContainer/Production/BtnShip.get_popup()
+	menu.clear()
+	menu.add_item('Combat', Enums.ship_types.combat)
+	menu.add_item('Explorer', Enums.ship_types.explorer)
+	menu.add_item('Miner', Enums.ship_types.miner)
+	menu.add_item('Transpprt', Enums.ship_types.transport)
+	menu.connect("id_pressed", self, "_create_ship")
+	
+	menu.popup()
+
+func _on_ship_distribution_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		get_parent().add_child(ship_distribution_prefab.instance())
