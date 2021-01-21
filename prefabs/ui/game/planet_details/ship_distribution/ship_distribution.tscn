@@ -17,7 +17,7 @@ __meta__ = {
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_right = 480.0
-margin_bottom = 244.0
+margin_bottom = 242.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 40
@@ -29,35 +29,32 @@ custom_constants/margin_bottom = 40
 margin_left = 40.0
 margin_top = 40.0
 margin_right = 440.0
-margin_bottom = 204.0
+margin_bottom = 202.0
 
 [node name="LabelsAndActions" type="HBoxContainer" parent="MarginContainer/Info"]
 margin_right = 400.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 0, 80 )
+margin_bottom = 48.0
 size_flags_horizontal = 3
-size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Combat" type="VBoxContainer" parent="MarginContainer/Info/LabelsAndActions"]
 margin_right = 97.0
-margin_bottom = 80.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/Info/LabelsAndActions/Combat"]
-margin_top = 16.0
 margin_right = 97.0
-margin_bottom = 36.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 text = "Combat"
 
 [node name="Actions" type="HBoxContainer" parent="MarginContainer/Info/LabelsAndActions/Combat"]
-margin_top = 40.0
+margin_top = 24.0
 margin_right = 97.0
-margin_bottom = 64.0
+margin_bottom = 48.0
 
 [node name="Decrease" type="TextureButton" parent="MarginContainer/Info/LabelsAndActions/Combat/Actions"]
 margin_right = 24.0
@@ -75,21 +72,20 @@ texture_disabled = ExtResource( 2 )
 [node name="Explorer" type="VBoxContainer" parent="MarginContainer/Info/LabelsAndActions"]
 margin_left = 101.0
 margin_right = 198.0
-margin_bottom = 80.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/Info/LabelsAndActions/Explorer"]
-margin_top = 16.0
 margin_right = 97.0
-margin_bottom = 36.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 text = "Explorer"
 
 [node name="Actions" type="HBoxContainer" parent="MarginContainer/Info/LabelsAndActions/Explorer"]
-margin_top = 40.0
+margin_top = 24.0
 margin_right = 97.0
-margin_bottom = 64.0
+margin_bottom = 48.0
 
 [node name="Decrease" type="TextureButton" parent="MarginContainer/Info/LabelsAndActions/Explorer/Actions"]
 margin_right = 24.0
@@ -107,21 +103,20 @@ texture_disabled = ExtResource( 2 )
 [node name="Miner" type="VBoxContainer" parent="MarginContainer/Info/LabelsAndActions"]
 margin_left = 202.0
 margin_right = 299.0
-margin_bottom = 80.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/Info/LabelsAndActions/Miner"]
-margin_top = 16.0
 margin_right = 97.0
-margin_bottom = 36.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 text = "Miner"
 
 [node name="Actions" type="HBoxContainer" parent="MarginContainer/Info/LabelsAndActions/Miner"]
-margin_top = 40.0
+margin_top = 24.0
 margin_right = 97.0
-margin_bottom = 64.0
+margin_bottom = 48.0
 
 [node name="Decrease" type="TextureButton" parent="MarginContainer/Info/LabelsAndActions/Miner/Actions"]
 margin_right = 24.0
@@ -139,21 +134,20 @@ texture_disabled = ExtResource( 2 )
 [node name="Transport" type="VBoxContainer" parent="MarginContainer/Info/LabelsAndActions"]
 margin_left = 303.0
 margin_right = 400.0
-margin_bottom = 80.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/Info/LabelsAndActions/Transport"]
-margin_top = 16.0
 margin_right = 97.0
-margin_bottom = 36.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 text = "Transport"
 
 [node name="Actions" type="HBoxContainer" parent="MarginContainer/Info/LabelsAndActions/Transport"]
-margin_top = 40.0
+margin_top = 24.0
 margin_right = 97.0
-margin_bottom = 64.0
+margin_bottom = 48.0
 
 [node name="Decrease" type="TextureButton" parent="MarginContainer/Info/LabelsAndActions/Transport/Actions"]
 margin_right = 24.0
@@ -169,9 +163,9 @@ texture_normal = ExtResource( 5 )
 texture_disabled = ExtResource( 2 )
 
 [node name="Distribution" type="HBoxContainer" parent="MarginContainer/Info"]
-margin_top = 84.0
+margin_top = 52.0
 margin_right = 400.0
-margin_bottom = 164.0
+margin_bottom = 162.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 0
@@ -180,105 +174,123 @@ __meta__ = {
 }
 
 [node name="Combat" type="VBoxContainer" parent="MarginContainer/Info/Distribution"]
-margin_right = 40.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 40, 0 )
+margin_right = 20.0
+margin_bottom = 110.0
+rect_min_size = Vector2( 20, 0 )
 size_flags_vertical = 3
 
 [node name="Color" type="ColorRect" parent="MarginContainer/Info/Distribution/Combat"]
-margin_right = 40.0
-margin_bottom = 62.0
+margin_right = 20.0
+margin_bottom = 92.0
 rect_min_size = Vector2( 20, 20 )
 size_flags_vertical = 3
 color = Color( 0.976471, 0.00392157, 0.00392157, 1 )
 
 [node name="Label" type="Label" parent="MarginContainer/Info/Distribution/Combat"]
-margin_top = 66.0
-margin_right = 40.0
-margin_bottom = 80.0
+margin_top = 96.0
+margin_right = 20.0
+margin_bottom = 110.0
 text = "1"
 
 [node name="Explorer" type="VBoxContainer" parent="MarginContainer/Info/Distribution"]
-margin_left = 40.0
-margin_right = 60.0
-margin_bottom = 80.0
+margin_left = 20.0
+margin_right = 40.0
+margin_bottom = 110.0
 size_flags_vertical = 3
 
 [node name="Color" type="ColorRect" parent="MarginContainer/Info/Distribution/Explorer"]
 margin_right = 20.0
-margin_bottom = 62.0
+margin_bottom = 92.0
 rect_min_size = Vector2( 20, 20 )
 size_flags_vertical = 3
 color = Color( 0.972549, 0.94902, 0.94902, 1 )
 
 [node name="Label" type="Label" parent="MarginContainer/Info/Distribution/Explorer"]
-margin_top = 66.0
+margin_top = 96.0
 margin_right = 20.0
-margin_bottom = 80.0
+margin_bottom = 110.0
 text = "1"
 
 [node name="Miner" type="VBoxContainer" parent="MarginContainer/Info/Distribution"]
-margin_left = 60.0
-margin_right = 80.0
-margin_bottom = 80.0
+margin_left = 40.0
+margin_right = 60.0
+margin_bottom = 110.0
 size_flags_vertical = 3
 
 [node name="Color" type="ColorRect" parent="MarginContainer/Info/Distribution/Miner"]
 margin_right = 20.0
-margin_bottom = 62.0
+margin_bottom = 92.0
 rect_min_size = Vector2( 20, 20 )
 size_flags_vertical = 3
 color = Color( 0.976471, 0.756863, 0.00392157, 1 )
 
 [node name="Label" type="Label" parent="MarginContainer/Info/Distribution/Miner"]
-margin_top = 66.0
+margin_top = 96.0
 margin_right = 20.0
-margin_bottom = 80.0
+margin_bottom = 110.0
 text = "1"
 
 [node name="Transport" type="VBoxContainer" parent="MarginContainer/Info/Distribution"]
-margin_left = 80.0
-margin_right = 100.0
-margin_bottom = 80.0
+margin_left = 60.0
+margin_right = 80.0
+margin_bottom = 110.0
 size_flags_vertical = 3
 
 [node name="Color" type="ColorRect" parent="MarginContainer/Info/Distribution/Transport"]
 margin_right = 20.0
-margin_bottom = 62.0
+margin_bottom = 92.0
 rect_min_size = Vector2( 20, 20 )
 size_flags_vertical = 3
 color = Color( 0.00392157, 0.270588, 0.976471, 1 )
 
 [node name="Label" type="Label" parent="MarginContainer/Info/Distribution/Transport"]
-margin_top = 66.0
+margin_top = 96.0
 margin_right = 20.0
-margin_bottom = 80.0
+margin_bottom = 110.0
 text = "1"
 
-[node name="Unallocated" type="VBoxContainer" parent="MarginContainer/Info/Distribution"]
-margin_left = 100.0
-margin_right = 300.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 200, 0 )
-alignment = 2
+[node name="Rebuilding" type="VBoxContainer" parent="MarginContainer/Info/Distribution"]
+margin_left = 80.0
+margin_right = 100.0
+margin_bottom = 110.0
+size_flags_vertical = 3
 
-[node name="Color" type="ColorRect" parent="MarginContainer/Info/Distribution/Unallocated"]
-margin_right = 200.0
-margin_bottom = 62.0
+[node name="Color" type="ColorRect" parent="MarginContainer/Info/Distribution/Rebuilding"]
+margin_right = 20.0
+margin_bottom = 92.0
+rect_min_size = Vector2( 20, 20 )
+size_flags_vertical = 3
+color = Color( 0.501961, 0.501961, 0.501961, 1 )
+
+[node name="Label" type="Label" parent="MarginContainer/Info/Distribution/Rebuilding"]
+margin_top = 96.0
+margin_right = 20.0
+margin_bottom = 110.0
+text = "1"
+
+[node name="Disabled" type="VBoxContainer" parent="MarginContainer/Info/Distribution"]
+margin_left = 100.0
+margin_right = 120.0
+margin_bottom = 110.0
+size_flags_vertical = 3
+
+[node name="Color" type="ColorRect" parent="MarginContainer/Info/Distribution/Disabled"]
+margin_right = 20.0
+margin_bottom = 92.0
 rect_min_size = Vector2( 20, 20 )
 size_flags_vertical = 3
 color = Color( 0, 0, 0, 1 )
 
-[node name="Label" type="Label" parent="MarginContainer/Info/Distribution/Unallocated"]
-margin_top = 66.0
-margin_right = 200.0
-margin_bottom = 80.0
+[node name="Label" type="Label" parent="MarginContainer/Info/Distribution/Disabled"]
+margin_top = 96.0
+margin_right = 20.0
+margin_bottom = 110.0
 text = "1"
 
 [node name="Actions" type="HBoxContainer" parent="."]
-margin_top = 248.0
+margin_top = 246.0
 margin_right = 480.0
-margin_bottom = 272.0
+margin_bottom = 270.0
 
 [node name="BtnCancel" type="TextureButton" parent="Actions"]
 margin_right = 24.0

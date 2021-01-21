@@ -10,6 +10,7 @@ var state = {
 }
 signal state_changed
 signal selection_changed
+signal update_ui
 
 func set_planet_system(planet_system: int) -> void:
 	var camera = get_node('/root/GameScene/Camera') as Camera2D

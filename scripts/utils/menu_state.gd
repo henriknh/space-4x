@@ -44,6 +44,7 @@ func pop() -> void:
 	if _menus.size() > 0:
 		_menus[_menus.size() - 1].visible = true
 	emit_signal("menu_changed")
+	GameState.emit_signal("update_ui")
 		
 func menus_size() -> int:
 	return _menus.size()

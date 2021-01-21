@@ -186,6 +186,30 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ColorRebuilding" type="ColorRect" parent="VBoxContainer/DistributionSpectra"]
+margin_left = 80.0
+margin_right = 100.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 20, 0 )
+mouse_filter = 1
+size_flags_vertical = 3
+color = Color( 0.521569, 0.521569, 0.521569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorDisabled" type="ColorRect" parent="VBoxContainer/DistributionSpectra"]
+margin_left = 100.0
+margin_right = 120.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 20, 0 )
+mouse_filter = 1
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Ships" type="HBoxContainer" parent="VBoxContainer"]
 visible = false
 margin_top = 120.0

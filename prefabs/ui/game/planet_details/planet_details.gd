@@ -18,6 +18,7 @@ func _ready():
 	_update_ui()
 	MenuState.push(self)
 	
+	GameState.connect("update_ui", self, "_update_ui")
 	selection.connect("entity_changed", self, "_update_ui")
 
 	var viewport_size = get_viewport_rect().size
@@ -46,20 +47,25 @@ func _update_ui():
 	
 	var distribution_width = $VBoxContainer/DistributionSpectra.rect_size[0]
 	
-	var unallocated = 0
 	var combat = 0
 	var explorer = 0
 	var miner = 0
 	var transport = 0
+	var rebuilding = 0
+	var disabled = 0
 	
 	for child in selection.children:
 		if child.ship_type >= 0 and child.faction == 0:
 			if child.state == Enums.ship_states.travel:
 				continue
 			
+			if child.state == Enums.ship_states.rebuild:
+				rebuilding += 1
+				continue
+			
 			match(child.ship_type):
 				Enums.ship_types.disabled:
-					unallocated += 1
+					disabled += 1
 				Enums.ship_types.combat:
 					combat += 1
 				Enums.ship_types.explorer:
@@ -69,31 +75,34 @@ func _update_ui():
 				Enums.ship_types.transport:
 					transport += 1
 					
-	var total: float = unallocated + combat + explorer + miner + transport
+	var total: float = combat + explorer + miner + transport + rebuilding + disabled
 	
 	$VBoxContainer/DistributionLabel/ShipCount.text = int(total) as String
 	$VBoxContainer/DistributionSpectra.visible = total > 0
+	
+	if total == 0:
+		return
 	
 	var combat_size = $VBoxContainer/DistributionSpectra/ColorCombat.rect_min_size
 	var explorer_size = $VBoxContainer/DistributionSpectra/ColorExplorer.rect_min_size
 	var miner_size = $VBoxContainer/DistributionSpectra/ColorMiner.rect_min_size
 	var transport_size = $VBoxContainer/DistributionSpectra/ColorTransport.rect_min_size
+	var rebuilding_size = $VBoxContainer/DistributionSpectra/ColorRebuilding.rect_min_size
+	var disabled_size = $VBoxContainer/DistributionSpectra/ColorDisabled.rect_min_size
 	
-	if total > 0:
-		combat_size[0] = (combat / total) * distribution_width
-		explorer_size[0] = (explorer / total) * distribution_width
-		miner_size[0] = (miner / total) * distribution_width
-		transport_size[0] = (transport / total) * distribution_width
-	else:
-		combat_size[0] = 0
-		explorer_size[0] = 0
-		miner_size[0] = 0
-		transport_size[0] = 0
-		
+	combat_size[0] = (combat / total) * distribution_width
+	explorer_size[0] = (explorer / total) * distribution_width
+	miner_size[0] = (miner / total) * distribution_width
+	transport_size[0] = (transport / total) * distribution_width
+	rebuilding_size[0] = (rebuilding / total) * distribution_width
+	disabled_size[0] = (disabled / total) * distribution_width
+	
 	$VBoxContainer/DistributionSpectra/ColorCombat.rect_min_size = combat_size
 	$VBoxContainer/DistributionSpectra/ColorExplorer.rect_min_size = explorer_size
 	$VBoxContainer/DistributionSpectra/ColorMiner.rect_min_size = miner_size
 	$VBoxContainer/DistributionSpectra/ColorTransport.rect_min_size = transport_size
+	$VBoxContainer/DistributionSpectra/ColorRebuilding.rect_min_size = rebuilding_size
+	$VBoxContainer/DistributionSpectra/ColorDisabled.rect_min_size = disabled_size
 	
 func _create_ship(ship_type: int):
 

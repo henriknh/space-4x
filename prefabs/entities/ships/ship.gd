@@ -59,18 +59,16 @@ func process(delta: float):
 			
 	elif state == Enums.ship_states.rebuild:
 		if not move(parent.position):
-			print('rebuild')
-			print(ship_type)
+			GameState.emit_signal("update_ui")
 			if ship_type != Enums.ship_types.disabled:
 				ship_type = Enums.ship_types.disabled
 			
 			process_progress -= delta
-			print(process_progress)
 			if process_progress < 0:
-				print('done')
 				process_progress = 0
 				ship_type = process_target
 				state = Enums.ship_states.idle
+				GameState.emit_signal("update_ui")
 	
 	elif state == Enums.ship_states.idle and ship_type != Enums.ship_types.disabled:
 		if not idle_target or close_to_target(idle_target):
