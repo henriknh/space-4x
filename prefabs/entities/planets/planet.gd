@@ -105,11 +105,13 @@ func _on_PlanetArea_body_entered(entity: entity):
 		if entity.object_type == Enums.object_types.asteroid:
 			asteroids.append(entity)
 		entity.parent = self
+		emit_signal("entity_changed")
 
 func _on_PlanetArea_body_exited(entity: entity):
 	if self.planet_system == entity.planet_system:
 		children.erase(entity)
 		asteroids.append(entity)
+		emit_signal("entity_changed")
 		
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
