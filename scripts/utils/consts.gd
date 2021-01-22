@@ -20,3 +20,7 @@ const asteroids_base_distance_to_sun = 2000
 const asteroids_extra_distance = 800
 const asteroids_min = 101
 const asteroids_max = 500
+
+# Ships
+const ship_acceleration_factor: float = 0.1 # Factor of max_speed
+const ship_turn_speed: int = 4

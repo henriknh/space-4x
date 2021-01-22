@@ -45,6 +45,14 @@ enum ship_types {
 	transport
 }
 
+const ship_colors = {
+	ship_types.disabled: Color(0, 0, 0, 1),
+	ship_types.combat: Color(1, 0, 0.4, 1),
+	ship_types.explorer: Color(1, 1, 1, 1),
+	ship_types.miner: Color(1, 0.8, 0.4, 1),
+	ship_types.transport: Color(0.2, 0.5, 1, 1)
+}
+
 enum ship_states {
 	idle,
 	rebase,
@@ -55,13 +63,6 @@ enum ship_states {
 	combat,
 	explore,
 	colonize
-}
-
-const ship_scripts = {
-	'combat': 'res://prefabs/entities/ships/ship_combat.gd',
-	'explorer': 'res://prefabs/entities/ships/ship_explorer.gd',
-	'miner': 'res://prefabs/entities/ships/ship_miner.gd',
-	'transport': 'res://prefabs/entities/ships/ship_transport.gd'
 }
 
 const scenes = {

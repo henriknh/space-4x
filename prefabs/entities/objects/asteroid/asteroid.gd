@@ -10,7 +10,6 @@ var sprite_large = preload("res://assets/asteroid_large.png")
 func create():
 	object_type = Enums.object_types.asteroid
 	label = NameGenerator.get_name_asteroid()
-	color = Color.from_hsv(0, WorldGenerator.rng.randf_range(20, 40) / 100, WorldGenerator.rng.randf_range(70, 100) / 100)
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
 	
 	metal = WorldGenerator.rng.randf_range(150, 150)
@@ -28,7 +27,7 @@ func ready():
 		sprite_size = 16
 		
 	($CollisionShape2D.shape as CircleShape2D).radius = sprite_size
-	$Sprite.self_modulate = color
+	$Sprite.self_modulate = Color.from_hsv(0, ((variant % 20) + 20) / 100, ((variant % 30) + 70) / 100)
 	
 	.ready()
 	

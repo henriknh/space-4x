@@ -39,6 +39,13 @@ func _ready():
 	distribution[Enums.ship_types.transport].change = distribution[Enums.ship_types.transport].current
 	
 	_update_disabled()
+	
+	$MarginContainer/Info/Distribution/Combat/Color.color = Enums.ship_colors[Enums.ship_types.combat]
+	$MarginContainer/Info/Distribution/Explorer/Color.color = Enums.ship_colors[Enums.ship_types.explorer]
+	$MarginContainer/Info/Distribution/Miner/Color.color = Enums.ship_colors[Enums.ship_types.miner]
+	$MarginContainer/Info/Distribution/Transport/Color.color = Enums.ship_colors[Enums.ship_types.transport]
+	$MarginContainer/Info/Distribution/Rebuilding/Color.color = Color(0.5, 0.5, 0.5, 1)
+	$MarginContainer/Info/Distribution/Disabled/Color.color = Enums.ship_colors[Enums.ship_types.disabled]
 
 	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Decrease.connect("pressed", self, "_on_change", [Enums.ship_types.combat, -1])
 	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Increase.connect("pressed", self, "_on_change", [Enums.ship_types.combat, 1])
@@ -52,10 +59,6 @@ func _ready():
 	_update_ui()
 	
 func _on_change(ship_type: int, change: int):
-	print('on change')
-	print(ship_type)
-	print(change)
-	
 	distribution[ship_type].change += change
 	
 	if distribution[ship_type].change < 0:

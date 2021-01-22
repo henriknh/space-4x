@@ -7,10 +7,12 @@ const INACTIVE_TIME_PERIOD: float = 0.05
 
 # Temporary
 var delta: float = 0
+var queued_to_free: bool = false
 signal entity_changed
 
 # General
 var id: int = -1
+var variant: int = -1
 var parent: entity
 var entity_type: int = -1
 var label: String = ''
@@ -20,7 +22,6 @@ var indestructible: bool = false
 var faction: int = -1
 var planet_system: int = -1
 var rotation_speed: float = 0
-var color: Color = Color(1,1,1,1)
 var state: int = 0
 var process_target: int
 var process_progress: float
@@ -52,6 +53,9 @@ var ship_cargo_size: int = 20
 
 func _physics_process(_delta):
 	
+	if queued_to_free:
+		return
+	
 	if entity_type != Enums.entity_types.planet:
 		if not parent:
 			return
@@ -67,8 +71,13 @@ func _physics_process(_delta):
 			process(delta)
 		delta = 0
 		
+func queue_free():
+	queued_to_free = true
+	.queue_free()
+
 func create():
 	id = WorldGenerator.get_new_id()
+	variant = WorldGenerator.rng.randi()
 	if hitpoints_max == -1:
 		hitpoints_max = 1
 	hitpoints = hitpoints_max
@@ -104,6 +113,7 @@ func save():
 		
 		# General
 		"id": id,
+		"variant": variant,
 		"entity_type": entity_type,
 		"label": label,
 		"hitpoints": hitpoints,
@@ -112,7 +122,6 @@ func save():
 		"faction": faction,
 		"planet_system": planet_system,
 		"rotation_speed": rotation_speed,
-		"color": color.to_html(true),
 		"state": state,
 		"process_target": process_target,
 		"process_progress": process_progress,

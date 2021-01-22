@@ -2,12 +2,6 @@ extends Control
 
 var ship_distribution_prefab = preload('res://prefabs/ui/game/planet_details/ship_distribution/ship_distribution.tscn')
 
-var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
-var script_combat = load(Enums.ship_scripts.combat)
-var script_explorer = load(Enums.ship_scripts.explorer)
-var script_miner = load(Enums.ship_scripts.miner)
-var script_transport = load(Enums.ship_scripts.transport)
-
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 onready var selection: entity = GameState.get_selection()
 
@@ -28,6 +22,13 @@ func _ready():
 	real_camera_zoom = camera.target_zoom
 	camera.target_position = GameState.get_selection().position + offset
 	camera.target_zoom = Vector2.ONE
+	
+	$VBoxContainer/DistributionSpectra/ColorCombat.color = Enums.ship_colors[Enums.ship_types.combat]
+	$VBoxContainer/DistributionSpectra/ColorExplorer.color = Enums.ship_colors[Enums.ship_types.explorer]
+	$VBoxContainer/DistributionSpectra/ColorMiner.color = Enums.ship_colors[Enums.ship_types.miner]
+	$VBoxContainer/DistributionSpectra/ColorTransport.color = Enums.ship_colors[Enums.ship_types.transport]
+	$VBoxContainer/DistributionSpectra/ColorRebuilding.color = Color(0.5, 0.5, 0.5, 1)
+	$VBoxContainer/DistributionSpectra/ColorDisabled.color = Enums.ship_colors[Enums.ship_types.disabled]
 	
 func queue_free():
 	camera.target_position = real_camera_position
@@ -105,26 +106,8 @@ func _update_ui():
 	$VBoxContainer/DistributionSpectra/ColorDisabled.rect_min_size = disabled_size
 	
 func _create_ship(ship_type: int):
-
 	var curr_selection = GameState.get_selection()
-	var instance = prefab_ship.instance()
-		
-	match ship_type:
-		Enums.ship_types.combat:
-			instance.set_script(script_combat)
-		Enums.ship_types.explorer:
-			instance.set_script(script_explorer)
-		Enums.ship_types.miner:
-			instance.set_script(script_miner)
-		Enums.ship_types.transport:
-			instance.set_script(script_transport)
-	
-	instance.planet_system = curr_selection.planet_system
-	instance.faction = curr_selection.faction
-	instance.position = curr_selection.position
-	instance.parent = curr_selection
-	instance.create()
-
+	var instance = Instancer.ship(ship_type, null, curr_selection)
 	get_node('/root/GameScene').add_child(instance)
 
 func _on_production_ship():

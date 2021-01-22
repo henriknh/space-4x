@@ -4,19 +4,12 @@ class_name ship
 
 # Temporary
 var nav_route = []
-var ship_target_obj = null
-var model: Sprite = null
-var trail: Node2D = null
 var idle_target: Vector2
-
-export(int) var min_speed: int = 10
-export(int) var acceleration: int = 50
-export(int) var turn_speed: int = 4
 
 func create():
 	entity_type = Enums.entity_types.ship
 	label = NameGenerator.get_name_ship()
-	faction = 0
+	
 	if hitpoints_max == -1:
 		hitpoints_max = 50
 	
@@ -30,19 +23,19 @@ func create():
 		water_max = 5
 	if ship_cargo_size < 0:
 		ship_cargo_size = metal_max + power_max + food_max + water_max
+	
 	.create()
 	
 func ready():
-	model = get_node("Sprite") as Sprite
-	trail = get_node("Trail") as Node2D
+	var model = get_node("Sprite") as Sprite
+	var trail = get_node("Trail") as Node2D
 	
 	if faction == 0:
-		model.self_modulate = color
-		trail.set_color(color)
+		model.self_modulate = Enums.ship_colors[ship_type]
+		trail.set_color(Enums.ship_colors[ship_type])
 	else:
-		var enemy_color = Color(0,0,0,1)
-		model.self_modulate = enemy_color
-		trail.set_color(enemy_color)
+		model.self_modulate = Enums.player_colors[faction]
+		trail.set_color(Enums.player_colors[faction])
 	.ready()
 		
 func process(delta: float):
@@ -59,16 +52,20 @@ func process(delta: float):
 			
 	elif state == Enums.ship_states.rebuild:
 		if not move(parent.position):
-			GameState.emit_signal("update_ui")
+			
+			# Replace old ship instance with disabled
 			if ship_type != Enums.ship_types.disabled:
-				ship_type = Enums.ship_types.disabled
+				get_node('/root/GameScene').add_child(Instancer.ship(Enums.ship_types.disabled, self))
+				return queue_free()
 			
 			process_progress -= delta
 			if process_progress < 0:
 				process_progress = 0
 				ship_type = process_target
 				state = Enums.ship_states.idle
-				GameState.emit_signal("update_ui")
+				
+				get_node('/root/GameScene').add_child(Instancer.ship(ship_type, self))
+				return queue_free()
 	
 	elif state == Enums.ship_states.idle and ship_type != Enums.ship_types.disabled:
 		if not idle_target or close_to_target(idle_target):
@@ -88,9 +85,9 @@ func clear():
 
 func move(target_position: Vector2, decrease_speed: bool = true, turn_direction: int = 0) -> bool:
 	if turn_direction == 0:
-		rotation += get_angle_to(target_position) * turn_speed * delta
+		rotation += get_angle_to(target_position) * Consts.ship_turn_speed * delta
 	elif turn_direction < 0:
-		rotation += get_angle_to(target_position) * turn_speed * delta
+		rotation += get_angle_to(target_position) * Consts.ship_turn_speed * delta
 
 	var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
 
@@ -101,23 +98,20 @@ func move(target_position: Vector2, decrease_speed: bool = true, turn_direction:
 func _calc_speed(target_position: Vector2, decrease_speed: bool) -> bool:
 	if decrease_speed and close_to_target(target_position):
 		if nav_route.size() <= 1 and ship_speed >= 0:
-			ship_speed -= ship_speed_max / 10 * delta * 10
+			ship_speed -= ship_speed_max * delta
 		if ship_speed < 0:
 			ship_speed = 0
-	elif ship_speed < min_speed:
-		ship_speed = min_speed
 	elif ship_speed > ship_speed_max:
 		ship_speed = ship_speed_max
 	elif ship_speed < ship_speed_max:
-		ship_speed += ship_speed_max / 10 * delta
-	#else:
-	#	ship_speed -= ship_speed_max / 10 * delta * 10
-		
+		ship_speed += ship_speed_max * Consts.ship_acceleration_factor * delta
+	
+	var trail = get_node("Trail") as Node2D
 	if ship_speed == 0 and trail.is_emitting():
 		trail.set_emitting(false)
 	elif ship_speed != 0 and visible and not trail.is_emitting():
 		trail.set_emitting(true)
-		
+	
 	return ship_speed != 0
 
 func _update_travel_route():
@@ -127,7 +121,6 @@ func _update_travel_route():
 		else:
 			nav_route = []
 			process_target = -1
-			trail.set_emitting(false)
 
 func close_to_target(target_position: Vector2) -> bool:
 	if not target_position:

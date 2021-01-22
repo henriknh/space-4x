@@ -135,6 +135,7 @@ Nav="*res://scripts/utils/navigation.gd"
 Voronoi="*res://scripts/voronoi/voronoi.gd"
 Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
+Instancer="*res://scripts/utils/instancer.gd"
 
 [display]
 

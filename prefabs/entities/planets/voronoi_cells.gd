@@ -6,7 +6,7 @@ func _ready():
 func _draw():
 	if not Settings.is_debug():
 		return
-		
+	
 	for segment in Nav.debug:
 		draw_line(segment[0], segment[1], Color(1,0,0,1), 1, true)
 	

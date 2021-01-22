@@ -79,7 +79,6 @@ func _instantiate_node_data(node_data):
 	var new_object: KinematicBody2D = load(node_data["filename"]).instance()
 	new_object.set_script(load(node_data["script"]))
 	new_object.visible = false
-	new_object.color = Color(node_data['color'])
 	new_object.position = Vector2(node_data["pos_x"], node_data["pos_y"])
 	
 	# Planet specific data
@@ -93,7 +92,7 @@ func _instantiate_node_data(node_data):
 
 	# Now we set the remaining variables.
 	for i in node_data.keys():
-		var special_keys = ['filename', 'script', 'color', 'parent', 'pos_x', 'pos_y']
+		var special_keys = ['filename', 'script', 'parent', 'pos_x', 'pos_y']
 		if special_keys.has(i):
 			continue
 		
