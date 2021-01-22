@@ -68,9 +68,6 @@ func _input(event):
 
 func _handle_touch(event: InputEvent):
 	if event is InputEventScreenTouch:
-		print('InputEventScreenTouch')
-		print(event.index)
-		print(event.position)
 		if event.pressed:
 			touches[event.index] = event.position
 		else:
@@ -79,7 +76,6 @@ func _handle_touch(event: InputEvent):
 		if touches.keys().size() == 1:
 			target_position -= event.relative * zoom.x
 		elif touches.keys().size() == 2:
-			print('pinch')
 			if touches.has(0) and touches.has(1):
 				var prev_dist = (touches[0] as Vector2).distance_squared_to(touches[1])
 				var curr_dist = prev_dist
