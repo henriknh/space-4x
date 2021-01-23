@@ -6,7 +6,7 @@
 [ext_resource path="res://prefabs/scenes/game.gd" type="Script" id=4]
 [ext_resource path="res://assets/background_transparent.png" type="Texture" id=5]
 [ext_resource path="res://prefabs/entities/planets/voronoi_cells.gd" type="Script" id=6]
-[ext_resource path="res://prefabs/scenes/loading.tscn" type="PackedScene" id=7]
+[ext_resource path="res://prefabs/ui/game/loading/loading.tscn" type="PackedScene" id=7]
 
 [node name="GameScene" type="Node2D"]
 script = ExtResource( 4 )

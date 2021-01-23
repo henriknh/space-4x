@@ -26,7 +26,6 @@ func ready():
 	get_node("InfoUI").set_label(label)
 	(get_node("PlanetArea/PlanetAreaCollision") as CollisionPolygon2D).polygon = self.planet_convex_hull
 	
-	print('ready %d' % id)
 	Settings.connect("settings_changed", self, "update")
 	
 	var instance = null

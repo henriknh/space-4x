@@ -26,7 +26,7 @@ func ready():
 		$Sprite.texture = sprite_large
 		sprite_size = 16
 		
-	($CollisionShape2D.shape as CircleShape2D).radius = sprite_size
+	#($CollisionShape2D.shape as CircleShape2D).radius = sprite_size
 	$Sprite.self_modulate = Color.from_hsv(0, ((variant % 20) + 20) / 100, ((variant % 30) + 70) / 100)
 	
 	.ready()
@@ -40,11 +40,11 @@ func process(delta: float):
 	
 	.process(delta)
 
-func get_target_point():
-	var angle = 2 * PI * randf()
-	var r = ($CollisionShape2D.shape as CircleShape2D).radius * randf()
-	
-	var x = r * cos(angle) + global_transform.origin.x
-	var y = r * sin(angle) + global_transform.origin.y
-	
-	return Vector2(x, y)
+#func get_target_point():
+#	var angle = 2 * PI * randf()
+#	var r = ($CollisionShape2D.shape as CircleShape2D).radius * randf()
+#
+#	var x = r * cos(angle) + global_transform.origin.x
+#	var y = r * sin(angle) + global_transform.origin.y
+#
+#	return Vector2(x, y)

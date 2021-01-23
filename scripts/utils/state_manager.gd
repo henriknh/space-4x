@@ -65,12 +65,27 @@ func load_game() -> bool:
 
 	save_game.close()
 	
+	var total_entities: float = 0
+	total_entities += node_data_planets.size()
+	total_entities += node_data_objects.size()
+	total_entities += node_data_ships.size()
+	var load_progress: float = 0
+	
+	GameState.loading_label = 'Planets'
 	for node_data_planet in node_data_planets:
 		self._instantiate_node_data(node_data_planet)
+		load_progress += 1
+		GameState.loading_progress = load_progress / total_entities
+	GameState.loading_label = 'Objects'
 	for node_data_object in node_data_objects:
 		self._instantiate_node_data(node_data_object)
+		load_progress += 1
+		GameState.loading_progress = load_progress / total_entities
+	GameState.loading_label = 'Ships'
 	for node_data_ship in node_data_ships:
 		self._instantiate_node_data(node_data_ship)
+		load_progress += 1
+		GameState.loading_progress = load_progress / total_entities
 		
 	GameState.set_planet_system(GameState.get_planet_system())
 	

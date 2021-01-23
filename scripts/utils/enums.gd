@@ -66,7 +66,6 @@ enum ship_states {
 }
 
 const scenes = {
-	'loading': 'res://prefabs/scenes/loading.tscn',
 	'main_menu': 'res://prefabs/scenes/main_menu.tscn',
 	'game': 'res://prefabs/scenes/game.tscn',
 	'galaxy_system': 'res://prefabs/scenes/galaxy_system.tscn',

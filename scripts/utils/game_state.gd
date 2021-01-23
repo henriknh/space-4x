@@ -3,6 +3,9 @@ extends Node
 # Temporary
 var _selection: entity
 var _is_loading: bool = true
+var loading: bool = true setget set_loading, is_loading
+var loading_progress: float = 0 setget set_loading_progress, get_loading_progress
+var loading_label: String = '' setget set_loading_label, get_loading_label
 
 # Persistent
 var state = {
@@ -63,8 +66,24 @@ func get_state() -> Dictionary:
 	return state
 
 func set_loading(is_loading: bool) -> void:
-	_is_loading = is_loading
+	loading = is_loading
+	loading_progress = 0
+	loading_label = ''
 	emit_signal("state_changed")
-	
+
 func is_loading() -> bool:
-	return _is_loading
+	return loading
+
+func set_loading_progress(_loading_progress: float) -> void:
+	loading_progress = _loading_progress
+	emit_signal("state_changed")
+
+func get_loading_progress() -> float:
+	return loading_progress
+
+func set_loading_label(_loading_label: String) -> void:
+	loading_label = _loading_label
+	emit_signal("state_changed")
+
+func get_loading_label() -> String:
+	return loading_label

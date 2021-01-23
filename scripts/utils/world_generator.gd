@@ -4,8 +4,8 @@ var _world_size: int = 1
 var _seed: int = 0
 var _unique_id = 0
 
-var load_progress = 0
-var total_entities = 0
+var load_progress: float = 0
+var total_entities: float  = 0
 
 onready var rng: RandomNumberGenerator = null
 
@@ -32,6 +32,7 @@ func generate_world():
 	print('Generate world with seed: %d' % rng.get_seed())
 	
 	# Calculate planet system count
+	GameState.loading_label = 'Metadata'
 	var galaxies_min = Consts.galaxy_size[_world_size].min
 	var galaxies_max = Consts.galaxy_size[_world_size].max
 	var planet_system_count = WorldGenerator.rng.randi_range(galaxies_min, galaxies_max)
@@ -70,12 +71,16 @@ func generate_world():
 	
 	var gameScene = get_node('/root/GameScene')
 	
+	
+			
 	# Instance planet systems
+	GameState.loading_label = 'Planet systems'
 	for planet_system_idx in range(planet_system_count):
 		gameScene.add_child(Instancer.planet_system(planet_system_idx))
 		_entity_loaded()
 	
 	# Instance planets
+	GameState.loading_label = 'Planets'
 	for planet_system_idx in range(planet_system_count):
 		var total_orbits = planet_system_orbit_count[planet_system_idx]
 		var orbit_diff = (Consts.planet_system_radius / total_orbits) * 0.2
@@ -107,11 +112,13 @@ func generate_world():
 	# Instance objects
 	for planet_system_idx in range(planet_system_count):
 		var object_count = planet_system_object_count[planet_system_idx]
+		GameState.loading_label = 'Asteroids'
 		for asteroid_idx in range(object_count[Enums.object_types.asteroid]):
-			gameScene.add_child(Instancer.object(Enums.object_types.asteroid, planet_system_idx))
+			var asteroid = Instancer.object(Enums.object_types.asteroid, planet_system_idx)
+			gameScene.add_child(asteroid)
 			_entity_loaded()
 			
-		
+	GameState.loading_label = 'Finishing up'
 	var players = [1]
 	for player in players:
 		var start_planet = _get_start_planet()
@@ -130,9 +137,7 @@ func generate_world():
 
 func _entity_loaded():
 	load_progress += 1
-	var progress_bar: ProgressBar = get_node('/root/GameScene/CanvasLayer/LoadingScene/ProgressBar')
-	progress_bar.max_value = total_entities
-	progress_bar.value = load_progress
+	GameState.loading_progress = load_progress / total_entities
 
 func _get_start_planet() -> entity:
 	var possible_planets = []

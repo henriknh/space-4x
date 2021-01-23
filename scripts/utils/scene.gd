@@ -8,8 +8,8 @@ func _ready():
 	var root = get_tree().get_root()
 	current_scene = root.get_child(root.get_child_count() -1)
 	
-	var loading_scene_resource = ResourceLoader.load(Enums.scenes.loading)
-	loading_scene = loading_scene_resource.instance()
+	#var loading_scene_resource = ResourceLoader.load(Enums.scenes.loading)
+	#loading_scene = loading_scene_resource.instance()
 	
 func goto_scene(path: String, saveFile: String = '') -> void:
 	call_deferred("_deferred_goto_scene", path, saveFile)
@@ -32,12 +32,12 @@ func _deferred_goto_scene(path: String, saveFile: String = '') -> void:
 	
 	if path == Enums.scenes.game:
 		print('thread')
-		#thread.start(self, "_handle_loading_entities", saveFile)
-		_handle_loading_entities(saveFile)
+		thread.start(self, "_handle_loading_entities", saveFile)
+		#_handle_loading_entities(saveFile)
 
 func _handle_loading_entities(saveFile: String):
 	print('_handle_loading_entities')
-	GameState.set_loading(true)
+	GameState.loading = true
 	
 	if saveFile.length() == 0:
 		#thread.start(WorldGenerator, "generate_world")
@@ -51,10 +51,7 @@ func _handle_loading_entities(saveFile: String):
 
 func _handle_loading_entities_done():
 	print('_handle_loading_entities_done')
-	#var result = thread.wait_to_finish()
-	#var current_scene = call_deferred("_deferred_goto_scene", Enums.scenes.game)
-	#print(current_scene)
+	var result = thread.wait_to_finish()
 	print('init scene')
 	get_tree().get_current_scene().init()
-	GameState.set_loading(false)
-	#current_scene.init()
+	GameState.loading = false
