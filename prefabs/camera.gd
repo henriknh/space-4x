@@ -122,11 +122,23 @@ func _handle_mouse(event: InputEvent):
 	if event is InputEventMouseButton:
 		match event.button_index:
 			BUTTON_WHEEL_UP:
-				target_zoom -= Vector2.ONE
+				zoom_at_point(1 / Consts.CAMERA_ZOOM_STEP, event.position)
 			BUTTON_WHEEL_DOWN:
-				target_zoom += Vector2.ONE
+				zoom_at_point(Consts.CAMERA_ZOOM_STEP, event.position)
 	
 	self._clamp_targets()
+
+func zoom_at_point(zoom_change, point):
+	# https://godotengine.org/qa/25983/camera2d-zoom-position-towards-the-mouse
+	var c0 = global_position # camera position
+	var v0 = get_viewport().size # vieport size
+	var c1 # next camera position
+	var z0 = zoom # current zoom value
+	var z1 = z0 * zoom_change # next zoom value
+
+	c1 = c0 + (-0.5*v0 + point)*(z0 - z1)
+	target_zoom = z1
+	target_position = c1
 
 func _clamp_targets():
 	
@@ -145,6 +157,7 @@ func _clamp_targets():
 		target_position.y = Consts.planet_system_radius
 
 func _process(delta):
+	pass
 	zoom = lerp(zoom, target_zoom, Consts.CAMERA_LERPTIME_POS * delta)
 	position = lerp(position, target_position, 1 if Utils.is_mobile else Consts.CAMERA_LERPTIME_POS * delta)
 

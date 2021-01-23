@@ -12,8 +12,9 @@ func create(gameScene: Node, planet_system_idx: int) -> void:
 		2: 0,
 		3: 0
 	}
-	
-	var total_orbits = int(WorldGenerator.rng.randi_range(Consts.planet_system_min_orbits, Consts.planet_system_max_orbits))
+	var orbits_min = Consts.planet_system_orbits[WorldGenerator.get_world_size()].min
+	var orbits_max = Consts.planet_system_orbits[WorldGenerator.get_world_size()].max
+	var total_orbits = int(WorldGenerator.rng.randi_range(orbits_min, orbits_max))
 	var orbit_diff = (Consts.planet_system_radius / total_orbits) * 0.2
 
 	for orbit in range(total_orbits):

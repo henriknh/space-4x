@@ -4,20 +4,21 @@ var settings = preload('res://prefabs/ui/settings/settings_menu.tscn')
 
 func _ready():
 	MenuState.push(self)
+	$VBox/CreateGame/VBoxContainer/SliderWorldSize.max_value = Enums.world_size.keys().size() - 1
 	_update_view_state()
 	
 func _update_view_state():
-	$VBoxContainer/ButtonCreate.disabled = StateManager.has_save()
-	$VBoxContainer/ButtonLoad.disabled = not StateManager.has_save()
-	$VBoxContainer/ButtonDeleteSave.disabled = not StateManager.has_save()
-	_on_world_size_changed($VBoxContainer/SliderWorldSize.value)
-	_on_seed_changed($VBoxContainer/SpinBoxSeed.value)
+	$VBox/CreateGame/ButtonCreate.disabled = StateManager.has_save()
+	$VBox/StoredGame/ButtonLoad.disabled = not StateManager.has_save()
+	$VBox/StoredGame/ButtonDeleteSave.disabled = not StateManager.has_save()
+	_on_world_size_changed($VBox/CreateGame/VBoxContainer/SliderWorldSize.value)
+	_on_seed_changed($VBox/CreateGame/VBoxContainer/SpinBoxSeed.value)
 
 func _on_create():
 	Scene.goto_scene(Enums.scenes.game, true)
 
 func _on_world_size_changed(value: int):
-	$VBoxContainer/LabelWorldSize.text = "World size: %s" % Enums.world_sizes[value]
+	$VBox/CreateGame/VBoxContainer/LabelWorldSize.text = "World size: %s" % Enums.world_size_label[value]
 	WorldGenerator.set_world_size(value)
 
 func _on_seed_changed(seed_value: int):

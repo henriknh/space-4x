@@ -122,8 +122,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Consts="*res://scripts/utils/consts.gd"
 Enums="*res://scripts/utils/enums.gd"
+Consts="*res://scripts/utils/consts.gd"
 Utils="*res://scripts/utils/utils.gd"
 NameGenerator="*res://scripts/utils/name_generator.gd"
 WorldGenerator="*res://scripts/utils/world_generator.gd"

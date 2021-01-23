@@ -73,7 +73,14 @@ const scenes = {
 	'planet_system': 'res://prefabs/scenes/planet_system.tscn'
 }
 
-const world_sizes = {
+# World
+enum world_size {
+	small,
+	medium,
+	large
+}
+
+const world_size_label = {
 	0: 'Small',
 	1: 'Medium',
 	2: 'Large'

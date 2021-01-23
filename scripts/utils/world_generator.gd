@@ -13,6 +13,9 @@ func _ready():
 func set_world_size(world_size: int) -> void:
 	_world_size = world_size
 
+func get_world_size() -> int:
+	return _world_size
+
 func set_seed(seed_value: int) -> void:
 	_seed = seed_value
 	rng = RandomNumberGenerator.new()
@@ -25,7 +28,9 @@ func get_new_id() -> int:
 func generate_world():
 	print('Generate world with seed: %d' % rng.get_seed())
 	
-	var planet_system_count = WorldGenerator.rng.randi_range(Consts.galaxy_min, Consts.galaxy_max)
+	var galaxies_min = Consts.galaxy_size[_world_size].min
+	var galaxies_max = Consts.galaxy_size[_world_size].max
+	var planet_system_count = WorldGenerator.rng.randi_range(galaxies_min, galaxies_max)
 	print('Planet systems: %d' % planet_system_count)
 	
 	var spawner_planet_systems = load('res://scripts/spawners/spawner_planet_systems.gd').new()
