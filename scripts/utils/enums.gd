@@ -5,7 +5,13 @@ const player_colors = {
 	0: Color(1, 1, 1),
 	1: Color(0, 0, 1),
 	2: Color(0, 1, 0),
-	3: Color(1, 0, 0)
+	3: Color(1, 0, 0),
+	4: Color(0.5, 0, 0),
+	5: Color(0, 0.5, 0),
+	6: Color(0, 0, 0.5),
+	7: Color(0.5, 0.5, 0),
+	8: Color(0, 0.5, 0.5),
+	9: Color(0.5, 0, 0.5)
 }
 
 enum entity_types {

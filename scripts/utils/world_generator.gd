@@ -119,30 +119,33 @@ func generate_world():
 			_entity_loaded()
 			
 	GameState.loading_label = 'Finishing up'
-	var players = [1]
-	for player in players:
-		var start_planet = _get_start_planet()
+	
+	for player in Enums.player_colors.keys():
+		if player < 0:
+			continue
+		
+		var is_human_player = player == 0
+		var start_planet = _get_start_planet(is_human_player)
 		start_planet.faction = player
 		_set_start_resouces(start_planet)
 		
-	var start_planet = _get_start_planet()
-	start_planet.faction = 0
-	_set_start_resouces(start_planet)
+		if is_human_player:
+			var camera = get_node('/root/GameScene/Camera') as Camera2D
+			camera.target_position = start_planet.position
+			camera.position = start_planet.position
 	
 	GameState.set_planet_system(0)
 	
-	var camera = get_node('/root/GameScene/Camera') as Camera2D
-	camera.target_position = start_planet.position
-	camera.position = start_planet.position
+
 
 func _entity_loaded():
 	load_progress += 1
 	GameState.loading_progress = load_progress / total_entities
 
-func _get_start_planet() -> entity:
+func _get_start_planet(is_human: bool) -> entity:
 	var possible_planets = []
 	for planet in get_tree().get_nodes_in_group('Planet'):
-		if planet.planet_system == 0 and planet.faction == -1:
+		if (is_human and planet.planet_system == 0 or not is_human) and planet.faction == -1:
 			possible_planets.append(planet)
 	
 	return possible_planets[WorldGenerator.rng.randi() % possible_planets.size()]
