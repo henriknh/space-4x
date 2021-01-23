@@ -42,7 +42,6 @@ var object_type: int = -1
 # Planet specific variables
 var planet_type: int = -1
 var planet_size: float = 1.0
-var planet_orbit_distance = 0
 var planet_convex_hull = []
 
 # Ship specific variables
@@ -142,7 +141,6 @@ func save():
 		# Planet
 		"planet_type": planet_type,
 		"planet_size": planet_size,
-		"planet_orbit_distance": planet_orbit_distance,
 		
 		# Ship
 		"ship_type": ship_type,
