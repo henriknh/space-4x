@@ -2,6 +2,7 @@ extends Node
 
 var loading_scene = null
 var current_scene = null
+onready var thread = Thread.new()
 
 func _ready():
 	var root = get_tree().get_root()
@@ -10,20 +11,12 @@ func _ready():
 	var loading_scene_resource = ResourceLoader.load(Enums.scenes.loading)
 	loading_scene = loading_scene_resource.instance()
 	
-func goto_scene(path: String, newGame: bool = false, saveFile: String = '') -> void:
-	call_deferred("_deferred_goto_loading_scene", path, newGame, saveFile)
+func goto_scene(path: String, saveFile: String = '') -> void:
+	call_deferred("_deferred_goto_scene", path, saveFile)
 
-func _deferred_goto_loading_scene(path: String, newGame: bool = false, saveFile: String = '') -> void:
-	get_tree().get_root().add_child(loading_scene)
-	
-	# It is now safe to remove the current scene
-	current_scene.queue_free()
-	
-	call_deferred("_deferred_goto_scene", path, newGame, saveFile)
-
-func _deferred_goto_scene(path: String, newGame: bool = false, saveFile: String = '') -> void:
+func _deferred_goto_scene(path: String, saveFile: String = '') -> void:
 	# Load the new scene.
-	
+	print('_deferred_goto_scene')
 	MenuState.reset()
 	
 	var s = ResourceLoader.load(path)
@@ -37,10 +30,31 @@ func _deferred_goto_scene(path: String, newGame: bool = false, saveFile: String 
 	# Optionally, to make it compatible with the SceneTree.change_scene() API.
 	get_tree().set_current_scene(current_scene)
 	
-	if current_scene.name == 'GameScene':
-		if newGame:
-			WorldGenerator.generate_world()
-		elif not newGame and saveFile.length() > 0:
-			if StateManager.load_game():
-				GameState.set_planet_system(GameState.get_planet_system())
-		current_scene.init()
+	if path == Enums.scenes.game:
+		print('thread')
+		#thread.start(self, "_handle_loading_entities", saveFile)
+		_handle_loading_entities(saveFile)
+
+func _handle_loading_entities(saveFile: String):
+	print('_handle_loading_entities')
+	GameState.set_loading(true)
+	
+	if saveFile.length() == 0:
+		#thread.start(WorldGenerator, "generate_world")
+		WorldGenerator.generate_world()
+	else:
+		#thread.start(StateManager, "load_game")
+		StateManager.load_game()
+	print('done loading')
+	
+	call_deferred("_handle_loading_entities_done")
+
+func _handle_loading_entities_done():
+	print('_handle_loading_entities_done')
+	#var result = thread.wait_to_finish()
+	#var current_scene = call_deferred("_deferred_goto_scene", Enums.scenes.game)
+	#print(current_scene)
+	print('init scene')
+	get_tree().get_current_scene().init()
+	GameState.set_loading(false)
+	#current_scene.init()

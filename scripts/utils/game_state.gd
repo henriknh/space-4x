@@ -2,6 +2,7 @@ extends Node
 
 # Temporary
 var _selection: entity
+var _is_loading: bool = true
 
 # Persistent
 var state = {
@@ -61,3 +62,9 @@ func get_state() -> Dictionary:
 		camera.set_camera_state()
 	return state
 
+func set_loading(is_loading: bool) -> void:
+	_is_loading = is_loading
+	emit_signal("state_changed")
+	
+func is_loading() -> bool:
+	return _is_loading

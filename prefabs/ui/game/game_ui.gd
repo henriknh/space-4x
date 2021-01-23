@@ -26,7 +26,6 @@ func _physics_process(delta):
 	var mouse_pos = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
 	$Debug/LabelMousePos.text = mouse_pos as String
 	$MainMenu/LabelFPS.text = Engine.get_frames_per_second() as String
-	
 
 func _ship_movement_disabled() -> bool:
 	if GameState.get_selection() == null:

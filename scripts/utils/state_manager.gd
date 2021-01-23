@@ -71,6 +71,8 @@ func load_game() -> bool:
 		self._instantiate_node_data(node_data_object)
 	for node_data_ship in node_data_ships:
 		self._instantiate_node_data(node_data_ship)
+		
+	GameState.set_planet_system(GameState.get_planet_system())
 	
 	return true
 
