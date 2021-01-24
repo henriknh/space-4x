@@ -125,7 +125,6 @@ class Voronoi:
 					convex_points.append(site_point)
 
 		self.convex_hull = Geometry.convex_hull_2d(convex_points)
-		print('calc convex hull: %d' % self.convex_hull.size())
 		
 	func _look_for_edge_sites():
 		for site in self.site_registry.sites:

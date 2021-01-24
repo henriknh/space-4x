@@ -75,7 +75,7 @@ func object(object_type: int, planet_system_idx: int) -> entity:
 	
 	return instance
 	
-func planet(planet_type: int, position: Vector2, planet_system_idx: int) -> entity:
+func planet(planet_type: int, position: Vector2, convex_hull: Array, planet_system_idx: int) -> entity:
 	var instance: entity = prefab_planet.instance()
 
 	match planet_type:
@@ -90,6 +90,7 @@ func planet(planet_type: int, position: Vector2, planet_system_idx: int) -> enti
 
 	instance.position = position
 	instance.planet_system = planet_system_idx
+	instance.planet_convex_hull = convex_hull
 	
 	instance.create()
 	

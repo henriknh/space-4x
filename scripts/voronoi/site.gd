@@ -4,11 +4,11 @@ const Edge = preload("res://scripts/voronoi/edge.gd")
 
 class Site:
 	var edge_registry = Edge.EdgeRegistry.new()
-	var node: Node2D = null
+	var node: Dictionary
 	var points: Array = []
 	var convex_hull: Array = []
 	
-	func _init(node: Node2D, _points: Array) -> void:
+	func _init(node: Dictionary, _points: Array) -> void:
 		self.node = node
 		for point in _points:
 			if not point in self.points:
@@ -49,31 +49,31 @@ class SiteRegistry:
 	
 	var sites = []
 	
-	func register_site(node: Node2D, local_points: Array) -> void:
+	func register_site(node: Dictionary, local_points: Array) -> void:
 		if local_points.size() > 0:
 			
 			var site = Site.new(node, local_points)
 			self.sites.append(site)
 	
-	func add_point(node: Node2D, point: Vector2) -> void:
+	func add_point(node: Dictionary, point: Vector2) -> void:
 		for site in sites:
-			if site.node == node:
+			if site.node.position == node.position:
 				site.add_point(point)
 				
-	func remove_point(node: Node2D, point: Vector2) -> bool:
+	func remove_point(node: Dictionary, point: Vector2) -> bool:
 		for site in sites:
-			if site.node == node:
+			if site.node.position == node.position:
 				return site.remove_point(point)
 		
 		return false
 		
-	func get_convex_hull_of_node(node: Node2D) -> Array:
+	func get_convex_hull_of_node(node: Dictionary) -> Array:
 		for site in self.sites:
-			if site.node == node:
+			if site.node.position == node.position:
 				return site.convex_hull
 		return []
 	
-	func get_edge_node_by_points(points: Array) -> Node2D:
+	func get_edge_node_by_points(points: Array) -> Dictionary:
 		var node = null
 		var furthest_dist = 0
 		

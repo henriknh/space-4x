@@ -30,59 +30,29 @@ func get_new_id() -> int:
 
 func generate_world():
 	print('Generate world with seed: %d' % rng.get_seed())
+	GameState.loading_progress = 0
 	
-	# Calculate planet system count
-	GameState.loading_label = 'Metadata'
+	# Calculate planet systems
+	GameState.loading_label = 'Generate planet systems'
 	var galaxies_min = Consts.galaxy_size[_world_size].min
 	var galaxies_max = Consts.galaxy_size[_world_size].max
-	var planet_system_count = WorldGenerator.rng.randi_range(galaxies_min, galaxies_max)
-	print('Planet systems: %d' % planet_system_count)
+	var planet_systems = []
+	for planet_system_idx in range(WorldGenerator.rng.randi_range(galaxies_min, galaxies_max)):
+		planet_systems.append({
+			'idx': planet_system_idx,
+			'voronoi': null,
+			'planets': [],
+			'objects': []
+		})
+	print('Planet systems: %d' % planet_systems.size())
 	
-	# Calculate orbit count
-	var planet_system_orbit_count = []
-	for planet_system_idx in range(planet_system_count):
+	# Calculate planets
+	GameState.loading_label = 'Generate planets'
+	for planet_system in planet_systems:
 		var orbits_min = Consts.planet_system_orbits[WorldGenerator.get_world_size()].min
 		var orbits_max = Consts.planet_system_orbits[WorldGenerator.get_world_size()].max
 		var total_orbits = int(WorldGenerator.rng.randi_range(orbits_min, orbits_max))
-		planet_system_orbit_count.append(total_orbits)
 		
-	# Calculate object count
-	var planet_system_object_count = []
-	for planet_system_idx in range(planet_system_count):
-		var asteroids_min = Consts.asteroids_per_planet_system[WorldGenerator.get_world_size()].min
-		var asteroids_max = Consts.asteroids_per_planet_system[WorldGenerator.get_world_size()].max
-		var total_asteroids = WorldGenerator.rng.randi_range(asteroids_min, asteroids_max)
-		
-		planet_system_object_count.append({
-			Enums.object_types.asteroid: total_asteroids
-		})
-	print(planet_system_object_count)
-	
-	load_progress = 0
-	total_entities = 0
-	total_entities += planet_system_count
-	for orbit_count in planet_system_orbit_count:
-		total_entities += orbit_count
-	for object_count in planet_system_object_count:
-		for key in object_count.keys():
-			total_entities += object_count[key]
-	print('Total entities to load: %d' % total_entities)
-		
-	
-	var gameScene = get_node('/root/GameScene')
-	
-	
-			
-	# Instance planet systems
-	GameState.loading_label = 'Planet systems'
-	for planet_system_idx in range(planet_system_count):
-		gameScene.add_child(Instancer.planet_system(planet_system_idx))
-		_entity_loaded()
-	
-	# Instance planets
-	GameState.loading_label = 'Planets'
-	for planet_system_idx in range(planet_system_count):
-		var total_orbits = planet_system_orbit_count[planet_system_idx]
 		var orbit_diff = (Consts.planet_system_radius / total_orbits) * 0.2
 		var quadrants = {
 			0: 0,
@@ -90,32 +60,72 @@ func generate_world():
 			2: 0,
 			3: 0
 		}
-		var planets = []
-		for orbit in range(planet_system_orbit_count[planet_system_idx]):
+		
+		for orbit in range(total_orbits):
+			pass
 			var smallest_quadrant = _get_least_dense_quadrant(quadrants)
 			var angle = WorldGenerator.rng.randf() * PI / 2 + smallest_quadrant * PI / 2
 			var orbit_distance = Consts.planet_system_base_distance_to_sun + (Consts.planet_system_radius / total_orbits) * (orbit + 1) + WorldGenerator.rng.randi_range(-orbit_diff, orbit_diff)
 		
 			var position = Vector2(orbit_distance * sin(angle), orbit_distance * cos(angle))
-			var planet_type = _calc_planet_type(orbit, total_orbits)
 			
-			var planet = Instancer.planet(planet_type, position, planet_system_idx)
-			gameScene.add_child(planet)
-			planets.append(planet)
-			_entity_loaded()
+			planet_system.planets.append({
+				'position': position,
+				'orbit': orbit
+			})
+	
+	# Calculate sites layout
+	GameState.loading_label = 'Generate planet system layouts'
+	for planet_system in planet_systems:
+		planet_system.voronoi = Voronoi.voronoi_registry.register_voronoi(planet_system.idx, planet_system.planets)
+	
+	GameState.loading_label = 'Generate objects'
+	for planet_system in planet_systems:
+		pass
+		var asteroids_min = Consts.asteroids_per_planet_system[WorldGenerator.get_world_size()].min
+		var asteroids_max = Consts.asteroids_per_planet_system[WorldGenerator.get_world_size()].max
+		var total_asteroids = WorldGenerator.rng.randi_range(asteroids_min, asteroids_max)
 		
-				
-		var voronoi = Voronoi.voronoi_registry.register_voronoi(planet_system_idx, planets)
-		for planet in planets:
-			planet.planet_convex_hull = voronoi.site_registry.get_convex_hull_of_node(planet)
+		for asteroid in range(total_asteroids):
+			planet_system.objects.append({
+				'object_type': Enums.object_types.asteroid
+			})
+
+	
+	load_progress = 0
+	total_entities = 0
+	for planet_system in planet_systems:
+		total_entities += 1
+		total_entities += planet_system.planets.size()
+		total_entities += planet_system.objects.size()
+	print('Total entities to load: %d' % total_entities)
+	
+	var gameScene = get_node('/root/GameScene')
+	
+	
+			
+	# Instance planet systems
+	GameState.loading_label = 'Instanciate planet systems'
+	for planet_system in planet_systems:
+		gameScene.add_child(Instancer.planet_system(planet_system.idx))
+		_entity_loaded()
+		
+	# Instance planets
+	GameState.loading_label = 'Instanciate planets'
+	for planet_system in planet_systems:
+		
+		for planet in planet_system.planets:
+			var planet_type = _calc_planet_type(planet.orbit, planet_system.planets.size())
+			var convex_hull = planet_system.voronoi.site_registry.get_convex_hull_of_node(planet)
+			gameScene.add_child(Instancer.planet(planet_type, planet.position, convex_hull, planet_system.idx))
+			_entity_loaded()
+	
 	
 	# Instance objects
-	for planet_system_idx in range(planet_system_count):
-		var object_count = planet_system_object_count[planet_system_idx]
-		GameState.loading_label = 'Asteroids'
-		for asteroid_idx in range(object_count[Enums.object_types.asteroid]):
-			var asteroid = Instancer.object(Enums.object_types.asteroid, planet_system_idx)
-			gameScene.add_child(asteroid)
+	GameState.loading_label = 'Instanciate objects'
+	for planet_system in planet_systems:
+		for object in planet_system.objects:
+			gameScene.add_child(Instancer.object(object.object_type, planet_system.idx))
 			_entity_loaded()
 			
 	GameState.loading_label = 'Finishing up'

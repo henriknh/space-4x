@@ -14,12 +14,12 @@ func save() -> void:
 	for node in save_nodes:
 		# Check the node is an instanced scene so it can be instanced again during load.
 		if node.filename.empty():
-			print("persistent node '%s' is not an instanced scene, skipped" % node.name)
+			print("Persistent node '%s' is not an instanced scene, skipped" % node.name)
 			continue
 
 		# Check the node has a save function.
 		if !node.has_method("save"):
-			print("persistent node '%s' is missing a save() function, skipped" % node.name)
+			print("Persistent node '%s' is missing a save() function, skipped" % node.name)
 			continue
 
 		# Call the node's save function.
