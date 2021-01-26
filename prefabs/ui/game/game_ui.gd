@@ -39,9 +39,6 @@ func _ship_movement_disabled() -> bool:
 		return true
 		
 func _update_ui():
-	
-	visible = not GameState.loading
-	
 	$Debug/LabelMousePos.visible = Settings.is_debug()
 	$MainMenu/LabelFPS.visible = Settings.get_show_fps()
 	$Bottom/BtnShipMovement.disabled = _ship_movement_disabled()

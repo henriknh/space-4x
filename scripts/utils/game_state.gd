@@ -2,8 +2,7 @@ extends Node
 
 # Temporary
 var _selection: entity
-var _is_loading: bool = true
-var loading: bool = true setget set_loading, is_loading
+var loading: bool = false setget set_loading, is_loading
 var loading_progress: float = 0 setget set_loading_progress, get_loading_progress
 var loading_label: String = '' setget set_loading_label, get_loading_label
 
