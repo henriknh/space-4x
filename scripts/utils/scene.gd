@@ -27,7 +27,8 @@ func _deferred_goto_scene(path: String, saveFile: String = '') -> void:
 	get_tree().set_current_scene(current_scene)
 	
 	if path == Enums.scenes.game:
-		thread.start(self, "_handle_loading_entities", saveFile)
+		#thread.start(self, "_handle_loading_entities", saveFile)
+		_handle_loading_entities(saveFile)
 
 func _handle_loading_entities(saveFile: String):
 	GameState.loading = true
@@ -40,6 +41,6 @@ func _handle_loading_entities(saveFile: String):
 	call_deferred("_handle_loading_entities_done")
 
 func _handle_loading_entities_done():
-	var result = thread.wait_to_finish()
+	#var result = thread.wait_to_finish()
 	get_tree().get_current_scene().init()
 	GameState.loading = false
