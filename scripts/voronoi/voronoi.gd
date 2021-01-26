@@ -30,9 +30,9 @@ class Voronoi:
 		self._calc_events()
 		self._calc_sites()
 		
-		#self._look_for_edge_sites()
-		#self._extend_two_site_intersections()
-		#self._extend_three_site_intersections()
+		self._look_for_edge_sites()
+		self._extend_two_site_intersections()
+		self._extend_three_site_intersections()
 		
 		self._calc_convex_hull()
 		
