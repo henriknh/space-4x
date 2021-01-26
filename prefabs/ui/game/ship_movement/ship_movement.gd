@@ -52,6 +52,15 @@ func _ready():
 	camera.target_position = GameState.get_selection().position + offset
 	camera.target_zoom = Vector2.ONE * 10
 	
+	$Changes/Combat/BtnDecrease.connect("pressed", self, "_on_change", [ Enums.ship_types.combat, -1])
+	$Changes/Combat/BtnIncrease.connect("pressed", self, "_on_change", [ Enums.ship_types.combat, 1])
+	$Changes/Explorer/BtnDecrease.connect("pressed", self, "_on_change", [ Enums.ship_types.explorer, -1])
+	$Changes/Explorer/BtnIncrease.connect("pressed", self, "_on_change", [ Enums.ship_types.explorer, 1])
+	$Changes/Miner/BtnDecrease.connect("pressed", self, "_on_change", [ Enums.ship_types.miner, -1])
+	$Changes/Miner/BtnIncrease.connect("pressed", self, "_on_change", [ Enums.ship_types.miner, 1])
+	$Changes/Transport/BtnDecrease.connect("pressed", self, "_on_change", [ Enums.ship_types.transport, -1])
+	$Changes/Transport/BtnIncrease.connect("pressed", self, "_on_change", [ Enums.ship_types.transport, 1])
+	
 func queue_free():
 	camera.target_position = real_camera_position
 	camera.target_zoom = real_camera_zoom

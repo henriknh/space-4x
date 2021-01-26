@@ -50,7 +50,6 @@ func _on_confirm():
 		Enums.ship_types.explorer: [],
 		Enums.ship_types.transport: [],
 	}
-
 	
 	var sorted_children = (move_selection.origin_planet as Planet).get_children_sorted_by_distance()
 	for ship in sorted_children:
@@ -63,6 +62,8 @@ func _on_confirm():
 				ships[ship_type].append(ship)
 	
 	for ship_type in Enums.ship_types.values():
+		if not ships.has(ship_type):
+			continue
 		for ship in ships[ship_type]:
 			(ship as Ship).state = Enums.ship_states.travel
 			(ship as Ship).process_target = selection.id

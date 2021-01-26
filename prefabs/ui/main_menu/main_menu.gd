@@ -24,8 +24,6 @@ func _on_create():
 
 func _on_world_size_changed(idx: int):
 	var selected_world_size = $VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.get_item_id(idx)
-	print(idx)
-	print(selected_world_size)
 	WorldGenerator.set_world_size(selected_world_size)
 
 func _on_seed_changed(seed_value: int):
