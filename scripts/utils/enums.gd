@@ -14,26 +14,42 @@ const player_colors = {
 	9: Color(0.5, 0, 0.5)
 }
 
-enum entity_types {
-	ship,
-	planet,
-	object
+# World 0 - 999
+const world_size = {
+	'small': 0,
+	'medium': 1,
+	'large': 2
 }
 
-enum object_types {
-	asteroid
+const world_size_label = {
+	world_size.small: 'Small',
+	world_size.medium: 'Medium',
+	world_size.large: 'Large'
 }
 
-enum planet_types {
-	lava,
-	iron,
-	earth,
-	ice
+# Entity 1000 - 1999
+const entity_types = {
+	'ship': 1000,
+	'planet': 1001,
+	'object': 1003
 }
 
-enum planet_states {
-	idle,
-	produce
+# Objects 2000 - 2999
+const object_types = {
+	'asteroid': 2000
+}
+
+# Planets 3000 - 3999
+const planet_types = {
+	'lava': 3000,
+	'iron': 3001,
+	'earth': 3002,
+	'ice': 3003
+}
+
+const planet_states = {
+	'idle': 3100,
+	'produce': 3101
 }
 
 const planet_scripts = {
@@ -43,12 +59,13 @@ const planet_scripts = {
 	'lava': 'res://prefabs/entities/planets/planet_lava.gd'
 }
 
-enum ship_types {
-	disabled,
-	combat,
-	explorer,
-	miner,
-	transport
+# Ships 4000 - 4999
+const ship_types = {
+	'disabled': 4000,
+	'combat': 4001,
+	'explorer': 4002,
+	'miner': 4003,
+	'transport': 4004
 }
 
 const ship_colors = {
@@ -59,34 +76,14 @@ const ship_colors = {
 	ship_types.transport: Color(0.2, 0.5, 1, 1)
 }
 
-enum ship_states {
-	idle,
-	rebase,
-	rebuild,
-	travel,
-	mine,
-	deliver,
-	combat,
-	explore,
-	colonize
-}
-
-const scenes = {
-	'main_menu': 'res://prefabs/scenes/main_menu.tscn',
-	'game': 'res://prefabs/scenes/game.tscn',
-	'galaxy_system': 'res://prefabs/scenes/galaxy_system.tscn',
-	'planet_system': 'res://prefabs/scenes/planet_system.tscn'
-}
-
-# World
-enum world_size {
-	small,
-	medium,
-	large
-}
-
-const world_size_label = {
-	0: 'Small',
-	1: 'Medium',
-	2: 'Large'
+const ship_states = {
+	'idle': 4100,
+	'rebase': 4101,
+	'rebuild': 4102,
+	'travel': 4103,
+	'mine': 4104,
+	'deliver': 4105,
+	'combat': 4106,
+	'explore': 4107,
+	'colonize': 4108
 }
