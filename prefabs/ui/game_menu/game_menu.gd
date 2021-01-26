@@ -12,7 +12,7 @@ func _on_save():
 	StateManager.save()
 
 func _on_main_menu():
-	Scene.goto_scene(Enums.scenes.main_menu)
+	Scene.goto_main_menu()
 
 func _on_quit():
 	get_tree().quit()

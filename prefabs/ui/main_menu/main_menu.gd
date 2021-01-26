@@ -15,7 +15,7 @@ func _update_view_state():
 	_on_seed_changed($VBox/CreateGame/VBoxContainer/SpinBoxSeed.value)
 
 func _on_create():
-	Scene.goto_scene(Enums.scenes.game)
+	Scene.goto_game()
 
 func _on_world_size_changed(value: int):
 	$VBox/CreateGame/VBoxContainer/LabelWorldSize.text = "World size: %s" % Enums.world_size_label[value]
@@ -25,7 +25,7 @@ func _on_seed_changed(seed_value: int):
 	WorldGenerator.set_seed(seed_value)
 
 func _on_load():
-	Scene.goto_scene(Enums.scenes.game, StateManager.save_file_path)
+	Scene.goto_game(StateManager.save_file_path)
 
 func _on_delete_save():
 	if StateManager.delete_game_file():

@@ -4,34 +4,35 @@ var loading_scene = null
 var current_scene = null
 onready var thread = Thread.new()
 
+var main_menu_scene = preload('res://prefabs/scenes/main_menu.tscn')
+var game_scene = preload('res://prefabs/scenes/game.tscn')
+
 func _ready():
 	var root = get_tree().get_root()
 	current_scene = root.get_child(root.get_child_count() -1)
 	
-func goto_scene(path: String, saveFile: String = '') -> void:
-	call_deferred("_deferred_goto_scene", path, saveFile)
-
-func _deferred_goto_scene(path: String, saveFile: String = '') -> void:
-	# Load the new scene.
+func goto_game(saveFile: String = '') -> void:
 	MenuState.reset()
 	
-	var s = ResourceLoader.load(path)
+	_load_scene(game_scene)
 	
-	# Instance the new scene.
-	current_scene = s.instance()
+	#thread.start(self, "_handle_loading_entities", saveFile)
+	_handle_loading_entities(saveFile)
 	
-	# Add it to the active scene, as child of root.
+func goto_main_menu() -> void:
+	MenuState.reset()
+	
+	_load_scene(main_menu_scene)
+	#GameState.loading = false
+	
+func _load_scene(scene):
+	current_scene.queue_free()
+	current_scene = scene.instance()
+	
 	get_tree().get_root().add_child(current_scene)
-	
-	# Optionally, to make it compatible with the SceneTree.change_scene() API.
 	get_tree().set_current_scene(current_scene)
 	
-	if path == Enums.scenes.game:
-		#thread.start(self, "_handle_loading_entities", saveFile)
-		_handle_loading_entities(saveFile)
-
 func _handle_loading_entities(saveFile: String):
-	GameState.loading = true
 	
 	if saveFile.length() == 0:
 		WorldGenerator.generate_world()
@@ -41,6 +42,7 @@ func _handle_loading_entities(saveFile: String):
 	call_deferred("_handle_loading_entities_done")
 
 func _handle_loading_entities_done():
-	#var result = thread.wait_to_finish()
+	#thread.wait_to_finish()
 	get_tree().get_current_scene().init()
 	GameState.loading = false
+
