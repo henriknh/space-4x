@@ -39,17 +39,17 @@ const object_types = {
 	'asteroid': 3000
 }
 
-# Planets 3000 - 3999
+# Planets 4000 - 4999
 const planet_types = {
-	'lava': 3000,
-	'iron': 3001,
-	'earth': 3002,
-	'ice': 3003
+	'lava': 4000,
+	'iron': 4001,
+	'earth': 4002,
+	'ice': 4003
 }
 
 const planet_states = {
-	'idle': 3100,
-	'produce': 3101
+	'idle': 0,
+	'produce': 4101
 }
 
 const planet_scripts = {
