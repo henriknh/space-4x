@@ -1,6 +1,6 @@
-extends planet
+extends Planet
 
-class_name planet_ice
+class_name PlanetIce
 
 func create():
 	planet_type = Enums.planet_types.ice

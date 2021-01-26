@@ -1,6 +1,6 @@
 extends Node2D
 
-class_name game
+class_name Game
 
 var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
 

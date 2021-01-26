@@ -1,6 +1,6 @@
-extends entity
+extends Entity
 
-class_name planet
+class_name Planet
 
 var is_hover = false
 
@@ -100,7 +100,7 @@ func get_target_point():
 	
 	return position #Vector2(x, y)
 
-func _on_PlanetArea_body_entered(entity: entity):
+func _on_PlanetArea_body_entered(entity: Entity):
 	if self.planet_system == entity.planet_system:
 		children.append(entity)
 		if entity.object_type == Enums.object_types.asteroid:
@@ -108,7 +108,7 @@ func _on_PlanetArea_body_entered(entity: entity):
 		entity.parent = self
 		emit_signal("entity_changed")
 
-func _on_PlanetArea_body_exited(entity: entity):
+func _on_PlanetArea_body_exited(entity: Entity):
 	if self.planet_system == entity.planet_system:
 		children.erase(entity)
 		asteroids.append(entity)
@@ -140,7 +140,7 @@ func get_children_sorted_by_distance() -> Array:
 	children.sort_custom(self, "sort_closest")
 	return children
 	
-func sort_closest(a: entity, b: entity) -> bool:
+func sort_closest(a: Entity, b: Entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b

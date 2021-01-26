@@ -1,6 +1,6 @@
-extends entity
+extends Entity
 
-class_name ship
+class_name Ship
 
 # Temporary
 var nav_route = []

@@ -52,7 +52,7 @@ func create_network():
 				
 		maps[planet_system_idx as int] = map
 
-func get_route(caller: entity, target_id: int):
+func get_route(caller: Entity, target_id: int):
 	var route = []
 	if true:
 		var map = maps[caller.planet_system as int] as AStar2D
@@ -68,5 +68,5 @@ func get_route(caller: entity, target_id: int):
 	
 	return route
 
-func get_map(caller: entity) -> AStar2D:
+func get_map(caller: Entity) -> AStar2D:
 	return maps[caller.planet_system]

@@ -1,6 +1,6 @@
-extends planet
+extends Planet
 
-class_name planet_earth
+class_name PlanetEarth
 
 func create():
 	planet_type = Enums.planet_types.earth

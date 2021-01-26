@@ -1,7 +1,7 @@
 extends Node
 
 # Temporary
-var _selection: entity
+var _selection: Entity
 var loading: bool = false setget set_loading, is_loading
 var loading_progress: float = 0 setget set_loading_progress, get_loading_progress
 var loading_label: String = '' setget set_loading_label, get_loading_label
@@ -26,7 +26,7 @@ func set_planet_system(planet_system: int) -> void:
 func get_planet_system() -> int:
 	return state['curr_planet_system']
 
-func set_selection(new_selection: entity = null):
+func set_selection(new_selection: Entity = null):
 	var old_selection = _selection
 	_selection = new_selection
 	
@@ -43,7 +43,7 @@ func get_selection():
 func _update_visible():
 	get_tree().call_group('Persist', 'set_visible', state['curr_planet_system'])
 	get_tree().call_group('StarSystem', 'set_visible', state['curr_planet_system'] == -1)
-	(get_node('/root/GameScene') as game).redraw()
+	(get_node('/root/GameScene') as Game).redraw()
 	
 func set_camera_setting(camera_state: Dictionary) -> void:
 	state["camera_states"][state['curr_planet_system'] as String] = camera_state

@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://assets/sun.png" type="Texture" id=1]
+[ext_resource path="res://prefabs/Camera.tscn" type="PackedScene" id=2]
+[ext_resource path="res://prefabs/ui/game/game_ui.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/spawners/spawner_planets.gd" type="Script" id=4]
+[ext_resource path="res://scripts/spawners/spawner_ships.gd" type="Script" id=5]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+glow_levels/7 = true
+glow_strength = 0.9
+glow_blend_mode = 0
+glow_bicubic_upscale = true
+adjustment_enabled = true
+
+[node name="star_system" type="Node2D"]
+
+[node name="camera" parent="." instance=ExtResource( 2 )]
+zoom = Vector2( 7, 7 )
+
+[node name="SpawnerShips" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="SpawnerPlanets" type="Node2D" parent="."]
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="SpawnerPlanets"]
+
+[node name="SpawnerProps" type="Node2D" parent="."]
+
+[node name="SpawnerEnvironment" type="Node2D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 1 )
+
+[node name="GUI" parent="." instance=ExtResource( 3 )]
+
+[node name="Sun" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="Sun"]
+texture = ExtResource( 1 )

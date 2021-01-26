@@ -1,6 +1,6 @@
 extends Node
 
-var prefab_asteroid = preload('res://prefabs/entities/objects/asteroid/asteroid.tscn')
+var prefab_asteroid = preload('res://prefabs/entities/props/asteroid/asteroid.tscn')
 
 func create(gameScene: Node, planet_system_idx: int) -> void:
 	var asteroids_min = Consts.asteroids_per_planet_system[WorldGenerator.get_world_size()].min

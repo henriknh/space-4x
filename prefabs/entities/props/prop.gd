@@ -1,6 +1,6 @@
-extends entity
+extends Entity
 
-class_name object
+class_name Prop
 
 func create():
 	entity_type = Enums.entity_types.object

@@ -1,6 +1,6 @@
-extends ship
+extends Ship
 
-class_name ship_transport
+class_name ShipTransport
 	
 func create():
 	ship_type = Enums.ship_types.transport

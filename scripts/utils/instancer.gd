@@ -13,7 +13,7 @@ var script_iron = preload('res://prefabs/entities/planets/planet_iron.gd')
 var script_lava = preload('res://prefabs/entities/planets/planet_lava.gd')
 
 # Object
-var prefab_asteroid = preload('res://prefabs/entities/objects/asteroid/asteroid.tscn')
+var prefab_asteroid = preload('res://prefabs/entities/props/asteroid/asteroid.tscn')
 
 # Ship
 var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
@@ -23,9 +23,9 @@ var script_explorer = preload('res://prefabs/entities/ships/ship_explorer.gd')
 var script_miner = preload('res://prefabs/entities/ships/ship_miner.gd')
 var script_transport = preload('res://prefabs/entities/ships/ship_transport.gd')
 
-func ship(ship_type: int, copy_from: entity = null, inherit: entity = null) -> entity:
+func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null) -> Entity:
 	
-	var instance: entity = prefab_ship.instance()
+	var instance: Entity = prefab_ship.instance()
 	
 	match ship_type:
 		Enums.ship_types.combat:
@@ -59,8 +59,8 @@ func ship(ship_type: int, copy_from: entity = null, inherit: entity = null) -> e
 	
 	return instance
 	
-func object(object_type: int, planet_system_idx: int) -> entity:
-	var instance: entity
+func object(object_type: int, planet_system_idx: int) -> Entity:
+	var instance: Entity
 
 	match object_type:
 		Enums.object_types.asteroid:
@@ -75,8 +75,8 @@ func object(object_type: int, planet_system_idx: int) -> entity:
 	
 	return instance
 	
-func planet(planet_type: int, position: Vector2, convex_hull: Array, planet_system_idx: int) -> entity:
-	var instance: entity = prefab_planet.instance()
+func planet(planet_type: int, position: Vector2, convex_hull: Array, planet_system_idx: int) -> Entity:
+	var instance: Entity = prefab_planet.instance()
 
 	match planet_type:
 		Enums.planet_types.earth:
@@ -96,8 +96,8 @@ func planet(planet_type: int, position: Vector2, convex_hull: Array, planet_syst
 	
 	return instance
 
-func planet_system(planet_system_idx: int) -> entity:
-	var instance: entity = prefab_planet_system.instance()
+func planet_system(planet_system_idx: int) -> Entity:
+	var instance: Entity = prefab_planet_system.instance()
 	instance.position = Vector2(planet_system_idx * 250, 0)
 	instance.planet_system = planet_system_idx
 	

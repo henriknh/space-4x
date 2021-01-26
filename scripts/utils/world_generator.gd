@@ -152,7 +152,7 @@ func _entity_loaded():
 	load_progress += 1
 	GameState.loading_progress = load_progress / total_entities
 
-func _get_start_planet(is_human: bool) -> entity:
+func _get_start_planet(is_human: bool) -> Entity:
 	var possible_planets = []
 	for planet in get_tree().get_nodes_in_group('Planet'):
 		if (is_human and planet.planet_system == 0 or not is_human) and planet.faction == -1:
@@ -160,7 +160,7 @@ func _get_start_planet(is_human: bool) -> entity:
 	
 	return possible_planets[WorldGenerator.rng.randi() % possible_planets.size()]
 
-func _set_start_resouces(planet: entity):
+func _set_start_resouces(planet: Entity):
 	planet.metal = 1000
 	planet.power = 1000
 	planet.food = 1000

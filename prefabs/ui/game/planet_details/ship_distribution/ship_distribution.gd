@@ -1,6 +1,6 @@
 extends VBoxContainer
 
-onready var selection: entity = GameState.get_selection()
+onready var selection: Entity = GameState.get_selection()
 onready var total_ui_width: int = $MarginContainer/Info/Distribution.rect_size[0]
 
 var total_ships: float = 0

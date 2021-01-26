@@ -3,7 +3,7 @@ extends Control
 var ship_distribution_prefab = preload('res://prefabs/ui/game/planet_details/ship_distribution/ship_distribution.tscn')
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
-onready var selection: entity = GameState.get_selection()
+onready var selection: Entity = GameState.get_selection()
 
 var real_camera_position: Vector2
 var real_camera_zoom: Vector2

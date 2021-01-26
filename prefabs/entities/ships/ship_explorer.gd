@@ -1,6 +1,6 @@
-extends ship
+extends Ship
 
-class_name ship_explorer
+class_name ShipExplorer
 
 var is_colonizing = false
 var explore_position: Vector2 = Vector2.INF 

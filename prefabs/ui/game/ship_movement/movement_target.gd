@@ -2,7 +2,7 @@ extends VBoxContainer
 
 const block_input = false
 
-var selection: entity = null
+var selection: Entity = null
 var move_selection = {}
 
 func _ready():
@@ -52,7 +52,7 @@ func _on_confirm():
 	}
 
 	
-	var sorted_children = (move_selection.origin_planet as planet).get_children_sorted_by_distance()
+	var sorted_children = (move_selection.origin_planet as Planet).get_children_sorted_by_distance()
 	for ship in sorted_children:
 		
 		if ship.ship_type == -1:
@@ -64,7 +64,7 @@ func _on_confirm():
 	
 	for ship_type in Enums.ship_types.values():
 		for ship in ships[ship_type]:
-			(ship as ship).state = Enums.ship_states.travel
-			(ship as ship).process_target = selection.id
+			(ship as Ship).state = Enums.ship_states.travel
+			(ship as Ship).process_target = selection.id
 	
 	MenuState.pop()

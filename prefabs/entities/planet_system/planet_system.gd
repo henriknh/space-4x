@@ -1,6 +1,6 @@
-extends entity
+extends Entity
 
-class_name planet_system
+class_name PlanetSystem
 
 func create():
 	label = NameGenerator.get_name_galaxy()

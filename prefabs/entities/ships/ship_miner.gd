@@ -1,10 +1,10 @@
-extends ship
+extends Ship
 
-class_name ship_miner
+class_name ShipMiner
 
 var mining_power = 10
 
-var mining_target: entity = null
+var mining_target: Entity = null
 var mining_charging: bool = false
 var mining_timer: Timer
 
@@ -82,7 +82,7 @@ func _get_next_mining_target() -> void:
 	else:
 		mining_target = null
 	
-func sort_asteroids(a: entity, b: entity) -> bool:
+func sort_asteroids(a: Entity, b: Entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b

@@ -1,8 +1,8 @@
-extends ship
+extends Ship
 
-class_name ship_combat
+class_name ShipCombat
 
-var target_enemy: entity
+var target_enemy: Entity
 var weapon_damage: int = 10
 var weapon_ready: bool = true
 var weapon_timer: Timer
@@ -58,7 +58,7 @@ func clear():
 	patrolling_position = Vector2.INF
 	.clear()
 
-func _on_entity_in_range(entity: entity):
+func _on_entity_in_range(entity: Entity):
 	if not target_enemy:
 		return
 	if weapon_ready and entity == target_enemy:
@@ -89,7 +89,7 @@ func _has_enemies_in_site() -> bool:
 			return true
 	return parent.faction != faction
 	
-func _get_closest_enemy() -> entity:
+func _get_closest_enemy() -> Entity:
 	var enemies = []
 	for child in parent.children:
 		if child.ship_type >= 0 and child.faction != faction:
@@ -110,10 +110,10 @@ func _get_closest_enemy() -> entity:
 	else:
 		return null
 
-func sort_combat_type(a: entity, b: entity) -> bool:
+func sort_combat_type(a: Entity, b: Entity) -> bool:
 	return b.ship_type != Enums.ship_types.combat
 	
-func sort_distance(a: entity, b: entity) -> bool:
+func sort_distance(a: Entity, b: Entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b

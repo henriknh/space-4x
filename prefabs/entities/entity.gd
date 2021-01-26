@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-class_name entity
+class_name Entity
 
 const ACTIVE_TIME_PERIOD: float = 0.0166
 const INACTIVE_TIME_PERIOD: float = 0.05
@@ -13,7 +13,7 @@ signal entity_changed
 # General
 var id: int = -1
 var variant: int = -1
-var parent: entity
+var parent: Entity
 var entity_type: int = -1
 var label: String = ''
 var hitpoints: int = 1

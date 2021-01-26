@@ -1,6 +1,6 @@
-extends planet
+extends Planet
 
-class_name planet_lava
+class_name PlanetLava
 
 func create():
 	planet_type = Enums.planet_types.lava

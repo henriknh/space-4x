@@ -1,6 +1,6 @@
-extends object
+extends Prop
 
-class_name asteroid
+class_name Asteroid
 
 var sprite_size = 0
 var sprite_small = preload("res://assets/asteroid_small.png")
