@@ -28,18 +28,6 @@ var real_camera_position: Vector2
 var real_camera_zoom: Vector2
 
 func _ready():
-	move_selection.origin_planet = GameState.get_selection()
-	for child in GameState.get_selection()['children']:
-		match child.ship_type:
-			Enums.ship_types.combat:
-				move_selection[Enums.ship_types.combat].total += 1
-			Enums.ship_types.explorer:
-				move_selection[Enums.ship_types.explorer].total += 1
-			Enums.ship_types.miner:
-				move_selection[Enums.ship_types.miner].total += 1
-			Enums.ship_types.transport:
-				move_selection[Enums.ship_types.transport].total += 1
-	_update_ui()
 	MenuState.push(self)
 	
 	GameState.get_selection().connect("entity_changed", self, "_update_ui")
@@ -61,10 +49,33 @@ func _ready():
 	$Changes/Transport/BtnDecrease.connect("pressed", self, "_on_change", [ Enums.ship_types.transport, -1])
 	$Changes/Transport/BtnIncrease.connect("pressed", self, "_on_change", [ Enums.ship_types.transport, 1])
 	
+	_update_ui()
+	
 func queue_free():
 	camera.target_position = real_camera_position
 	camera.target_zoom = real_camera_zoom
 	.queue_free()
+	
+func _get_total_ships():
+	var total_combat = 0
+	var total_explorer = 0
+	var total_miner = 0
+	var total_transport = 0
+	for child in GameState.get_selection()['children']:
+		match child.ship_type:
+			Enums.ship_types.combat:
+				total_combat += 1
+			Enums.ship_types.explorer:
+				total_explorer += 1
+			Enums.ship_types.miner:
+				total_miner += 1
+			Enums.ship_types.transport:
+				total_transport += 1
+	
+	move_selection[Enums.ship_types.combat].total = total_combat
+	move_selection[Enums.ship_types.explorer].total = total_explorer
+	move_selection[Enums.ship_types.miner].total = total_miner
+	move_selection[Enums.ship_types.transport].total = total_transport
 
 func _on_change(ship_type: int, modification: int = 0):
 	move_selection[ship_type].selected = move_selection[ship_type].selected + modification
@@ -81,6 +92,8 @@ func _get_label_values(ship_type: int) -> Array:
 	]
 	
 func _update_ui():
+	_get_total_ships()
+	
 	$Changes/Combat/LblChanges.text = "%d / %d" % _get_label_values(Enums.ship_types.combat)
 	$Changes/Combat/BtnDecrease.disabled = move_selection[Enums.ship_types.combat].selected == 0
 	$Changes/Combat/BtnIncrease.disabled = move_selection[Enums.ship_types.combat].selected == move_selection[Enums.ship_types.combat].total
@@ -102,10 +115,20 @@ func _update_ui():
 	has_selection = has_selection || move_selection[Enums.ship_types.explorer].selected > 0
 	has_selection = has_selection || move_selection[Enums.ship_types.miner].selected  > 0
 	has_selection = has_selection || move_selection[Enums.ship_types.transport].selected  > 0
-	$Actions/BtnConfirmMove.disabled = not has_selection
+	
+	var too_many = false
+	too_many = too_many || move_selection[Enums.ship_types.combat].selected > move_selection[Enums.ship_types.combat].total
+	too_many = too_many || move_selection[Enums.ship_types.explorer].selected > move_selection[Enums.ship_types.explorer].total
+	too_many = too_many || move_selection[Enums.ship_types.miner].selected > move_selection[Enums.ship_types.miner].total
+	too_many = too_many || move_selection[Enums.ship_types.transport].selected > move_selection[Enums.ship_types.transport].total
+	
+	$Actions/BtnConfirmMove.disabled = not has_selection || too_many
 
 func _on_confirm_move():
 	MenuState.pop()
+	
+	move_selection.origin_planet = GameState.get_selection()
+	
 	var movement_target = movement_target_prefab.instance()
 	movement_target.move_selection = move_selection
 	get_parent().add_child(movement_target)

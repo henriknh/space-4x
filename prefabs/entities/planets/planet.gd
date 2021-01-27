@@ -48,7 +48,18 @@ func ready():
 	.ready()
 
 func process(delta: float):
-	.process(delta)
+	if state == Enums.planet_states.produce:
+		process_time += delta
+		
+		if get_process_progress() > 1:
+			process_time = 0
+			state = Enums.planet_states.idle
+			if process_target in Enums.ship_types.values():
+				get_node('/root/GameScene').add_child(Instancer.ship(process_target, null, self))
+		
+		GameState.emit_signal("update_ui")
+	else:
+		.process(delta)
 	
 func kill():
 	faction = -1

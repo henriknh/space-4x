@@ -24,7 +24,8 @@ var planet_system: int = -1
 var rotation_speed: float = 0
 var state: int = 0
 var process_target: int
-var process_progress: float
+var process_time: float = 0
+var _process_time_total: float = 0
 
 # Resources
 var metal: float = 0
@@ -102,6 +103,16 @@ func set_visible(in_data):
 	else:
 		visible = planet_system == in_data
 
+func set_process_target(target: int, total_time: int = 0) -> void:
+	process_target = target
+	process_time = 0
+	_process_time_total = total_time
+	
+func get_process_progress() -> float:
+	if _process_time_total <= 0:
+		return .0
+	return process_time / _process_time_total
+	
 func save():
 	var data = {
 		"filename": get_filename(),
@@ -123,7 +134,8 @@ func save():
 		"rotation_speed": rotation_speed,
 		"state": state,
 		"process_target": process_target,
-		"process_progress": process_progress,
+		"process_time": process_time,
+		"_process_time_total": _process_time_total,
 		
 		# Resources
 		"metal": metal,

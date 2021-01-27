@@ -78,5 +78,4 @@ func _on_planet_details():
 	get_parent().add_child(planet_details_prefab.instance())
 
 func _on_ship_movement():
-	pass # Replace with function body.
 	get_parent().add_child(ship_movement_prefab.instance())

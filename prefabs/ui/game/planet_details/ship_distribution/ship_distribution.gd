@@ -178,8 +178,7 @@ func _on_confirm():
 				continue
 			if distribution[ship_type].change > distribution[ship_type].current:
 				unallocated_child.state = Enums.ship_states.rebuild
-				unallocated_child.process_target = ship_type
-				unallocated_child.process_progress = 10
+				unallocated_child.set_process_target(ship_type, 10)
 				distribution[ship_type].change -= 1
 				handled = true
 				break
@@ -190,8 +189,7 @@ func _on_confirm():
 	for unallocated_child in unhandled_unallocated:
 		if unallocated_child.ship_type != Enums.ship_types.disabled:
 			unallocated_child.state = Enums.ship_states.rebuild
-			unallocated_child.process_target = Enums.ship_types.disabled
-			unallocated_child.process_progress = 10
+			unallocated_child.set_process_target(Enums.ship_types.disabled, 10)
 			unallocated_children.erase(unallocated_child)
 	
 	MenuState.pop()

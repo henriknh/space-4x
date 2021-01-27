@@ -1,6 +1,7 @@
 extends Control
 
 var ship_distribution_prefab = preload('res://prefabs/ui/game/planet_details/ship_distribution/ship_distribution.tscn')
+var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_movement.tscn')
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 onready var selection: Entity = GameState.get_selection()
@@ -45,6 +46,8 @@ func _update_ui():
 	$VBoxContainer/Resources1/LabelPower.text = Utils.format_number(selection.power)
 	$VBoxContainer/Resources2/LabelFood.text = Utils.format_number(selection.food)
 	$VBoxContainer/Resources2/LabelWater.text = Utils.format_number(selection.water)
+	
+	$VBoxContainer/ProgressBar.value = selection.get_process_progress()
 	
 	var distribution_width = $VBoxContainer/DistributionSpectra.rect_size[0]
 	
@@ -107,8 +110,9 @@ func _update_ui():
 	
 func _create_ship(ship_type: int):
 	var curr_selection = GameState.get_selection()
-	var instance = Instancer.ship(ship_type, null, curr_selection)
-	get_node('/root/GameScene').add_child(instance)
+	selection.metal -= 500
+	curr_selection.state = Enums.planet_states.produce
+	curr_selection.set_process_target(ship_type, 10)
 
 func _on_production_ship():
 	var menu = $VBoxContainer/Production/BtnShip.get_popup()
@@ -124,3 +128,7 @@ func _on_production_ship():
 func _on_ship_distribution_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		get_parent().add_child(ship_distribution_prefab.instance())
+
+func _on_ship_movement():
+	get_parent().add_child(ship_movement_prefab.instance())
+

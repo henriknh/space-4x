@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/icons/ship.png" type="Texture" id=1]
 [ext_resource path="res://assets/icons/react.png" type="Texture" id=2]
 [ext_resource path="res://assets/icons/food-apple.png" type="Texture" id=3]
 [ext_resource path="res://prefabs/ui/game/planet_details/planet_details.gd" type="Script" id=4]
+[ext_resource path="res://assets/icons/car-arrow-right.png" type="Texture" id=5]
 [ext_resource path="res://assets/icons/flash.png" type="Texture" id=6]
 [ext_resource path="res://assets/icons/cube.png" type="Texture" id=7]
 [ext_resource path="res://assets/icons/water.png" type="Texture" id=8]
@@ -22,7 +23,7 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_right = 220.0
-margin_bottom = 236.0
+margin_bottom = 270.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
@@ -117,24 +118,32 @@ align = 1
 [node name="DistributionLabel" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 98.0
 margin_right = 220.0
-margin_bottom = 112.0
+margin_bottom = 122.0
 
 [node name="ShipsLabel" type="Label" parent="VBoxContainer/DistributionLabel"]
-margin_right = 208.0
-margin_bottom = 14.0
+margin_top = 5.0
+margin_right = 180.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
 text = "Ships"
 
 [node name="ShipCount" type="Label" parent="VBoxContainer/DistributionLabel"]
-margin_left = 212.0
-margin_right = 220.0
-margin_bottom = 14.0
+margin_left = 184.0
+margin_top = 5.0
+margin_right = 192.0
+margin_bottom = 19.0
 text = "1"
 
-[node name="DistributionSpectra" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 122.0
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/DistributionLabel"]
+margin_left = 196.0
 margin_right = 220.0
-margin_bottom = 142.0
+margin_bottom = 24.0
+texture_normal = ExtResource( 5 )
+
+[node name="DistributionSpectra" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 132.0
+margin_right = 220.0
+margin_bottom = 152.0
 rect_min_size = Vector2( 0, 20 )
 mouse_filter = 0
 size_flags_horizontal = 3
@@ -248,9 +257,9 @@ text = "Transporter"
 clip_text = true
 
 [node name="Buildings" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 152.0
+margin_top = 162.0
 margin_right = 220.0
-margin_bottom = 196.0
+margin_bottom = 206.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Buildings"]
 margin_right = 76.0
@@ -281,9 +290,9 @@ text = "TEXT ABOUT BUILDING AND WHAT IT DOES"
 scroll_active = false
 
 [node name="Production" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 206.0
+margin_top = 216.0
 margin_right = 220.0
-margin_bottom = 236.0
+margin_bottom = 246.0
 alignment = 1
 
 [node name="BtnShip" type="MenuButton" parent="VBoxContainer/Production"]
@@ -300,8 +309,13 @@ texture_normal = ExtResource( 2 )
 
 [node name="Node" type="Node" parent="VBoxContainer/Production"]
 
-[node name="Node" type="Node" parent="VBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+margin_top = 256.0
+margin_right = 220.0
+margin_bottom = 270.0
+max_value = 1.0
 [connection signal="pressed" from="VBoxContainer/Info/BtnClose" to="." method="_on_close"]
+[connection signal="pressed" from="VBoxContainer/DistributionLabel/TextureButton" to="." method="_on_ship_movement"]
 [connection signal="gui_input" from="VBoxContainer/DistributionSpectra" to="." method="_on_ship_distribution_input" flags=3]
 [connection signal="pressed" from="VBoxContainer/Ships/BtnCreateCombat" to="." method="_create_ship" binds= [ 0 ]]
 [connection signal="pressed" from="VBoxContainer/Ships/BtnCreateExplorer" to="." method="_create_ship" binds= [ 1 ]]

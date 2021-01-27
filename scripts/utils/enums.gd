@@ -87,3 +87,8 @@ const ship_states = {
 	'explore': 5107,
 	'colonize': 5108
 }
+
+# Research 6000 - 6999
+const research_types = {
+	'dummy': 6000
+}

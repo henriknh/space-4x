@@ -57,10 +57,10 @@ func process(delta: float):
 			if ship_type != Enums.ship_types.disabled:
 				get_node('/root/GameScene').add_child(Instancer.ship(Enums.ship_types.disabled, self))
 				return queue_free()
+			process_time += delta
 			
-			process_progress -= delta
-			if process_progress < 0:
-				process_progress = 0
+			if get_process_progress() > 1:
+				process_time = 0
 				ship_type = process_target
 				state = Enums.ship_states.idle
 				
