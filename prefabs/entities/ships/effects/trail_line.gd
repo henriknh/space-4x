@@ -9,14 +9,14 @@ extends Line2D
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 
-export var is_emitting := true setget set_emitting
+var is_emitting := true setget set_emitting
 
 # Distance in pixels between vertices. A higher resolution leads to more details.
-export var resolution := 10
+var resolution := 10
 # Life of each point in seconds before it is deleted.
-export var lifetime := 2
+var lifetime := 1
 # Maximum number of points allowed on the curve.
-export var max_points := 20
+var max_points := 50
 
 # Optional path to the target node to follow. If not set, the instance follows its parent.
 export var target_path: NodePath

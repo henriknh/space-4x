@@ -40,6 +40,7 @@ show_behind_parent = true
 script = ExtResource( 2 )
 
 [node name="Line2D" type="Line2D" parent="."]
+show_behind_parent = true
 points = PoolVector2Array( 0.0774117, -0.0630035 )
 width = 4.0
 width_curve = SubResource( 1 )

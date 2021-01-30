@@ -155,3 +155,10 @@ func sort_closest(a: Entity, b: Entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b
+
+func get_ships_by_type(type: int) -> Array:
+	var children_by_type = []
+	for child in children:
+		if child.ship_type == type and child.faction == faction:
+			children_by_type.append(child)
+	return children_by_type

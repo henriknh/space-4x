@@ -136,6 +136,7 @@ Voronoi="*res://scripts/voronoi/voronoi.gd"
 Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
 Instancer="*res://scripts/utils/instancer.gd"
+AI="*res://scripts/ai/ai.gd"
 
 [display]
 
@@ -171,6 +172,10 @@ texture={
 "stream": false,
 "svg/scale": 1.0
 }
+
+[physics]
+
+common/physics_fps=30
 
 [rendering]
 

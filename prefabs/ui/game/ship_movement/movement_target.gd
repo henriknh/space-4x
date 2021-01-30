@@ -65,7 +65,6 @@ func _on_confirm():
 		if not ships.has(ship_type):
 			continue
 		for ship in ships[ship_type]:
-			(ship as Ship).state = Enums.ship_states.travel
-			(ship as Ship).set_process_target(selection.id)
+			ship.set_entity_process(Enums.ship_states.travel, selection.id)
 	
 	MenuState.pop()

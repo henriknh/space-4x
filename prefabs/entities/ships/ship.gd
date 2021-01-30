@@ -109,7 +109,7 @@ func _calc_speed(target_position: Vector2, decrease_speed: bool) -> bool:
 	var trail = get_node("Trail") as Node2D
 	if ship_speed == 0 and trail.is_emitting():
 		trail.set_emitting(false)
-	elif ship_speed != 0 and visible and not trail.is_emitting():
+	elif ship_speed != 0 and visible and not trail.is_emitting() and planet_system == GameState.get_planet_system():
 		trail.set_emitting(true)
 	
 	return ship_speed != 0

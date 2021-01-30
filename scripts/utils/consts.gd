@@ -7,6 +7,26 @@ const CAMERA_LERPTIME_POS = 50
 const CAMERA_LERPTIME_ZOOM = 15
 const CAMERA_ZOOM_STEP = 1.1
 
+# General
+
+const computer_count = {
+	Enums.world_size.small: {
+		'min': 2, 
+		'max': 5, 
+	},
+	Enums.world_size.medium: {
+		'min': 4, 
+		'max': 7, 
+	},
+	Enums.world_size.large: {
+		'min': 6, 
+		'max': 9, 
+	}
+}
+
+# AI
+const DIFFICULTY_LEVELS = 3
+
 # Galaxy
 const galaxy_size = {
 	Enums.world_size.small: {
@@ -60,5 +80,6 @@ const asteroids_per_planet_system = {
 }
 
 # Ships
+const SHIP_COST_METAL = 500
 const ship_acceleration_factor: float = 0.1 # Factor of max_speed
 const ship_turn_speed: int = 4

@@ -27,29 +27,35 @@ const world_size_label = {
 	world_size.large: 'Large'
 }
 
-# Entity 2000 - 2999
+# AI 2000 - 2999
+const ai_states = {
+	'idle': 0,
+	'delay': 2000
+}
+
+# Entity 3000 - 3999
 const entity_types = {
-	'ship': 2000,
-	'planet': 2001,
-	'object': 2003
+	'ship': 3000,
+	'planet': 3001,
+	'object': 3003
 }
 
-# Objects 3000 - 3999
+# Objects 4000 - 4999
 const object_types = {
-	'asteroid': 3000
+	'asteroid': 4000
 }
 
-# Planets 4000 - 4999
+# Planets 5000 - 5999
 const planet_types = {
-	'lava': 4000,
-	'iron': 4001,
-	'earth': 4002,
-	'ice': 4003
+	'lava': 5000,
+	'iron': 5001,
+	'earth': 5002,
+	'ice': 5003
 }
 
 const planet_states = {
 	'idle': 0,
-	'produce': 4101
+	'produce': 5101
 }
 
 const planet_scripts = {
@@ -59,13 +65,13 @@ const planet_scripts = {
 	'lava': 'res://prefabs/entities/planets/planet_lava.gd'
 }
 
-# Ships 5000 - 5999
+# Ships 6000 - 6999
 const ship_types = {
-	'disabled': 5000,
-	'combat': 5001,
-	'explorer': 5002,
-	'miner': 5003,
-	'transport': 5004
+	'disabled': 6000,
+	'combat': 6001,
+	'explorer': 6002,
+	'miner': 6003,
+	'transport': 6004
 }
 
 const ship_colors = {
@@ -78,17 +84,17 @@ const ship_colors = {
 
 const ship_states = {
 	'idle': 0,
-	'rebase': 5101,
-	'rebuild': 5102,
-	'travel': 5103,
-	'mine': 5104,
-	'deliver': 5105,
-	'combat': 5106,
-	'explore': 5107,
-	'colonize': 5108
+	'rebase': 6101,
+	'rebuild': 6102,
+	'travel': 6103,
+	'mine': 6104,
+	'deliver': 6105,
+	'combat': 6106,
+	'explore': 6107,
+	'colonize': 6108
 }
 
-# Research 6000 - 6999
+# Research 7000 - 7999
 const research_types = {
 	'dummy': 6000
 }

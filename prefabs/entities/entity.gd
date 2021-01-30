@@ -61,7 +61,7 @@ func _physics_process(_delta):
 			return
 	
 	delta += _delta
-	
+
 	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
@@ -76,7 +76,7 @@ func queue_free():
 	.queue_free()
 
 func create():
-	id = WorldGenerator.get_new_id()
+	id = WorldGenerator.unique_id
 	variant = WorldGenerator.rng.randi()
 	if hitpoints_max == -1:
 		hitpoints_max = 1
@@ -84,10 +84,11 @@ func create():
 	ready()
 	
 func ready():
-	pass
+	set_visible(planet_system == GameState.get_planet_system())
 
 func process(delta: float):
-	pass
+	if faction > 0:
+		AI.process_entity(self, delta)
 
 func kill():
 	pass
@@ -103,14 +104,15 @@ func set_visible(in_data):
 	else:
 		visible = planet_system == in_data
 
-func set_process_target(target: int, total_time: int = 0) -> void:
+func set_entity_process(state: int, target: int, total_time: int = 0) -> void:
+	self.state = state
 	process_target = target
 	process_time = 0
 	_process_time_total = total_time
 	
 func get_process_progress() -> float:
 	if _process_time_total <= 0:
-		return .0
+		return 0.0
 	return process_time / _process_time_total
 	
 func save():

@@ -9,14 +9,14 @@ extends Line2D
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 
-export var is_emitting := true setget set_emitting
+var is_emitting := false setget set_emitting
 
 # Distance in pixels between vertices. A higher resolution leads to more details.
-export var resolution := 10
+var resolution := 10
 # Life of each point in seconds before it is deleted.
-export var lifetime := 1
+var lifetime := 1
 # Maximum number of points allowed on the curve.
-export var max_points := 50
+var max_points := 50
 
 # Optional path to the target node to follow. If not set, the instance follows its parent.
 export var target_path: NodePath
@@ -52,7 +52,6 @@ func _process(delta: float) -> void:
 	var distance: float = _last_point.distance_squared_to(desired_point)
 	if camera and distance > pow(max(resolution, resolution * camera.zoom.x * 0.025), 2):
 		add_timed_point(desired_point, _clock)
-
 
 # Creates a new point and stores its creation time.
 func add_timed_point(point: Vector2, time: float) -> void:

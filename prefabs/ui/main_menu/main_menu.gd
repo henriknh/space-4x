@@ -7,9 +7,10 @@ func _ready():
 
 	for world_size_value in Enums.world_size.values():
 		$VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.add_item(Enums.world_size_label[world_size_value], world_size_value)
-	$VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.selected = 0
+	
+	$VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.selected = WorldGenerator.world_size
+	$VBox/CreateGame/VBoxContainer/SpinBoxSeed.value = WorldGenerator.seed_value
 	_on_world_size_changed($VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.selected)
-	$VBox/CreateGame/VBoxContainer/SpinBoxSeed.value = 0
 	_on_seed_changed($VBox/CreateGame/VBoxContainer/SpinBoxSeed.value)
 	
 	_update_view_state()
@@ -24,10 +25,10 @@ func _on_create():
 
 func _on_world_size_changed(idx: int):
 	var selected_world_size = $VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.get_item_id(idx)
-	WorldGenerator.set_world_size(selected_world_size)
+	WorldGenerator.world_size = selected_world_size
 
 func _on_seed_changed(seed_value: int):
-	WorldGenerator.set_seed(seed_value)
+	WorldGenerator.seed_value = seed_value
 
 func _on_load():
 	Scene.goto_game(StateManager.save_file_path)

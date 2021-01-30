@@ -1,8 +1,8 @@
 extends Node
 
-var _world_size: int = 1
-var _seed: int = 0
-var _unique_id = 0
+var world_size: int = 1
+var seed_value: int = 0 setget set_seed
+var unique_id = 0 setget ,get_unique_id
 
 var load_progress: float = 0
 var total_entities: float  = 0
@@ -11,22 +11,16 @@ onready var rng: RandomNumberGenerator = null
 
 func _ready():
 	rng = RandomNumberGenerator.new()
-	rng.set_seed(_seed)
+	rng.set_seed(seed_value)
 
-func set_world_size(world_size: int) -> void:
-	_world_size = world_size
-
-func get_world_size() -> int:
-	return _world_size
-
-func set_seed(seed_value: int) -> void:
-	_seed = seed_value
+func set_seed(_seed_value: int) -> void:
+	seed_value = _seed_value
 	rng = RandomNumberGenerator.new()
-	rng.set_seed(_seed)
+	rng.set_seed(seed_value)
 	
-func get_new_id() -> int:
-	_unique_id += 1
-	return _unique_id
+func get_unique_id() -> int:
+	unique_id += 1
+	return unique_id
 
 func generate_world():
 	print('Generate world with seed: %d' % rng.get_seed())
@@ -34,8 +28,8 @@ func generate_world():
 	
 	# Calculate planet systems
 	GameState.loading_label = 'Generate planet systems'
-	var galaxies_min = Consts.galaxy_size[_world_size].min
-	var galaxies_max = Consts.galaxy_size[_world_size].max
+	var galaxies_min = Consts.galaxy_size[world_size].min
+	var galaxies_max = Consts.galaxy_size[world_size].max
 	var planet_systems = []
 	for planet_system_idx in range(WorldGenerator.rng.randi_range(galaxies_min, galaxies_max)):
 		planet_systems.append({
@@ -49,8 +43,8 @@ func generate_world():
 	# Calculate planets
 	GameState.loading_label = 'Generate planets'
 	for planet_system in planet_systems:
-		var orbits_min = Consts.planet_system_orbits[WorldGenerator.get_world_size()].min
-		var orbits_max = Consts.planet_system_orbits[WorldGenerator.get_world_size()].max
+		var orbits_min = Consts.planet_system_orbits[WorldGenerator.world_size].min
+		var orbits_max = Consts.planet_system_orbits[WorldGenerator.world_size].max
 		var total_orbits = int(WorldGenerator.rng.randi_range(orbits_min, orbits_max))
 		
 		var orbit_diff = (Consts.planet_system_radius / total_orbits) * 0.2
@@ -82,8 +76,8 @@ func generate_world():
 	GameState.loading_label = 'Generate objects'
 	for planet_system in planet_systems:
 		pass
-		var asteroids_min = Consts.asteroids_per_planet_system[WorldGenerator.get_world_size()].min
-		var asteroids_max = Consts.asteroids_per_planet_system[WorldGenerator.get_world_size()].max
+		var asteroids_min = Consts.asteroids_per_planet_system[WorldGenerator.world_size].min
+		var asteroids_max = Consts.asteroids_per_planet_system[WorldGenerator.world_size].max
 		var total_asteroids = WorldGenerator.rng.randi_range(asteroids_min, asteroids_max)
 		
 		for asteroid in range(total_asteroids):
@@ -128,25 +122,26 @@ func generate_world():
 			gameScene.add_child(Instancer.object(object.object_type, planet_system.idx))
 			_entity_loaded()
 			
-	GameState.loading_label = 'Finishing up'
-	
-	for player in Enums.player_colors.keys():
-		if player < 0:
-			continue
+	GameState.loading_label = 'Generate player data'
+	var player_planet = _get_start_planet(true)
+	player_planet.faction = 0
+	_set_start_resouces(player_planet)
 		
-		var is_human_player = player == 0
-		var start_planet = _get_start_planet(is_human_player)
-		start_planet.faction = player
+	var camera = get_node('/root/GameScene/Camera') as Camera2D
+	camera.target_position = player_planet.position
+	camera.position = player_planet.position
+	
+	GameState.loading_label = 'Generate AIs'
+	var computers_min = Consts.computer_count[world_size].min
+	var computers_max = Consts.computer_count[world_size].max
+	for idx in range(WorldGenerator.rng.randi_range(computers_min, computers_max)):
+		var ai = AI.create(idx + 1)
+		var start_planet = _get_start_planet(ai.faction == 1)
+		start_planet.faction = ai.faction
 		_set_start_resouces(start_planet)
-		
-		if is_human_player:
-			var camera = get_node('/root/GameScene/Camera') as Camera2D
-			camera.target_position = start_planet.position
-			camera.position = start_planet.position
 	
+	GameState.loading_label = 'Finishing up'
 	GameState.set_planet_system(0)
-	
-
 
 func _entity_loaded():
 	load_progress += 1

@@ -110,9 +110,8 @@ func _update_ui():
 	
 func _create_ship(ship_type: int):
 	var curr_selection = GameState.get_selection()
-	selection.metal -= 500
-	curr_selection.state = Enums.planet_states.produce
-	curr_selection.set_process_target(ship_type, 10)
+	selection.metal -= Consts.SHIP_COST_METAL
+	curr_selection.set_entity_process(Enums.planet_states.produce, ship_type, 10)
 
 func _on_production_ship():
 	var menu = $VBoxContainer/Production/BtnShip.get_popup()
