@@ -27,7 +27,8 @@ func ready():
 		sprite_size = 16
 		
 	#($CollisionShape2D.shape as CircleShape2D).radius = sprite_size
-	$Sprite.self_modulate = Color.from_hsv(0, ((variant % 20) + 20) / 100, ((variant % 30) + 70) / 100)
+	$Sprite.self_modulate = Color.from_hsv(0, float((variant % 20) + 20) / 100, float((variant % 30) + 70) / 100)
+	$Sprite.scale = Vector2.ONE * 5
 	
 	.ready()
 	
