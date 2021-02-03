@@ -70,3 +70,6 @@ func get_route(caller: Entity, target_id: int):
 
 func get_map(caller: Entity) -> AStar2D:
 	return maps[caller.planet_system]
+
+func get_adjacent_sites(entity: Entity) -> Array:
+	return maps[entity.planet_system].get_point_connections(entity.id)

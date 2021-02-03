@@ -1,10 +1,23 @@
 extends Node
 
-static func process(entity: Entity):
-	var ai = AI.get_ai(entity.faction)
+static func process(entity: Entity, delta: float):
+	
+	if entity.state == Enums.ai_states.delay:
+		entity.process_time += delta
+		
+		if entity.get_process_progress() > 1:
+			produce(entity)
+			
+	if entity.state == Enums.ai_states.idle:
+		var ai = AI.get_computer(entity.faction)
+		var delay_time = (Consts.DIFFICULTY_LEVELS - ai.difficulty) * 5
+		entity.set_entity_process(Enums.ai_states.delay, -1, delay_time)
+
+static func produce(entity: Entity):
+	var ai = AI.get_computer(entity.faction)
 	
 	if entity.metal == Consts.SHIP_COST_METAL:
-		var miner_ships = entity.get_ships_by_type(Enums.ship_types.miner)
+		var miner_ships = entity.get_children_by_type(Enums.ship_types.miner, 'ship_type')
 		if miner_ships.size() == 0:
 			entity.metal -= Consts.SHIP_COST_METAL
 			return entity.set_entity_process(Enums.planet_states.produce, Enums.ship_types.miner, 10)

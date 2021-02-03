@@ -68,7 +68,11 @@ func _physics_process(_delta):
 		if hitpoints <= 0:
 			kill()
 		else:
+			if faction > 0:
+				AI.process_entity(self, delta)
+				
 			process(delta)
+			
 		delta = 0
 		
 func queue_free():
@@ -87,8 +91,7 @@ func ready():
 	set_visible(planet_system == GameState.get_planet_system())
 
 func process(delta: float):
-	if faction > 0:
-		AI.process_entity(self, delta)
+	pass
 
 func kill():
 	pass

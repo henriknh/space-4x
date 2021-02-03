@@ -13,6 +13,7 @@ func create():
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
 	
 	metal = WorldGenerator.rng.randf_range(150, 150)
+	
 	.create()
 	
 func ready():

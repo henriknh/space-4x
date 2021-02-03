@@ -1,6 +1,7 @@
 extends Node
 
-onready var planet = load("res://scripts/ai/planet.gd")
+onready var planet = preload("res://scripts/ai/planet/planet.gd").new()
+onready var ship = preload("res://scripts/ai/ship/ship.gd").new()
 
 class Computer:
 	
@@ -21,25 +22,16 @@ func create(faction: int) -> Computer:
 	computers[faction] = ai
 	return ai
 
-func get_ai(faction: int) -> Computer:
+func get_computer(faction: int) -> Computer:
 	if computers.has(faction):
 		return computers[faction]
 	else:
 		return null
 
 func process_entity(entity: Entity, delta: float):
-	var ai = get_ai(entity.faction)
-	
-	if entity.state == Enums.ai_states.delay:
-		entity.process_time += delta
+	match entity.entity_type:
+		Enums.entity_types.planet:
+			return planet.process(entity, delta)
+		Enums.entity_types.ship:
+			return ship.process(entity, delta)
 		
-		if entity.get_process_progress() > 1:
-			match entity.entity_type:
-				Enums.entity_types.planet:
-					return planet.process(entity)
-			
-			entity.state = Enums.ai_states.idle
-		
-	if entity.state == Enums.ai_states.idle:
-		var delay_time = (Consts.DIFFICULTY_LEVELS - ai.difficulty) * 5
-		entity.set_entity_process(Enums.ai_states.delay, -1, delay_time)
