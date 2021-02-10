@@ -83,9 +83,9 @@ func clear():
 
 func move(target_position: Vector2, decrease_speed: bool = true, turn_direction: int = 0) -> bool:
 	if turn_direction == 0:
-		rotation += get_angle_to(target_position) * Consts.ship_turn_speed * delta
+		rotation += get_angle_to(target_position) * Consts.SHIP_TURN_SPEED * delta
 	elif turn_direction < 0:
-		rotation += get_angle_to(target_position) * Consts.ship_turn_speed * delta
+		rotation += get_angle_to(target_position) * Consts.SHIP_TURN_SPEED * delta
 
 	var ship_forward_dir = Vector2(cos(rotation), sin(rotation)).normalized()
 
@@ -102,7 +102,7 @@ func _calc_speed(target_position: Vector2, decrease_speed: bool) -> bool:
 	elif ship_speed > ship_speed_max:
 		ship_speed = ship_speed_max
 	elif ship_speed < ship_speed_max:
-		ship_speed += ship_speed_max * Consts.ship_acceleration_factor * delta
+		ship_speed += ship_speed_max * Consts.SHIP_ACCELERATION_FACTOR * delta
 	
 	var trail = get_node("Trail") as Node2D
 	if ship_speed == 0 and trail.is_emitting():

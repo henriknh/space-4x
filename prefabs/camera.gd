@@ -147,14 +147,14 @@ func _clamp_targets():
 	elif target_zoom.x > Consts.CAMERA_ZOOM_MAX:
 		target_zoom = Vector2(Consts.CAMERA_ZOOM_MAX, Consts.CAMERA_ZOOM_MAX)
 	
-	if target_position.x < -Consts.planet_system_radius:
-		target_position.x = -Consts.planet_system_radius
-	elif target_position.x > Consts.planet_system_radius:
-		target_position.x = Consts.planet_system_radius
-	if target_position.y < -Consts.planet_system_radius:
-		target_position.y = -Consts.planet_system_radius
-	elif target_position.y > Consts.planet_system_radius:
-		target_position.y = Consts.planet_system_radius
+	if target_position.x < -Consts.PLANET_SYSTEM_RADIUS:
+		target_position.x = -Consts.PLANET_SYSTEM_RADIUS
+	elif target_position.x > Consts.PLANET_SYSTEM_RADIUS:
+		target_position.x = Consts.PLANET_SYSTEM_RADIUS
+	if target_position.y < -Consts.PLANET_SYSTEM_RADIUS:
+		target_position.y = -Consts.PLANET_SYSTEM_RADIUS
+	elif target_position.y > Consts.PLANET_SYSTEM_RADIUS:
+		target_position.y = Consts.PLANET_SYSTEM_RADIUS
 
 func _process(delta):
 	pass

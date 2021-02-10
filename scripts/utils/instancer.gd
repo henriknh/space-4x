@@ -64,7 +64,7 @@ func object(object_type: int, planet_system_idx: int) -> Entity:
 			instance = prefab_asteroid.instance()
 
 	var angle = WorldGenerator.rng.randf() * 2 * PI
-	var distance = Consts.asteroids_base_distance_to_sun + WorldGenerator.rng.randf() * (Consts.planet_system_radius + Consts.asteroids_extra_distance)
+	var distance = Consts.ASTEROIDS_BASE_DISTANCE_TO_SUN + WorldGenerator.rng.randf() * (Consts.PLANET_SYSTEM_RADIUS + Consts.ASTEROIDS_EXTRA_DISTANCE)
 	instance.position = Vector2(distance * cos(angle), distance * sin(angle))
 	instance.planet_system = planet_system_idx
 	

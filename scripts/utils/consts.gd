@@ -8,7 +8,7 @@ const CAMERA_LERPTIME_ZOOM = 15
 const CAMERA_ZOOM_STEP = 1.1
 
 # General
-const computer_count = {
+const COMPUTER_COUNT = {
 	Enums.world_size.small: {
 		'min': 2, 
 		'max': 5, 
@@ -32,7 +32,7 @@ const RESOURCE_CONVERTION_RATIO = 0.5
 const DIFFICULTY_LEVELS = 3
 
 # Galaxy
-const galaxy_size = {
+const GALAXY_SIZE = {
 	Enums.world_size.small: {
 		'min': 4, 
 		'max': 8, 
@@ -48,9 +48,9 @@ const galaxy_size = {
 }
 
 # Planet system
-const planet_system_base_distance_to_sun = 2500
-const planet_system_radius = 30000
-const planet_system_orbits = {
+const PLANET_SYSTEM_BASE_DISTANCE_TO_SUN = 2500
+const PLANET_SYSTEM_RADIUS = 30000
+const PLANET_SYSTEM_ORBITS = {
 	Enums.world_size.small: {
 		'min': 6, 
 		'max': 10, 
@@ -66,9 +66,9 @@ const planet_system_orbits = {
 }
 
 # Asteroids
-const asteroids_base_distance_to_sun = 2000
-const asteroids_extra_distance = 800
-const asteroids_per_planet_system = {
+const ASTEROIDS_BASE_DISTANCE_TO_SUN = 2000
+const ASTEROIDS_EXTRA_DISTANCE = 800
+const ASTEROIDS_PER_PLANET_SYSTEM = {
 	Enums.world_size.small: {
 		'min': 200, 
 		'max': 400, 
@@ -85,8 +85,8 @@ const asteroids_per_planet_system = {
 
 # Ships
 const SHIP_COST_TITANIUM = 1
-const ship_acceleration_factor: float = 0.1 # Factor of max_speed
-const ship_turn_speed: int = 4
+const SHIP_ACCELERATION_FACTOR: float = 0.1 # Factor of max_speed
+const SHIP_TURN_SPEED: int = 4
 
 # Research
 const RESEARCH_COST_ASTRAL_DUST = 1

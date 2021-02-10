@@ -28,8 +28,8 @@ func generate_world():
 	
 	# Calculate planet systems
 	GameState.loading_label = 'Generate planet systems'
-	var galaxies_min = Consts.galaxy_size[world_size].min
-	var galaxies_max = Consts.galaxy_size[world_size].max
+	var galaxies_min = Consts.GALAXY_SIZE[world_size].min
+	var galaxies_max = Consts.GALAXY_SIZE[world_size].max
 	var planet_systems = []
 	for planet_system_idx in range(WorldGenerator.rng.randi_range(galaxies_min, galaxies_max)):
 		planet_systems.append({
@@ -43,11 +43,11 @@ func generate_world():
 	# Calculate planets
 	GameState.loading_label = 'Generate planets'
 	for planet_system in planet_systems:
-		var orbits_min = Consts.planet_system_orbits[WorldGenerator.world_size].min
-		var orbits_max = Consts.planet_system_orbits[WorldGenerator.world_size].max
+		var orbits_min = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].min
+		var orbits_max = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].max
 		var total_orbits = int(WorldGenerator.rng.randi_range(orbits_min, orbits_max))
 		
-		var orbit_diff = (Consts.planet_system_radius / total_orbits) * 0.2
+		var orbit_diff = (Consts.PLANET_SYSTEM_RADIUS / total_orbits) * 0.2
 		var quadrants = {
 			0: 0,
 			1: 0,
@@ -59,7 +59,7 @@ func generate_world():
 			pass
 			var smallest_quadrant = _get_least_dense_quadrant(quadrants)
 			var angle = WorldGenerator.rng.randf() * PI / 2 + smallest_quadrant * PI / 2
-			var orbit_distance = Consts.planet_system_base_distance_to_sun + (Consts.planet_system_radius / total_orbits) * (orbit + 1) + WorldGenerator.rng.randi_range(-orbit_diff, orbit_diff)
+			var orbit_distance = Consts.PLANET_SYSTEM_BASE_DISTANCE_TO_SUN + (Consts.PLANET_SYSTEM_RADIUS / total_orbits) * (orbit + 1) + WorldGenerator.rng.randi_range(-orbit_diff, orbit_diff)
 		
 			var position = Vector2(orbit_distance * sin(angle), orbit_distance * cos(angle))
 			
@@ -76,8 +76,8 @@ func generate_world():
 	GameState.loading_label = 'Generate objects'
 	for planet_system in planet_systems:
 		pass
-		var asteroids_min = Consts.asteroids_per_planet_system[WorldGenerator.world_size].min
-		var asteroids_max = Consts.asteroids_per_planet_system[WorldGenerator.world_size].max
+		var asteroids_min = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].min
+		var asteroids_max = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].max
 		var total_asteroids = WorldGenerator.rng.randi_range(asteroids_min, asteroids_max)
 		
 		for asteroid in range(total_asteroids):
@@ -131,8 +131,8 @@ func generate_world():
 	camera.position = player_planet.position
 	
 	GameState.loading_label = 'Generate AIs'
-	var computers_min = Consts.computer_count[world_size].min
-	var computers_max = Consts.computer_count[world_size].max
+	var computers_min = Consts.COMPUTER_COUNT[world_size].min
+	var computers_max = Consts.COMPUTER_COUNT[world_size].max
 	for idx in range(WorldGenerator.rng.randi_range(computers_min, computers_max)):
 		var ai_faction = Factions.create(idx + 1)
 		var start_planet = _get_start_planet(ai_faction.faction == 1)
