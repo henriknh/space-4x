@@ -48,7 +48,6 @@ func _on_confirm():
 		Enums.ship_types.combat: [],
 		Enums.ship_types.miner: [],
 		Enums.ship_types.explorer: [],
-		Enums.ship_types.transport: [],
 	}
 	
 	var sorted_children = (move_selection.origin_planet as Planet).get_children_sorted_by_distance()

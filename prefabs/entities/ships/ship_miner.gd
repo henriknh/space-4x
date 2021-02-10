@@ -2,7 +2,7 @@ extends Ship
 
 class_name ShipMiner
 
-var mining_power = 10
+var mining_power = 1
 
 var mining_target: Entity = null
 var mining_charging: bool = false
@@ -11,7 +11,7 @@ var mining_timer: Timer
 func create():
 	ship_type = Enums.ship_types.miner
 	ship_speed_max = 1000
-	metal_max = 100
+	asteroid_rocks_max = 1
 	.create()
 	
 func ready():
@@ -36,7 +36,7 @@ func process(delta: float):
 		if mining_target:
 			state = Enums.ship_states.mine
 	
-	if state == Enums.ship_states.mine and metal == metal_max:
+	if state == Enums.ship_states.mine and asteroid_rocks >= asteroid_rocks_max:
 		state = Enums.ship_states.deliver
 		
 	if state == Enums.ship_states.deliver:
@@ -61,16 +61,16 @@ func charge_mine():
 
 func do_mine():
 	mining_charging = false
-	if mining_target and not mining_target.is_dead() and mining_target.metal > 0:
-		var can_mine = min(mining_power, metal_max - metal)
-		var mine_amount = min(mining_target.metal, can_mine)
-		metal += mine_amount
-		mining_target.metal -= mine_amount
+	if mining_target and not mining_target.is_dead() and mining_target.asteroid_rocks > 0:
+		var can_mine = min(mining_power, asteroid_rocks_max - asteroid_rocks)
+		var mine_amount = min(mining_target.asteroid_rocks, can_mine)
+		asteroid_rocks += mine_amount
+		mining_target.asteroid_rocks -= mine_amount
 
 func deliver():
-	parent.metal += metal
+	parent.asteroid_rocks += asteroid_rocks
+	asteroid_rocks = 0
 	parent.emit_signal("entity_changed")
-	metal = 0
 	
 func _get_next_mining_target() -> void:
 	

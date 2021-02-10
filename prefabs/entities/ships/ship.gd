@@ -13,16 +13,14 @@ func create():
 	if hitpoints_max == -1:
 		hitpoints_max = 50
 	
-	if metal_max < 0:
-		metal_max = 0
-	if power_max < 0:
-		power_max = 10
-	if food_max < 0:
-		food_max = 5
-	if water_max < 0:
-		water_max = 5
+	if asteroid_rocks_max < 0:
+		asteroid_rocks_max = 0
+	if titanium_max < 0:
+		titanium_max = 0
+	if titanium_max < 0:
+		titanium_max = 10
 	if ship_cargo_size < 0:
-		ship_cargo_size = metal_max + power_max + food_max + water_max
+		ship_cargo_size = asteroid_rocks_max + titanium_max
 	
 	.create()
 	

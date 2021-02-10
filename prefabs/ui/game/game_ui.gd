@@ -4,10 +4,10 @@ var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
 var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_movement.tscn')
 var planet_details_prefab = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 
-var total_metal: int = 0
-var total_power: int = 0
-var total_food: int = 0
-var total_water: int = 0
+onready var node_asteroid_rocks = $Resources/ValueAsteroidRocks as Label
+onready var node_titanium = $Resources/ValueTitanium as Label
+onready var node_astral_dust = $Resources/ValueAstralDust as Label
+
 
 func _ready():
 	MenuState.push(self)
@@ -44,35 +44,17 @@ func _update_ui():
 	$Bottom/BtnShipMovement.disabled = _ship_movement_disabled()
 	$Bottom/BtnPlanetDetails.disabled = GameState.get_selection() == null
 	
-	_update_resources()
-	$Resources/LabelMetal.text = Utils.format_number(total_metal)
-	$Resources/LabelPower.text = Utils.format_number(total_power)
-	$Resources/LabelFood.text = Utils.format_number(total_food)
-	$Resources/LabelWater.text = Utils.format_number(total_water)
-		
-func _update_resources():
-	total_metal = 0
-	total_power = 0
-	total_food = 0
-	total_water = 0
-	
-	var planets = get_tree().get_nodes_in_group("Planet")
-	
-	for planet in planets:
-		if planet.faction == 0 and (GameState.get_planet_system() == -1 or GameState.get_planet_system() == planet.planet_system):
-			total_metal += planet.metal
-			total_power += planet.power
-			total_food += planet.food
-			total_water += planet.water
+	var faction = Factions.get_faction(0)
+	if faction:
+		node_asteroid_rocks.text = Utils.format_number(faction.resources.asteroid_rocks)
+		node_titanium.text = Utils.format_number(faction.resources.titanium)
+		node_astral_dust.text = Utils.format_number(faction.resources.astral_dust)
 
 func _on_game_menu():
 	get_parent().add_child(game_menu_prefab.instance())
 
 func _on_go_to_galaxy():
 	GameState.set_planet_system(-1)
-
-func _on_overview():
-	print('TODO: Implement planet system overview')
 
 func _on_planet_details():
 	get_parent().add_child(planet_details_prefab.instance())

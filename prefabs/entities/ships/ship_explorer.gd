@@ -8,7 +8,6 @@ var explore_position: Vector2 = Vector2.INF
 func create():
 	ship_type = Enums.ship_types.explorer
 	ship_speed_max = 1000
-	power_max = 40
 	.create()
 	
 func ready():

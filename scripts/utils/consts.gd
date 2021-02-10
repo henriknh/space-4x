@@ -8,7 +8,6 @@ const CAMERA_LERPTIME_ZOOM = 15
 const CAMERA_ZOOM_STEP = 1.1
 
 # General
-
 const computer_count = {
 	Enums.world_size.small: {
 		'min': 2, 
@@ -23,6 +22,11 @@ const computer_count = {
 		'max': 9, 
 	}
 }
+
+# Resources
+const RESOURCE_CONVERTION_COST = 2
+const RESOURCE_CONVERTION_TIME = 10
+const RESOURCE_CONVERTION_RATIO = 0.5
 
 # AI
 const DIFFICULTY_LEVELS = 3
@@ -80,6 +84,9 @@ const asteroids_per_planet_system = {
 }
 
 # Ships
-const SHIP_COST_METAL = 500
+const SHIP_COST_TITANIUM = 1
 const ship_acceleration_factor: float = 0.1 # Factor of max_speed
 const ship_turn_speed: int = 4
+
+# Research
+const RESEARCH_COST_ASTRAL_DUST = 1

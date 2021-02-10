@@ -12,15 +12,15 @@ func create():
 	label = NameGenerator.get_name_asteroid()
 	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
 	
-	metal = WorldGenerator.rng.randf_range(150, 150)
+	asteroid_rocks = WorldGenerator.rng.randf_range(200, 1000)
 	
 	.create()
 	
 func ready():
-	if metal < 400:
+	if asteroid_rocks < 400:
 		$Sprite.texture = sprite_small
 		sprite_size = 4
-	elif metal < 700:
+	elif asteroid_rocks < 700:
 		$Sprite.texture = sprite_medium
 		sprite_size = 8
 	else:
@@ -34,7 +34,7 @@ func ready():
 	.ready()
 	
 func process(delta: float):
-	if metal == 0:
+	if asteroid_rocks <= 0:
 		kill()
 		
 	if visible:

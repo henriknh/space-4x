@@ -92,7 +92,6 @@ func generate_world():
 		total_entities += 1
 		total_entities += planet_system.planets.size()
 		total_entities += planet_system.objects.size()
-	print('Total entities to load: %d' % total_entities)
 	
 	var gameScene = get_node('/root/GameScene')
 	
@@ -123,9 +122,9 @@ func generate_world():
 			_entity_loaded()
 			
 	GameState.loading_label = 'Generate player data'
+	var player = Factions.create(0)
 	var player_planet = _get_start_planet(true)
-	player_planet.faction = 0
-	_set_start_resouces(player_planet)
+	player_planet.faction = player.faction
 		
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
 	camera.target_position = player_planet.position
@@ -135,10 +134,9 @@ func generate_world():
 	var computers_min = Consts.computer_count[world_size].min
 	var computers_max = Consts.computer_count[world_size].max
 	for idx in range(WorldGenerator.rng.randi_range(computers_min, computers_max)):
-		var ai = AI.create(idx + 1)
-		var start_planet = _get_start_planet(ai.faction == 1)
-		start_planet.faction = ai.faction
-		_set_start_resouces(start_planet)
+		var ai_faction = Factions.create(idx + 1)
+		var start_planet = _get_start_planet(ai_faction.faction == 1)
+		start_planet.faction = ai_faction.faction
 	
 	GameState.loading_label = 'Finishing up'
 	GameState.set_planet_system(0)
@@ -154,12 +152,6 @@ func _get_start_planet(is_human: bool) -> Entity:
 			possible_planets.append(planet)
 	
 	return possible_planets[WorldGenerator.rng.randi() % possible_planets.size()]
-
-func _set_start_resouces(planet: Entity):
-	planet.metal = 1000
-	planet.power = 1000
-	planet.food = 1000
-	planet.water = 1000
 	
 func _calc_planet_type(orbit: int, total_orbits: int) -> int:
 	var r = WorldGenerator.rng.randf()

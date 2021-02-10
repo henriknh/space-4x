@@ -21,7 +21,6 @@ var script_ship = preload('res://prefabs/entities/ships/ship.gd')
 var script_combat = preload('res://prefabs/entities/ships/ship_combat.gd')
 var script_explorer = preload('res://prefabs/entities/ships/ship_explorer.gd')
 var script_miner = preload('res://prefabs/entities/ships/ship_miner.gd')
-var script_transport = preload('res://prefabs/entities/ships/ship_transport.gd')
 
 func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null) -> Entity:
 	
@@ -34,8 +33,6 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null) -> E
 			instance.set_script(script_explorer)
 		Enums.ship_types.miner:
 			instance.set_script(script_miner)
-		Enums.ship_types.transport:
-			instance.set_script(script_transport)
 
 	if copy_from:
 		for propery in script_ship.get_script_property_list():

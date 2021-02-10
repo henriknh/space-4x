@@ -17,10 +17,6 @@ var distribution = {
 		'current': 0,
 		'change': 0
 	},
-	Enums.ship_types.transport: {
-		'current': 0,
-		'change': 0
-	}
 }
 var disabled = 0;
 var rebuilding = 0;
@@ -36,14 +32,12 @@ func _ready():
 	distribution[Enums.ship_types.combat].change = distribution[Enums.ship_types.combat].current
 	distribution[Enums.ship_types.explorer].change = distribution[Enums.ship_types.explorer].current
 	distribution[Enums.ship_types.miner].change = distribution[Enums.ship_types.miner].current
-	distribution[Enums.ship_types.transport].change = distribution[Enums.ship_types.transport].current
 	
 	_update_disabled()
 	
 	$MarginContainer/Info/Distribution/Combat/Color.color = Enums.ship_colors[Enums.ship_types.combat]
 	$MarginContainer/Info/Distribution/Explorer/Color.color = Enums.ship_colors[Enums.ship_types.explorer]
 	$MarginContainer/Info/Distribution/Miner/Color.color = Enums.ship_colors[Enums.ship_types.miner]
-	$MarginContainer/Info/Distribution/Transport/Color.color = Enums.ship_colors[Enums.ship_types.transport]
 	$MarginContainer/Info/Distribution/Rebuilding/Color.color = Color(0.5, 0.5, 0.5, 1)
 	$MarginContainer/Info/Distribution/Disabled/Color.color = Enums.ship_colors[Enums.ship_types.disabled]
 
@@ -53,9 +47,7 @@ func _ready():
 	$MarginContainer/Info/LabelsAndActions/Explorer/Actions/Increase.connect("pressed", self, "_on_change", [Enums.ship_types.explorer, 1])
 	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Decrease.connect("pressed", self, "_on_change", [Enums.ship_types.miner, -1])
 	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Increase.connect("pressed", self, "_on_change", [Enums.ship_types.miner, 1])
-	$MarginContainer/Info/LabelsAndActions/Transport/Actions/Decrease.connect("pressed", self, "_on_change", [Enums.ship_types.transport, -1])
-	$MarginContainer/Info/LabelsAndActions/Transport/Actions/Increase.connect("pressed", self, "_on_change", [Enums.ship_types.transport, 1])
-
+	
 	_update_ui()
 	
 func _on_change(ship_type: int, change: int):
@@ -94,8 +86,6 @@ func _update_current_state():
 					distribution[Enums.ship_types.explorer].current += 1
 				Enums.ship_types.miner:
 					distribution[Enums.ship_types.miner].current += 1
-				Enums.ship_types.transport:
-					distribution[Enums.ship_types.transport].current += 1
 
 	_update_disabled()
 
@@ -104,7 +94,6 @@ func _update_disabled():
 	disabled -= distribution[Enums.ship_types.combat].change
 	disabled -= distribution[Enums.ship_types.explorer].change
 	disabled -= distribution[Enums.ship_types.miner].change
-	disabled -= distribution[Enums.ship_types.transport].change
 	disabled -= rebuilding
 
 func _set_distribution(ui_elem: Control, value: float):
@@ -130,17 +119,14 @@ func _update_ui():
 	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Decrease.disabled = distribution[Enums.ship_types.combat].change == 0
 	$MarginContainer/Info/LabelsAndActions/Explorer/Actions/Decrease.disabled = distribution[Enums.ship_types.explorer].change == 0
 	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Decrease.disabled = distribution[Enums.ship_types.miner].change == 0
-	$MarginContainer/Info/LabelsAndActions/Transport/Actions/Decrease.disabled = distribution[Enums.ship_types.transport].change == 0
 	
 	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Increase.disabled = disabled == 0
 	$MarginContainer/Info/LabelsAndActions/Explorer/Actions/Increase.disabled = disabled == 0
 	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Increase.disabled = disabled == 0
-	$MarginContainer/Info/LabelsAndActions/Transport/Actions/Increase.disabled = disabled == 0
 	
 	_set_distribution($MarginContainer/Info/Distribution/Combat, distribution[Enums.ship_types.combat].change)
 	_set_distribution($MarginContainer/Info/Distribution/Explorer, distribution[Enums.ship_types.explorer].change)
 	_set_distribution($MarginContainer/Info/Distribution/Miner, distribution[Enums.ship_types.miner].change)
-	_set_distribution($MarginContainer/Info/Distribution/Transport, distribution[Enums.ship_types.transport].change)
 	_set_distribution($MarginContainer/Info/Distribution/Rebuilding, rebuilding)
 	_set_distribution($MarginContainer/Info/Distribution/Disabled, disabled)
 	

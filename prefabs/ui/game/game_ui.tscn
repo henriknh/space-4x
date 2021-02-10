@@ -1,12 +1,11 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/icons/shield-lock-outline.png" type="Texture" id=1]
 [ext_resource path="res://assets/icons/car-arrow-right.png" type="Texture" id=2]
-[ext_resource path="res://assets/icons/flash.png" type="Texture" id=3]
+[ext_resource path="res://assets/icons/image-filter-hdr.png" type="Texture" id=3]
 [ext_resource path="res://assets/icons/cube.png" type="Texture" id=4]
+[ext_resource path="res://assets/icons/cloud.png" type="Texture" id=5]
 [ext_resource path="res://prefabs/ui/game/game_ui.gd" type="Script" id=6]
-[ext_resource path="res://assets/icons/food-apple.png" type="Texture" id=7]
-[ext_resource path="res://assets/icons/water.png" type="Texture" id=8]
 [ext_resource path="res://assets/icons/cog.png" type="Texture" id=9]
 [ext_resource path="res://assets/icons/alert-circle.png" type="Texture" id=10]
 [ext_resource path="res://assets/icons/react.png" type="Texture" id=11]
@@ -29,55 +28,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureMetal" type="TextureRect" parent="Resources"]
-margin_left = 162.0
-margin_right = 186.0
-margin_bottom = 24.0
-texture = ExtResource( 4 )
-
-[node name="LabelMetal" type="Label" parent="Resources"]
-margin_left = 190.0
-margin_top = 5.0
-margin_right = 198.0
-margin_bottom = 19.0
-text = "0"
-
-[node name="TexturePower" type="TextureRect" parent="Resources"]
-margin_left = 202.0
-margin_right = 226.0
+[node name="TextureAsteroidRocks" type="TextureRect" parent="Resources"]
+margin_left = 182.0
+margin_right = 206.0
 margin_bottom = 24.0
 texture = ExtResource( 3 )
 
-[node name="LabelPower" type="Label" parent="Resources"]
-margin_left = 230.0
+[node name="ValueAsteroidRocks" type="Label" parent="Resources"]
+margin_left = 210.0
 margin_top = 5.0
-margin_right = 238.0
+margin_right = 218.0
 margin_bottom = 19.0
 text = "0"
 
-[node name="TextureFood" type="TextureRect" parent="Resources"]
-margin_left = 242.0
-margin_right = 266.0
+[node name="TextureTitanium" type="TextureRect" parent="Resources"]
+margin_left = 222.0
+margin_right = 246.0
 margin_bottom = 24.0
-texture = ExtResource( 7 )
+texture = ExtResource( 4 )
 
-[node name="LabelFood" type="Label" parent="Resources"]
-margin_left = 270.0
+[node name="ValueTitanium" type="Label" parent="Resources"]
+margin_left = 250.0
 margin_top = 5.0
-margin_right = 278.0
+margin_right = 258.0
 margin_bottom = 19.0
 text = "0"
 
-[node name="TextureWater" type="TextureRect" parent="Resources"]
-margin_left = 282.0
-margin_right = 306.0
+[node name="TextureAstralDust" type="TextureRect" parent="Resources"]
+margin_left = 262.0
+margin_right = 286.0
 margin_bottom = 24.0
-texture = ExtResource( 8 )
+texture = ExtResource( 5 )
 
-[node name="LabelWater" type="Label" parent="Resources"]
-margin_left = 310.0
+[node name="ValueAstralDust" type="Label" parent="Resources"]
+margin_left = 290.0
 margin_top = 5.0
-margin_right = 318.0
+margin_right = 298.0
 margin_bottom = 19.0
 text = "0"
 

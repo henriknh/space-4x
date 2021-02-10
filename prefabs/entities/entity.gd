@@ -28,14 +28,12 @@ var process_time: float = 0
 var _process_time_total: float = 0
 
 # Resources
-var metal: float = 0
-var metal_max: int = -1
-var power: float = 0
-var power_max: int = -1
-var food: float = 0
-var food_max: int = -1
-var water: float = 0
-var water_max: int = -1
+var asteroid_rocks: float = 0
+var asteroid_rocks_max: int = 0
+var titanium: float = 0
+var titanium_max: int = 0
+var astral_dust: float = 0
+var astral_dust_max: int = 0
 
 # Object specific variables
 var object_type: int = -1
@@ -68,7 +66,8 @@ func _physics_process(_delta):
 		if hitpoints <= 0:
 			kill()
 		else:
-			if faction > 0:
+			var faction = Factions.get_faction(self.faction)
+			if faction and faction.is_computer:
 				AI.process_entity(self, delta)
 				
 			process(delta)
@@ -143,14 +142,12 @@ func save():
 		"_process_time_total": _process_time_total,
 		
 		# Resources
-		"metal": metal,
-		"metal_max": metal_max,
-		"power": power,
-		"power_max": power_max,
-		"food": food,
-		"food_max": food_max,
-		"water": water,
-		"water_max": water_max,
+		"asteroid_rocks": asteroid_rocks,
+		"asteroid_rocks_max": asteroid_rocks_max,
+		"titanium": titanium,
+		"titanium_max": titanium_max,
+		"astral_dust": astral_dust,
+		"astral_dust_max": astral_dust_max,
 		
 		# Object
 		"object_type": object_type,

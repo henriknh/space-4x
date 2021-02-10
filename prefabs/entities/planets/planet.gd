@@ -48,14 +48,24 @@ func ready():
 	.ready()
 
 func process(delta: float):
-	if state == Enums.planet_states.produce:
+	if state == Enums.planet_states.produce or state == Enums.planet_states.convertion:
 		process_time += delta
 		
 		if get_process_progress() > 1:
+			if state == Enums.planet_states.produce:
+				if process_target in Enums.ship_types.values():
+					get_node('/root/GameScene').add_child(Instancer.ship(process_target, null, self))
+			elif state == Enums.planet_states.convertion:
+				var faction = Factions.get_faction(self.faction)
+				var converted_amount = Consts.RESOURCE_CONVERTION_COST * Consts.RESOURCE_CONVERTION_RATIO
+				match process_target:
+					Enums.resource_types.titanium:
+						faction.resources.titanium += converted_amount
+					Enums.resource_types.astral_dust:
+						faction.resources.astral_dust += converted_amount
+			
 			process_time = 0
 			state = Enums.planet_states.idle
-			if process_target in Enums.ship_types.values():
-				get_node('/root/GameScene').add_child(Instancer.ship(process_target, null, self))
 		
 		GameState.emit_signal("update_ui")
 	else:

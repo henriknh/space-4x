@@ -14,6 +14,12 @@ const player_colors = {
 	9: Color(0.5, 0, 0.5)
 }
 
+const resource_types = {
+	'asteroid_rock': 0,
+	'titanium': 1,
+	'astral_dust': 2,
+}
+
 # World 1000 - 1999
 const world_size = {
 	'small': 1000,
@@ -55,7 +61,8 @@ const planet_types = {
 
 const planet_states = {
 	'idle': 0,
-	'produce': 5101
+	'produce': 5101,
+	'convertion': 5102
 }
 
 const planet_scripts = {
@@ -71,7 +78,6 @@ const ship_types = {
 	'combat': 6001,
 	'explorer': 6002,
 	'miner': 6003,
-	'transport': 6004
 }
 
 const ship_colors = {
@@ -79,7 +85,6 @@ const ship_colors = {
 	ship_types.combat: Color(1, 0, 0.4, 1),
 	ship_types.explorer: Color(1, 1, 1, 1),
 	ship_types.miner: Color(1, 0.8, 0.4, 1),
-	ship_types.transport: Color(0.2, 0.5, 1, 1)
 }
 
 const ship_states = {
