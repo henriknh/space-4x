@@ -49,7 +49,6 @@ static func produce(entity: Entity, faction: Faction):
 			potential_ships.append(Enums.ship_types.explorer)
 			
 		potential_ships.shuffle()
-		potential_ships = [Enums.ship_types.combat]
 		
 		faction.resources.titanium -= Consts.SHIP_COST_TITANIUM
 		
