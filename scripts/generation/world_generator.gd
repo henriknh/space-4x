@@ -114,6 +114,10 @@ func generate_world():
 	# Instance objects
 	GameState.loading_label = 'Instanciate objects'
 	for planet_system in planet_systems:
+		var asteroid_fomrations = Enums.asteroid_formation_types.values()
+		asteroid_fomrations.shuffle()
+		var asteroid_formation = asteroid_fomrations[0]
+		print(asteroid_formation)
 		for object in planet_system.objects:
 			gameScene.add_child(Instancer.object(object.object_type, planet_system.idx))
 			_entity_loaded()
