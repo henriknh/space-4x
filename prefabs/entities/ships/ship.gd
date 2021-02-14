@@ -68,7 +68,7 @@ func process(delta: float):
 	elif state == Enums.ship_states.idle and ship_type != Enums.ship_types.disabled:
 		if not idle_target or close_to_target(idle_target):
 			idle_target = get_random_point_in_site()
-			
+		
 		move(idle_target)
 	else:
 		.process(delta)
@@ -134,30 +134,32 @@ func set_visible(in_data) -> void:
 		visible = planet_system == in_data
 
 func get_random_point_in_site() -> Vector2:
+	var parent_hull = parent.planet_convex_hull
+	var hull = parent_hull.duplicate() if parent_hull[0] == parent_hull[parent_hull.size() - 1] else parent_hull
 	
-	var bound_left = INF
-	var bound_right = -INF
-	var bound_top = INF
-	var bound_bottom = -INF
+	var hull_shrinked: PoolVector2Array = []
+	for point in hull:
+		var point_shrinked = point * 0.8
+		hull_shrinked.append(point_shrinked + parent.position)
 	
-	var bound_limit = 30000
+	var distance = Consts.PLANET_SYSTEM_RADIUS * WorldGenerator.rng.randf()
+	var angle = 2 * PI * WorldGenerator.rng.randf()
+	var target = Vector2(distance * cos(angle), distance * sin(angle)) + parent.position
 	
-	var polygon_shrinked = []
-	for point in parent.planet_convex_hull:
-		var point_shrinked = Utils.get_midpoint(point, Vector2.ZERO)
-		polygon_shrinked.append(point_shrinked + parent.position)
-		
-		bound_left = min(bound_left, point_shrinked.x)
-		bound_right = max(bound_right, point_shrinked.x)
-		bound_top = min(bound_top, point_shrinked.y)
-		bound_bottom = max(bound_bottom, point_shrinked.y)
 	
-	var random_point: Vector2 = Vector2.INF
-	while random_point == Vector2.INF:
-		var x = WorldGenerator.rng.randf_range(max(bound_left, -bound_limit), min(bound_right, bound_limit))
-		var y = WorldGenerator.rng.randf_range(max(bound_top, -bound_limit), min(bound_bottom, bound_limit))
-		var _random_point: Vector2 = Vector2(x, y)
-		if Geometry.is_point_in_polygon(_random_point, polygon_shrinked):
-			random_point = _random_point
-	return random_point
+	# Check convex hull segments
+	var prev = hull_shrinked[0]
+	var curr = null
+	for i in range(1, hull_shrinked.size()):
+		curr = hull_shrinked[i]
+		var intersects = Geometry.segment_intersects_segment_2d(parent.position, target, prev, curr)
+		if intersects != null:
+			target = intersects
+		prev = curr
 	
+	# Check planet system bounds
+	var intersects_circle = Geometry.segment_intersects_circle(parent.position, target, Vector2.ZERO, Consts.PLANET_SYSTEM_RADIUS)
+	if intersects_circle != -1:
+		target = (target - parent.position) * intersects_circle + parent.position
+
+	return target

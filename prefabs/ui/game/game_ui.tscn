@@ -23,47 +23,45 @@ __meta__ = {
 [node name="Resources" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 margin_bottom = 24.0
-alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureAsteroidRocks" type="TextureRect" parent="Resources"]
-margin_left = 182.0
-margin_right = 206.0
+margin_right = 24.0
 margin_bottom = 24.0
 texture = ExtResource( 3 )
 
 [node name="ValueAsteroidRocks" type="Label" parent="Resources"]
-margin_left = 210.0
+margin_left = 28.0
 margin_top = 5.0
-margin_right = 218.0
+margin_right = 36.0
 margin_bottom = 19.0
 text = "0"
 
 [node name="TextureTitanium" type="TextureRect" parent="Resources"]
-margin_left = 222.0
-margin_right = 246.0
+margin_left = 40.0
+margin_right = 64.0
 margin_bottom = 24.0
 texture = ExtResource( 4 )
 
 [node name="ValueTitanium" type="Label" parent="Resources"]
-margin_left = 250.0
+margin_left = 68.0
 margin_top = 5.0
-margin_right = 258.0
+margin_right = 76.0
 margin_bottom = 19.0
 text = "0"
 
 [node name="TextureAstralDust" type="TextureRect" parent="Resources"]
-margin_left = 262.0
-margin_right = 286.0
+margin_left = 80.0
+margin_right = 104.0
 margin_bottom = 24.0
 texture = ExtResource( 5 )
 
 [node name="ValueAstralDust" type="Label" parent="Resources"]
-margin_left = 290.0
+margin_left = 108.0
 margin_top = 5.0
-margin_right = 298.0
+margin_right = 116.0
 margin_bottom = 19.0
 text = "0"
 

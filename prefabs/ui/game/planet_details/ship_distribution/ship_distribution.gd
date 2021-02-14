@@ -163,7 +163,7 @@ func _on_confirm():
 			if not distribution.has(ship_type):
 				continue
 			if distribution[ship_type].change > distribution[ship_type].current:
-				unallocated_child.set_entity_process(Enums.ship_states.rebuild, ship_type, 10)
+				unallocated_child.set_entity_process(Enums.ship_states.rebuild, ship_type, Consts.SHIP_REBUILD_TIME)
 				distribution[ship_type].change -= 1
 				handled = true
 				break
@@ -173,7 +173,7 @@ func _on_confirm():
 	# Set the rest to disabled type, if they are not already disabled type
 	for unallocated_child in unhandled_unallocated:
 		if unallocated_child.ship_type != Enums.ship_types.disabled:
-			unallocated_child.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.disabled, 10)
+			unallocated_child.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.disabled, Consts.SHIP_REBUILD_TIME)
 			unallocated_children.erase(unallocated_child)
 	
 	MenuState.pop()

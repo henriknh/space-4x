@@ -12,6 +12,8 @@ onready var node_convert_to_amount: Label = $VBoxContainer/Convertion/ConvertToA
 onready var node_convert_to_titanium: TextureButton = $VBoxContainer/Convertion/ConvertToTitanium
 onready var node_convert_to_astral_dust: TextureButton = $VBoxContainer/Convertion/ConvertToAstralDust
 
+onready var node_debug_current_process: Label = $VBoxContainer/DebugCurrentProduction
+
 var real_camera_position: Vector2
 var real_camera_zoom: Vector2
 
@@ -19,6 +21,7 @@ func _ready():
 	MenuState.push(self)
 	
 	GameState.connect("update_ui", self, "_update_ui")
+	Settings.connect("settings_changed", self, "_update_ui")
 	selection.connect("entity_changed", self, "_update_ui")
 
 	var viewport_size = get_viewport_rect().size
@@ -50,6 +53,10 @@ func _on_close():
 
 func _update_ui():
 	
+	# Set name of selection
+	$VBoxContainer/Info/LabelSelection.text = selection.label
+	
+	# Enable/disable actions
 	var busy = selection.state != Enums.planet_states.idle
 	var cant_convert = faction.resources.asteroid_rocks < Consts.RESOURCE_CONVERTION_COST
 	var cant_produce_ship = faction.resources.titanium < Consts.SHIP_COST_TITANIUM
@@ -60,13 +67,18 @@ func _update_ui():
 	$VBoxContainer/Production/BtnShip.disabled = busy or cant_produce_ship
 	$VBoxContainer/Production/BtnResearch.disabled = busy or cant_produce_research
 	
-	$VBoxContainer/Info/LabelSelection.text = selection.label
-	
+	# Update progress bar
 	$VBoxContainer/ProgressBar.value = selection.get_process_progress()
 	
+	# Set convertion values
 	node_convert_from_amount.text = Consts.RESOURCE_CONVERTION_COST as String
 	node_convert_to_amount.text = (Consts.RESOURCE_CONVERTION_COST * Consts.RESOURCE_CONVERTION_RATIO) as String
 	
+	# If debug, set current process number
+	node_debug_current_process.visible = Settings.is_debug()
+	node_debug_current_process.text = selection.process_target as String
+		
+	# Update ship distribution
 	var distribution_width = $VBoxContainer/DistributionSpectra.rect_size[0]
 	
 	var combat = 0
@@ -123,7 +135,7 @@ func _update_ui():
 func _create_ship(ship_type: int):
 	if faction.resources.titanium >= Consts.SHIP_COST_TITANIUM:
 		faction.resources.titanium -= Consts.SHIP_COST_TITANIUM
-		selection.set_entity_process(Enums.planet_states.produce, ship_type, 10)
+		selection.set_entity_process(Enums.planet_states.produce, ship_type, Consts.SHIP_PRODUCTION_TIME)
 
 func _on_production_ship():
 	var menu = $VBoxContainer/Production/BtnShip.get_popup()

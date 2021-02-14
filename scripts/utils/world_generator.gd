@@ -95,8 +95,6 @@ func generate_world():
 	
 	var gameScene = get_node('/root/GameScene')
 	
-	
-			
 	# Instance planet systems
 	GameState.loading_label = 'Instanciate planet systems'
 	for planet_system in planet_systems:
@@ -106,13 +104,12 @@ func generate_world():
 	# Instance planets
 	GameState.loading_label = 'Instanciate planets'
 	for planet_system in planet_systems:
-		
+
 		for planet in planet_system.planets:
 			var planet_type = _calc_planet_type(planet.orbit, planet_system.planets.size())
 			var convex_hull = planet_system.voronoi.site_registry.get_convex_hull_of_node(planet)
 			gameScene.add_child(Instancer.planet(planet_type, planet.position, convex_hull, planet_system.idx))
 			_entity_loaded()
-	
 	
 	# Instance objects
 	GameState.loading_label = 'Instanciate objects'
@@ -125,15 +122,15 @@ func generate_world():
 	var player = Factions.create(0)
 	var player_planet = _get_start_planet(true)
 	player_planet.faction = player.faction
-		
+
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
 	camera.target_position = player_planet.position
 	camera.position = player_planet.position
-	
+
 	GameState.loading_label = 'Generate AIs'
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
-	for idx in range(WorldGenerator.rng.randi_range(computers_min, computers_max)):
+	for idx in range(1): #range(WorldGenerator.rng.randi_range(computers_min, computers_max)):
 		var ai_faction = Factions.create(idx + 1)
 		var start_planet = _get_start_planet(ai_faction.faction == 1)
 		start_planet.faction = ai_faction.faction

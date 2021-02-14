@@ -50,7 +50,6 @@ func process(delta: float):
 				_wait_for_weapon()
 			else:
 				move(target_enemy.position, false, -1)
-		
 	.process(delta)
 
 func clear():

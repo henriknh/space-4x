@@ -69,7 +69,6 @@ func _physics_process(_delta):
 			var faction = Factions.get_faction(self.faction)
 			if faction and faction.is_computer:
 				AI.process_entity(self, delta)
-				
 			process(delta)
 			
 		delta = 0
