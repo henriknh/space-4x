@@ -87,7 +87,7 @@ const ASTEROIDS_PER_PLANET_SYSTEM = {
 # Ships
 const SHIP_PRODUCTION_TIME = 1
 const SHIP_REBUILD_TIME = 1
-const SHIP_COST_TITANIUM = 0
+const SHIP_COST_TITANIUM = 1
 const SHIP_ACCELERATION_FACTOR: float = 0.1 # Factor of max_speed
 const SHIP_TURN_SPEED: int = 4
 
