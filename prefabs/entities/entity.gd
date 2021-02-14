@@ -79,7 +79,7 @@ func queue_free():
 
 func create():
 	id = WorldGenerator.unique_id
-	variant = WorldGenerator.rng.randi()
+	variant = Random.randi()
 	if hitpoints_max == -1:
 		hitpoints_max = 1
 	hitpoints = hitpoints_max

@@ -142,8 +142,8 @@ func get_random_point_in_site() -> Vector2:
 		var point_shrinked = point * 0.8
 		hull_shrinked.append(point_shrinked + parent.position)
 	
-	var distance = Consts.PLANET_SYSTEM_RADIUS * WorldGenerator.rng.randf()
-	var angle = 2 * PI * WorldGenerator.rng.randf()
+	var distance = Consts.PLANET_SYSTEM_RADIUS * Random.randf()
+	var angle = 2 * PI * Random.randf()
 	var target = Vector2(distance * cos(angle), distance * sin(angle)) + parent.position
 	
 	

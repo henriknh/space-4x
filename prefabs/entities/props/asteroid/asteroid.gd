@@ -10,9 +10,9 @@ var sprite_large = preload("res://assets/asteroid_large.png")
 func create():
 	object_type = Enums.object_types.asteroid
 	label = NameGenerator.get_name_asteroid()
-	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
+	rotation_speed = Random.randf_range(-1, 1) * 10
 	
-	asteroid_rocks = WorldGenerator.rng.randf_range(200, 1000)
+	asteroid_rocks = Random.randf_range(200, 1000)
 	
 	.create()
 	

@@ -77,7 +77,7 @@ func _get_next_mining_target() -> void:
 	#asteroids.sort_custom(self, "sort_asteroids")
 	
 	if parent.asteroids.size() > 0:
-		var asteroid_idx = WorldGenerator.rng.randi() % parent.asteroids.size()
+		var asteroid_idx = Random.randi() % parent.asteroids.size()
 		mining_target = parent.asteroids[asteroid_idx]
 	else:
 		mining_target = null

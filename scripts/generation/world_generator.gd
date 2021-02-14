@@ -1,29 +1,17 @@
 extends Node
 
 var world_size: int = 1
-var seed_value: int = 0 setget set_seed
 var unique_id = 0 setget ,get_unique_id
 
 var load_progress: float = 0
 var total_entities: float  = 0
-
-onready var rng: RandomNumberGenerator = null
-
-func _ready():
-	rng = RandomNumberGenerator.new()
-	rng.set_seed(seed_value)
-
-func set_seed(_seed_value: int) -> void:
-	seed_value = _seed_value
-	rng = RandomNumberGenerator.new()
-	rng.set_seed(seed_value)
 	
 func get_unique_id() -> int:
 	unique_id += 1
 	return unique_id
 
 func generate_world():
-	print('Generate world with seed: %d' % rng.get_seed())
+	print('Generate world with seed: %d' % Random.get_seed())
 	GameState.loading_progress = 0
 	
 	# Calculate planet systems
@@ -31,7 +19,7 @@ func generate_world():
 	var galaxies_min = Consts.GALAXY_SIZE[world_size].min
 	var galaxies_max = Consts.GALAXY_SIZE[world_size].max
 	var planet_systems = []
-	for planet_system_idx in range(WorldGenerator.rng.randi_range(galaxies_min, galaxies_max)):
+	for planet_system_idx in range(Random.randi_range(galaxies_min, galaxies_max)):
 		planet_systems.append({
 			'idx': planet_system_idx,
 			'voronoi': null,
@@ -45,7 +33,7 @@ func generate_world():
 	for planet_system in planet_systems:
 		var orbits_min = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].min
 		var orbits_max = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].max
-		var total_orbits = int(WorldGenerator.rng.randi_range(orbits_min, orbits_max))
+		var total_orbits = int(Random.randi_range(orbits_min, orbits_max))
 		
 		var orbit_diff = (Consts.PLANET_SYSTEM_RADIUS / total_orbits) * 0.2
 		var quadrants = {
@@ -58,8 +46,8 @@ func generate_world():
 		for orbit in range(total_orbits):
 			pass
 			var smallest_quadrant = _get_least_dense_quadrant(quadrants)
-			var angle = WorldGenerator.rng.randf() * PI / 2 + smallest_quadrant * PI / 2
-			var orbit_distance = Consts.PLANET_SYSTEM_BASE_DISTANCE_TO_SUN + (Consts.PLANET_SYSTEM_RADIUS / total_orbits) * (orbit + 1) + WorldGenerator.rng.randi_range(-orbit_diff, orbit_diff)
+			var angle = Random.randf() * PI / 2 + smallest_quadrant * PI / 2
+			var orbit_distance = Consts.PLANET_SYSTEM_BASE_DISTANCE_TO_SUN + (Consts.PLANET_SYSTEM_RADIUS / total_orbits) * (orbit + 1) + Random.randi_range(-orbit_diff, orbit_diff)
 		
 			var position = Vector2(orbit_distance * sin(angle), orbit_distance * cos(angle))
 			
@@ -78,7 +66,7 @@ func generate_world():
 		pass
 		var asteroids_min = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].min
 		var asteroids_max = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].max
-		var total_asteroids = WorldGenerator.rng.randi_range(asteroids_min, asteroids_max)
+		var total_asteroids = Random.randi_range(asteroids_min, asteroids_max)
 		
 		for asteroid in range(total_asteroids):
 			planet_system.objects.append({
@@ -134,7 +122,7 @@ func generate_world():
 	GameState.loading_label = 'Generate AIs'
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
-	for idx in range(1): #range(WorldGenerator.rng.randi_range(computers_min, computers_max)):
+	for idx in range(1): #range(Random.randi_range(computers_min, computers_max)):
 		var ai_faction = Factions.create(idx + 1)
 		var start_planet = _get_start_planet(ai_faction.faction == 1)
 		start_planet.faction = ai_faction.faction
@@ -152,10 +140,10 @@ func _get_start_planet(is_human: bool) -> Entity:
 		if (is_human and planet.planet_system == 0 or not is_human) and planet.faction == -1:
 			possible_planets.append(planet)
 	
-	return possible_planets[WorldGenerator.rng.randi() % possible_planets.size()]
+	return possible_planets[Random.randi() % possible_planets.size()]
 	
 func _calc_planet_type(orbit: int, total_orbits: int) -> int:
-	var r = WorldGenerator.rng.randf()
+	var r = Random.randf()
 	var odds_sum = 0
 
 	if float(orbit) / total_orbits < 0.25:

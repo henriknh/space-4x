@@ -14,8 +14,8 @@ var prefab_ice = preload('res://assets/PixelPlanets/IceWorld/IceWorld.tscn')
 
 func create():
 	entity_type = Enums.entity_types.planet
-	planet_size = WorldGenerator.rng.randf_range(1.0, 2.0)
-	rotation_speed = WorldGenerator.rng.randf_range(-1, 1) * 10
+	planet_size = Random.randf_range(1.0, 2.0)
+	rotation_speed = Random.randf_range(-1, 1) * 10
 	label = NameGenerator.get_name_planet()
 	indestructible = true
 	hitpoints_max = 250

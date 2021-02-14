@@ -9,7 +9,7 @@ func _ready():
 		$VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.add_item(Enums.world_size_label[world_size_value], world_size_value)
 	
 	$VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.selected = WorldGenerator.world_size
-	$VBox/CreateGame/VBoxContainer/SpinBoxSeed.value = WorldGenerator.seed_value
+	$VBox/CreateGame/VBoxContainer/SpinBoxSeed.value = Random.get_seed()
 	_on_world_size_changed($VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.selected)
 	_on_seed_changed($VBox/CreateGame/VBoxContainer/SpinBoxSeed.value)
 	
@@ -28,7 +28,7 @@ func _on_world_size_changed(idx: int):
 	WorldGenerator.world_size = selected_world_size
 
 func _on_seed_changed(seed_value: int):
-	WorldGenerator.seed_value = seed_value
+	Random.set_seed(seed_value)
 
 func _on_load():
 	Scene.goto_game(StateManager.save_file_path)

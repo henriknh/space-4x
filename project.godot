@@ -122,12 +122,13 @@ config/icon="res://icon.png"
 
 [autoload]
 
+Random="*res://scripts/utils/random.gd"
 Enums="*res://scripts/utils/enums.gd"
 Consts="*res://scripts/utils/consts.gd"
 Utils="*res://scripts/utils/utils.gd"
 NameGenerator="*res://scripts/utils/name_generator.gd"
-WorldGenerator="*res://scripts/generation/world_generator.gd"
 Scene="*res://scripts/utils/scene.gd"
+WorldGenerator="*res://scripts/generation/world_generator.gd"
 GameState="*res://scripts/utils/game_state.gd"
 StateManager="*res://scripts/utils/state_manager.gd"
 Formatter="*res://scripts/utils/formatter.gd"
