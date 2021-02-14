@@ -4,8 +4,8 @@ var loading_scene = null
 var current_scene = null
 onready var thread = Thread.new()
 
-var main_menu_scene = preload('res://prefabs/scenes/main_menu.tscn')
-var game_scene = preload('res://prefabs/scenes/game.tscn')
+var main_menu_scene = preload('res://scenes/main_menu.tscn')
+var game_scene = preload('res://scenes/game.tscn')
 
 func _ready():
 	var root = get_tree().get_root()

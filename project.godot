@@ -27,7 +27,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "Game",
 "language": "GDScript",
-"path": "res://prefabs/scenes/game.gd"
+"path": "res://scenes/game.gd"
 }, {
 "base": "Entity",
 "class": "Planet",
@@ -117,7 +117,7 @@ _global_script_class_icons={
 [application]
 
 config/name="space-4x"
-run/main_scene="res://prefabs/scenes/main_menu.tscn"
+run/main_scene="res://scenes/main_menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
