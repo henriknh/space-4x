@@ -49,8 +49,6 @@ func update_visiblity():
 		menu.visible = false if GameState.loading else menu == _menus[_menus.size() - 1]
 		
 	emit_signal("menu_changed")
-	
-	#GameState.emit_signal("update_ui")
-		
+
 func menus_size() -> int:
 	return _menus.size()

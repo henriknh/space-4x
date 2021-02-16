@@ -69,6 +69,7 @@ func set_loading(is_loading: bool) -> void:
 	loading_progress = 0
 	loading_label = ''
 	emit_signal("state_changed")
+	emit_signal("update_ui")
 
 func is_loading() -> bool:
 	return loading
@@ -76,6 +77,7 @@ func is_loading() -> bool:
 func set_loading_progress(_loading_progress: float) -> void:
 	loading_progress = _loading_progress
 	emit_signal("state_changed")
+	emit_signal("update_ui")
 
 func get_loading_progress() -> float:
 	return loading_progress
@@ -83,6 +85,7 @@ func get_loading_progress() -> float:
 func set_loading_label(_loading_label: String) -> void:
 	loading_label = _loading_label
 	emit_signal("state_changed")
+	emit_signal("update_ui")
 
 func get_loading_label() -> String:
 	return loading_label

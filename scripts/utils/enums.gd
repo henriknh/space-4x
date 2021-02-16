@@ -33,6 +33,13 @@ const world_size_label = {
 	world_size.large: 'Large'
 }
 
+const asteroid_formation_types = {
+	'none': 1100,
+	'belt': 1101,
+	'hilda': 1102,
+	'dual': 1103
+}
+
 # AI 2000 - 2999
 const ai_states = {
 	'idle': 0,

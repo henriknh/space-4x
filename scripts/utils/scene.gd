@@ -14,16 +14,17 @@ func _ready():
 func goto_game(saveFile: String = '') -> void:
 	MenuState.reset()
 	
+	
 	_load_scene(game_scene)
 	
-	#thread.start(self, "_handle_loading_entities", saveFile)
-	_handle_loading_entities(saveFile)
+	thread.start(self, "_handle_loading_entities", saveFile)
+	#_handle_loading_entities(saveFile)
 	
 func goto_main_menu() -> void:
 	MenuState.reset()
 	
 	_load_scene(main_menu_scene)
-	#GameState.loading = false
+	GameState.loading = false
 	
 func _load_scene(scene):
 	current_scene.queue_free()
@@ -31,9 +32,9 @@ func _load_scene(scene):
 	
 	get_tree().get_root().add_child(current_scene)
 	get_tree().set_current_scene(current_scene)
+	GameState.loading = true
 	
 func _handle_loading_entities(saveFile: String):
-	
 	if saveFile.length() == 0:
 		WorldGenerator.generate_world()
 	else:
@@ -42,7 +43,7 @@ func _handle_loading_entities(saveFile: String):
 	call_deferred("_handle_loading_entities_done")
 
 func _handle_loading_entities_done():
-	#thread.wait_to_finish()
+	thread.wait_to_finish()
 	get_tree().get_current_scene().init()
 	GameState.loading = false
 

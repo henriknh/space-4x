@@ -56,16 +56,20 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null) -> E
 	
 	return instance
 	
-func object(object_type: int, planet_system_idx: int) -> Entity:
+func object(object_type: int, planet_system_idx: int, position: Vector2 = Vector2.INF) -> Entity:
 	var instance: Entity
 
 	match object_type:
 		Enums.object_types.asteroid:
 			instance = prefab_asteroid.instance()
 
-	var angle = Random.randf() * 2 * PI
-	var distance = Consts.ASTEROIDS_BASE_DISTANCE_TO_SUN + Random.randf() * (Consts.PLANET_SYSTEM_RADIUS + Consts.ASTEROIDS_EXTRA_DISTANCE)
-	instance.position = Vector2(distance * cos(angle), distance * sin(angle))
+	if position == Vector2.INF:
+		var angle = Random.randf() * 2 * PI
+		var distance = Consts.ASTEROIDS_BASE_DISTANCE_TO_SUN + Random.randf() * (Consts.PLANET_SYSTEM_RADIUS + Consts.ASTEROIDS_EXTRA_DISTANCE)
+		instance.position = Vector2(distance * cos(angle), distance * sin(angle))
+	else:
+		instance.position = position
+	
 	instance.planet_system = planet_system_idx
 	
 	instance.create()
