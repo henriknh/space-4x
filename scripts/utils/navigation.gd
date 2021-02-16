@@ -1,6 +1,7 @@
 extends Node
 
 var maps = {}
+var planet_ids_map = {}
 
 var debug = []
 
@@ -12,6 +13,7 @@ func create_network():
 		if not planet_systems.has(planet.planet_system):
 			planet_systems[planet.planet_system] = []
 		planet_systems[planet.planet_system].append(planet)
+		planet_ids_map[planet.id] = planet
 	
 	for planet_system_idx in planet_systems.keys():
 		var segments = []
@@ -72,4 +74,11 @@ func get_map(caller: Entity) -> AStar2D:
 	return maps[caller.planet_system]
 
 func get_adjacent_sites(entity: Entity) -> Array:
+	var sites = []
+	for planet_id in maps[entity.planet_system].get_point_connections(entity.id):
+		sites.append(planet_ids_map[planet_id])
+	return sites
+
+
+func get_adjacent_site_ids(entity: Entity) -> Array:
 	return maps[entity.planet_system].get_point_connections(entity.id)

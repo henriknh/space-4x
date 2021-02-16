@@ -2,9 +2,12 @@ extends Node
 
 func process(entity: Entity):
 	if entity.parent.faction != -1:
-		var adjacent_site_ids = Nav.get_adjacent_sites(entity.parent)
-		adjacent_site_ids.sort()
-		var selected_site_id = adjacent_site_ids[0]
-		entity.set_entity_process(Enums.ship_states.travel, selected_site_id)
+		var adjacent_sites = Nav.get_adjacent_sites(entity.parent)
+		adjacent_sites.sort_custom(AIShipExplorerSort, "sort_explorer")
+		entity.set_entity_process(Enums.ship_states.travel, adjacent_sites[0])
 	else:
 		entity.state = Enums.ship_states.colonize
+
+class AIShipExplorerSort:
+	static func sort_explorer(a: Entity, b: Entity):
+		return a.id < b.id
