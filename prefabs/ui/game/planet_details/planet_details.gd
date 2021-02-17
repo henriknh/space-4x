@@ -58,9 +58,14 @@ func _update_ui():
 	
 	# Enable/disable actions
 	var busy = selection.state != Enums.planet_states.idle
-	var cant_convert = faction.resources.asteroid_rocks < Consts.RESOURCE_CONVERTION_COST
-	var cant_produce_ship = faction.resources.titanium < Consts.SHIP_COST_TITANIUM
-	var cant_produce_research = faction.resources.astral_dust < Consts.RESEARCH_COST_ASTRAL_DUST
+	var cant_convert = true
+	var cant_produce_ship = true
+	var cant_produce_research = true
+
+	if faction:
+		cant_convert = faction.resources.asteroid_rocks < Consts.RESOURCE_CONVERTION_COST
+		cant_produce_ship = faction.resources.titanium < Consts.SHIP_COST_TITANIUM
+		cant_produce_research = faction.resources.astral_dust < Consts.RESEARCH_COST_ASTRAL_DUST
 	
 	node_convert_to_titanium.disabled = busy or cant_convert
 	node_convert_to_astral_dust.disabled = busy or cant_convert
