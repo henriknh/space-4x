@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://prefabs/entities/planets/voronoi_cells.gd" type="Script" id=1]
 [ext_resource path="res://prefabs/Camera.tscn" type="PackedScene" id=2]
@@ -7,6 +7,12 @@
 [ext_resource path="res://assets/background_transparent.png" type="Texture" id=5]
 [ext_resource path="res://scenes/game.gd" type="Script" id=6]
 [ext_resource path="res://prefabs/ui/game/loading/loading.tscn" type="PackedScene" id=7]
+[ext_resource path="res://shaders/faction_bound.tres" type="Material" id=8]
+
+[sub_resource type="ImageTexture" id=4]
+flags = 0
+flags = 0
+size = Vector2( 250, 250 )
 
 [node name="GameScene" type="Node2D"]
 script = ExtResource( 6 )
@@ -67,3 +73,9 @@ motion_mirroring = Vector2( 2048, 2048 )
 rotation = 4.71239
 texture = ExtResource( 5 )
 centered = false
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+material = ExtResource( 8 )
+texture = SubResource( 4 )
+polygon = PoolVector2Array( 0, 0, 500, 0, 0, 200 )
+uv = PoolVector2Array( 0, 0, 500, 0, 0, 200 )

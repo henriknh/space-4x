@@ -140,6 +140,10 @@ Instancer="*res://scripts/generation/instancer.gd"
 Factions="*res://scripts/utils/factions.gd"
 AI="*res://scripts/ai/ai.gd"
 
+[debug]
+
+settings/stdout/print_fps=true
+
 [display]
 
 window/size/width=480
