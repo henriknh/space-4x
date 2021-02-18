@@ -16,7 +16,7 @@ var script_lava = preload('res://prefabs/entities/planets/planet_lava.gd')
 var prefab_asteroid = preload('res://prefabs/entities/props/asteroid/asteroid.tscn')
 
 # Ship
-var prefab_ship = load('res://prefabs/entities/ships/ship.tscn')
+var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
 var script_ship = preload('res://prefabs/entities/ships/ship.gd')
 var script_combat = preload('res://prefabs/entities/ships/ship_combat.gd')
 var script_explorer = preload('res://prefabs/entities/ships/ship_explorer.gd')
