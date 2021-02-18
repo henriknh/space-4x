@@ -59,7 +59,7 @@ func _physics_process(_delta):
 			return
 	
 	delta += _delta
-
+	
 	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
