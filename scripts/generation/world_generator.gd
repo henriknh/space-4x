@@ -29,12 +29,11 @@ func generate_world():
 	var galaxies_count: float = Random.randi_range(galaxies_min, galaxies_max)
 	for planet_system_idx in range(galaxies_count):
 		
-		
-		gameScene.add_child(Instancer.planet_system(planet_system_idx))
+		gameScene.call_deferred("add_child", Instancer.planet_system(planet_system_idx))
 		for planet in GenPlanets.generate(planet_system_idx):
-			gameScene.add_child(planet)
+			gameScene.call_deferred("add_child", planet)
 		for asteroid in GenAsteroids.generate(planet_system_idx):
-			gameScene.add_child(asteroid)
+			gameScene.call_deferred("add_child", asteroid)
 		
 		GameState.loading_progress = (planet_system_idx + 1) / galaxies_count
 	
