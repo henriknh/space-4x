@@ -8,6 +8,7 @@ const INACTIVE_TIME_PERIOD: float = 0.05
 # Temporary
 var delta: float = 0
 var queued_to_free: bool = false
+var _faction_object
 signal entity_changed
 
 # General
@@ -19,7 +20,7 @@ var label: String = ''
 var hitpoints: int = 1
 var hitpoints_max: int = -1
 var indestructible: bool = false
-var faction: int = -1
+var faction: int = -1 setget _set_faction
 var planet_system: int = -1
 var rotation_speed: float = 0
 var state: int = 0
@@ -50,7 +51,9 @@ var ship_speed_max: int = 500
 var ship_cargo_size: int = 20
 
 func _physics_process(_delta):
-	
+	if GameState.loading:
+		return
+		
 	if queued_to_free:
 		return
 	
@@ -66,7 +69,7 @@ func _physics_process(_delta):
 		if hitpoints <= 0:
 			kill()
 		else:
-			var faction = Factions.get_faction(self.faction)
+			var faction = get_faction()
 			if faction and faction.is_computer:
 				AI.process_entity(self, delta)
 			process(delta)
@@ -115,6 +118,15 @@ func get_process_progress() -> float:
 	if _process_time_total <= 0:
 		return 0.0
 	return process_time / _process_time_total
+
+func _set_faction(faction_value):
+	faction = faction_value
+	_faction_object = Factions.get_faction(faction)
+	
+func get_faction() -> Faction:
+	if faction >= 0 and _faction_object == null:
+		_faction_object = Factions.get_faction(faction)
+	return _faction_object
 	
 func save():
 	var data = {

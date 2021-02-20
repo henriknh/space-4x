@@ -68,7 +68,7 @@ func do_mine():
 		mining_target.asteroid_rocks -= mine_amount
 
 func deliver():
-	parent.asteroid_rocks += asteroid_rocks
+	self.get_faction().resources.asteroid_rocks += asteroid_rocks
 	asteroid_rocks = 0
 	parent.emit_signal("entity_changed")
 	
