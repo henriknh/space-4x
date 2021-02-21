@@ -4,7 +4,7 @@ const GenUtils = preload('res://scripts/generation/utils.gd')
 const GenPlanets = preload('res://scripts/generation/planets.gd')
 const GenAsteroids = preload('res://scripts/generation/asteroids.gd')
 
-var world_size: int = 1
+var world_size: int = Enums.world_size.small
 var unique_id = 0 setget ,get_unique_id
 
 var load_progress: float = 0
