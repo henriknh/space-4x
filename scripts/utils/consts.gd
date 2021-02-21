@@ -2,7 +2,6 @@ extends Node
 
 # Camera
 const CAMERA_ZOOM_MIN = 2
-const CAMERA_ZOOM_MAX = 200
 const CAMERA_LERPTIME_POS = 50
 const CAMERA_LERPTIME_ZOOM = 15
 const CAMERA_ZOOM_STEP = 1.1

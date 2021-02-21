@@ -6,6 +6,7 @@ onready var target_position = Vector2.ZERO
 
 var last_pos = position
 var last_zoom = zoom
+onready var target_zoom_max: float = Consts.PLANET_SYSTEM_RADIUS / 500
 
 var keys = {
 	KEY_A: false,
@@ -16,6 +17,12 @@ var keys = {
 var touches = {}
 
 func _ready():
+	
+	limit_left = -Consts.PLANET_SYSTEM_RADIUS * 1.2
+	limit_right = Consts.PLANET_SYSTEM_RADIUS * 1.2
+	limit_top = -Consts.PLANET_SYSTEM_RADIUS * 1.2
+	limit_bottom = Consts.PLANET_SYSTEM_RADIUS * 1.2
+	
 	GameState.connect("state_changed", self, "load_camera_state")
 	
 	var timer = Timer.new()
@@ -62,9 +69,9 @@ func _input(event):
 		return
 	
 	if Utils.is_mobile:
-		self._handle_touch(event)
+		_handle_touch(event)
 	else:
-		self._handle_mouse(event)
+		_handle_desktop(event)
 
 func _handle_touch(event: InputEvent):
 	if event is InputEventScreenTouch:
@@ -94,7 +101,7 @@ func _handle_touch(event: InputEvent):
 		
 		self._clamp_targets()
 		
-func _handle_mouse(event: InputEvent):
+func _handle_desktop(event: InputEvent):
 	if event is InputEventKey:
 		
 		keys[event.scancode] = true if event.pressed else false
@@ -144,25 +151,9 @@ func _clamp_targets():
 	
 	if target_zoom.x < Consts.CAMERA_ZOOM_MIN:
 		target_zoom = Vector2(Consts.CAMERA_ZOOM_MIN, Consts.CAMERA_ZOOM_MIN)
-	elif target_zoom.x > Consts.CAMERA_ZOOM_MAX:
-		target_zoom = Vector2(Consts.CAMERA_ZOOM_MAX, Consts.CAMERA_ZOOM_MAX)
-	
-	if target_position.x < -Consts.PLANET_SYSTEM_RADIUS:
-		target_position.x = -Consts.PLANET_SYSTEM_RADIUS
-	elif target_position.x > Consts.PLANET_SYSTEM_RADIUS:
-		target_position.x = Consts.PLANET_SYSTEM_RADIUS
-	if target_position.y < -Consts.PLANET_SYSTEM_RADIUS:
-		target_position.y = -Consts.PLANET_SYSTEM_RADIUS
-	elif target_position.y > Consts.PLANET_SYSTEM_RADIUS:
-		target_position.y = Consts.PLANET_SYSTEM_RADIUS
+	elif target_zoom.x > target_zoom_max:
+		target_zoom = Vector2(target_zoom_max, target_zoom_max)
 
 func _process(delta):
-	pass
 	zoom = lerp(zoom, target_zoom, Consts.CAMERA_LERPTIME_POS * delta)
 	position = lerp(position, target_position, 1 if Utils.is_mobile else Consts.CAMERA_LERPTIME_POS * delta)
-
-func update_limit(distance: int):
-	limit_left = -int(distance + get_viewport().size.x)
-	limit_right = int(distance + get_viewport().size.x)
-	limit_top = -int(distance + get_viewport().size.y)
-	limit_bottom = int(distance + get_viewport().size.y)
