@@ -2,6 +2,8 @@ extends Node
 
 var factions = {}
 
+signal factions_changed
+
 func create(faction: int) -> Faction:
 	var ai = Faction.new(faction)
 	factions[faction] = ai

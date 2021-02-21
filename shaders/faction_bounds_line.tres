@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://shaders/faction_bounds_line.shader" type="Shader" id=1]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/origin = Vector2( -50, 100 )
+shader_param/width = 64.0
+shader_param/speed = 1.0
+shader_param/opacity = 1.0
