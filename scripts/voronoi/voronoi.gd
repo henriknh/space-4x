@@ -4,8 +4,6 @@ const Site = preload("res://scripts/voronoi/site.gd")
 
 onready var voronoi_registry = VoronoiRegistry.new()
 
-const BOUND_SIZE = 100000
-
 class Voronoi:
 	
 	onready var site_registry = Site.SiteRegistry.new()
@@ -33,6 +31,16 @@ class Voronoi:
 		self._look_for_edge_sites()
 		self._extend_two_site_intersections()
 		self._extend_three_site_intersections()
+		
+		print('bound points')
+		var m = 0
+		
+		for site in self.site_registry.sites:
+			for point in site.points:
+				var site_point = point + site.node.position
+				m = min(m, site_point.x)
+			
+		print('m1 %d' % m)
 		
 		self._calc_convex_hull()
 		
@@ -139,12 +147,11 @@ class Voronoi:
 				var next_site = next_sites[0] if not next_sites[0] in prev_sites else next_sites[1]
 				
 				var prev_midpoint = Utils.get_midpoint(prev_site.node.position, site.node.position)
-				#var prev_opposite = (prev_point + (prev_point - prev_midpoint) * BOUND_SIZE)
 				var prev_opposite = site.node.position
 				if prev_point.distance_squared_to(Vector2.ZERO) > prev_midpoint.distance_squared_to(Vector2.ZERO):
-					prev_opposite = (prev_point + (prev_point - prev_midpoint) * BOUND_SIZE)
+					prev_opposite = (prev_point + (prev_point - prev_midpoint).normamlized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 				else:
-					prev_opposite = (prev_midpoint + (prev_midpoint - prev_point) * BOUND_SIZE)
+					prev_opposite = (prev_midpoint + (prev_midpoint - prev_point).normamlized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 				site.add_point(prev_opposite - site.node.position)
 				prev_site.add_point(prev_opposite - prev_site.node.position)
 				self.events.append({
@@ -155,12 +162,11 @@ class Voronoi:
 				self.debug_edgepoints.append([prev_midpoint, prev_point, prev_opposite])
 				
 				var next_midpoint = Utils.get_midpoint(next_site.node.position, site.node.position)
-				#var next_opposite = (next_point + (next_point - next_midpoint) * BOUND_SIZE)
 				var next_opposite = site.node.position
 				if next_point.distance_squared_to(Vector2.ZERO) > next_midpoint.distance_squared_to(Vector2.ZERO):
-					next_opposite = (next_point + (next_point - next_midpoint) * BOUND_SIZE)
+					next_opposite = (next_point + (next_point - next_midpoint).normamlized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 				else:
-					next_opposite = (next_midpoint + (next_midpoint - next_point) * BOUND_SIZE)
+					next_opposite = (next_midpoint + (next_midpoint - next_point).normamlized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 				site.add_point(next_opposite - site.node.position)
 				next_site.add_point(next_opposite - next_site.node.position)
 				self.events.append({
@@ -198,12 +204,12 @@ class Voronoi:
 						closest_circle = event_circle
 			var opposite = point
 			if point.distance_squared_to(Vector2.ZERO) > closest_circle.circle.position.distance_squared_to(Vector2.ZERO):
-				opposite = (point + (point - closest_circle.circle.position) * BOUND_SIZE)
+				opposite = (point + (point - closest_circle.circle.position).normalized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 			else:
-				opposite = (point + (point - closest_circle.circle.position) * BOUND_SIZE)
+				opposite = (point + (point - closest_circle.circle.position).normalized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 				
 			self.debug_edgepoints.append([closest_circle.circle.position, point, opposite])
-				
+			
 			self.site_registry.replace_global_point(point, opposite)
 			self.edge_points_handled.append(opposite)
 		
@@ -264,9 +270,9 @@ class Voronoi:
 				var midpoint = Utils.get_midpoint(edge_sites[0].node.position, edge_sites[1].node.position)
 				var opposite = point
 				if point.distance_squared_to(Vector2.ZERO) > midpoint.distance_squared_to(Vector2.ZERO):
-					opposite = (point + (point - midpoint) * BOUND_SIZE)
+					opposite = (point + (point - midpoint).normalized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 				else:
-					opposite = (midpoint + (midpoint - point) * BOUND_SIZE)
+					opposite = (midpoint + (midpoint - point).normalized() * Consts.PLANET_SYSTEM_RADIUS * 2)
 				
 				edge_sites[0].add_point(opposite - edge_sites[0].node.position)
 				edge_sites[1].add_point(opposite - edge_sites[1].node.position)
