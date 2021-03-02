@@ -37,6 +37,11 @@ func ready():
 	.ready()
 		
 func process(delta: float):
+
+	if state != Enums.ship_states.idle:
+		if idle_target != Vector2.INF:
+			idle_target = Vector2.INF
+
 	if state == Enums.ship_states.travel:
 		if nav_route.size() == 0 and process_target >= 0:
 			nav_route = Nav.get_route(self, process_target)
@@ -66,7 +71,7 @@ func process(delta: float):
 				return queue_free()
 	
 	elif state == Enums.ship_states.idle and ship_type != Enums.ship_types.disabled:
-		if not idle_target or close_to_target(idle_target):
+		if not idle_target or idle_target == Vector2.INF or close_to_target(idle_target):
 			idle_target = get_random_point_in_site()
 		
 		move(idle_target)
