@@ -69,8 +69,6 @@ func generate_world():
 #		var ai_faction = Factions.create(idx + 1)
 #		var start_planet = GenUtils.get_start_planet(all_planets, ai_faction.faction == 1)
 #		start_planet.faction = ai_faction.faction
-	
-	#GameState.emit_signal("loading_done")
 
 func add_node_deffered(node: Object):
 	gameScene.add_child(node)
