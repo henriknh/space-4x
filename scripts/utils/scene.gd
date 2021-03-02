@@ -14,7 +14,6 @@ func _ready():
 func goto_game(saveFile: String = '') -> void:
 	MenuState.reset()
 	
-	
 	_load_scene(game_scene)
 	
 	thread.start(self, "_handle_loading_entities", saveFile)
