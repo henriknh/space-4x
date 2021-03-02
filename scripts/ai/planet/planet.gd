@@ -9,11 +9,12 @@ static func process(entity: Entity, delta: float):
 		if entity.get_process_progress() > 1:
 			if (faction.resources.titanium == 0 or faction.resources.astral_dust == 0) and faction.resources.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
 				convertion(entity, faction)
-			elif faction.resources.titanium >= Consts.SHIP_COST_TITANIUM:
+			if faction.resources.titanium >= Consts.SHIP_COST_TITANIUM:
 				produce(entity, faction)
+			elif faction.resources.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
+				convertion(entity, faction)
 			else:
 				entity.state = Enums.ai_states.idle
-				
 			
 	if entity.state == Enums.ai_states.idle:
 		var delay_time = (Consts.AI_DIFFICULTY_LEVELS - faction.difficulty) * Consts.AI_DELAY_TIME
@@ -21,12 +22,16 @@ static func process(entity: Entity, delta: float):
 
 static func produce(entity: Entity, faction: Faction):
 	
+	if faction.resources.titanium < Consts.SHIP_COST_TITANIUM:
+		return
+	
+	var ship_to_produce = -1
 	if faction.resources.titanium == Consts.SHIP_COST_TITANIUM:
 		var miner_ships = entity.get_children_by_type(Enums.ship_types.miner, 'ship_type')
 		if miner_ships.size() == 0:
 			faction.resources.titanium -= Consts.SHIP_COST_TITANIUM
-			return entity.set_entity_process(Enums.planet_states.produce, Enums.ship_types.miner, Consts.SHIP_PRODUCTION_TIME)
-		
+			ship_to_produce = Enums.ship_types.miner
+	
 	if faction.resources.titanium >= Consts.SHIP_COST_TITANIUM:
 		
 		var potential_ships = [
@@ -49,12 +54,13 @@ static func produce(entity: Entity, faction: Faction):
 			potential_ships.append(Enums.ship_types.explorer)
 			
 		potential_ships.shuffle()
+		ship_to_produce = potential_ships[0]
+	
+	faction.resources.titanium -= Consts.SHIP_COST_TITANIUM
+	return entity.set_entity_process(Enums.planet_states.produce, ship_to_produce, Consts.SHIP_PRODUCTION_TIME)
 		
-		faction.resources.titanium -= Consts.SHIP_COST_TITANIUM
-		
-		entity.set_entity_process(Enums.planet_states.produce, potential_ships[0], Consts.SHIP_PRODUCTION_TIME)
-
 static func convertion(entity: Entity, faction: Faction):
+	faction.resources.asteroid_rocks -= Consts.RESOURCE_CONVERTION_COST
 	if faction.resources.titanium == 0:
 		entity.set_entity_process(Enums.planet_states.convertion, Enums.resource_types.titanium, Consts.RESOURCE_CONVERTION_TIME)
 	elif faction.resources.astral_dust == 0:
