@@ -122,6 +122,8 @@ func get_process_progress() -> float:
 func _set_faction(faction_value):
 	faction = faction_value
 	_faction_object = Factions.get_faction(faction)
+	if entity_type == Enums.entity_types.planet:
+		Factions.emit_signal("factions_changed")
 	
 func get_faction() -> Faction:
 	if faction >= 0 and _faction_object == null:
