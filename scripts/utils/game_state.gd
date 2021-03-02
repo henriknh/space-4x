@@ -20,6 +20,7 @@ func set_planet_system(planet_system: int) -> void:
 	if camera:
 		camera.set_camera_state()
 	state['curr_planet_system'] = planet_system
+	set_selection(null)
 	emit_signal("state_changed")
 	_update_visible()
 	

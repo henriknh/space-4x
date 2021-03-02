@@ -2,16 +2,18 @@ extends Node
 
 const player_colors = {
 	-1: Color(0.5, 0.5, 0.5),
-	0: Color(1, 1, 1),
-	1: Color(0, 0, 1),
-	2: Color(0, 1, 0),
-	3: Color(1, 0, 0),
-	4: Color(0.5, 0, 0),
-	5: Color(0, 0.5, 0),
-	6: Color(0, 0, 0.5),
-	7: Color(0.5, 0.5, 0),
-	8: Color(0, 0.5, 0.5),
-	9: Color(0.5, 0, 0.5)
+	0: Color(0.9, 0.9, 0.9), # white
+	1: Color(0.321, 0.517, 1), # blue
+	2: Color(0.556, 1, 0.360), # green
+	3: Color(1, 0.247, 0.219), # red
+	4: Color(0.988, 0.372, 0.564), # pink
+	5: Color(0.968, 0.988, 0.372), # yellow
+	6: Color(0.552, 0.490, 0.831), # purple
+	7: Color(0.992, 0.658, 0.247), # orange
+	8: Color(0.247, 0.992, 0.976), # teal
+	9: Color(0.694, 0.819, 0.501), # forest green
+	10: Color(0.529, 0.721, 0.768), # aqua blue
+	11: Color(0.831, 0.717, 0.490) # light brown
 }
 
 const resource_types = {
