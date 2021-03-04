@@ -32,16 +32,6 @@ class Voronoi:
 		self._extend_two_site_intersections()
 		self._extend_three_site_intersections()
 		
-		print('bound points')
-		var m = 0
-		
-		for site in self.site_registry.sites:
-			for point in site.points:
-				var site_point = point + site.node.position
-				m = min(m, site_point.x)
-			
-		print('m1 %d' % m)
-		
 		self._calc_convex_hull()
 		
 	func clear():
