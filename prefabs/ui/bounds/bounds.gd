@@ -39,7 +39,6 @@ func _update_node(node: Line2D, polygon: Array):
 	
 	node.points = polygon_offset
 	node.width = width
-	node.material.set_shader_param("width", width)
 	node.visible = true
 
 func _update_all():
