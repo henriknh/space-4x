@@ -8,13 +8,6 @@ func equals(a, b, elipse = 100) -> bool:
 			return true
 	
 	return false
-
-func array_remove_duplicates(array: Array) -> Array:
-	var new_array = []
-	for object in array:
-		if not Utils.array_has(object, new_array):
-			new_array.append(object)
-	return new_array
 	
 func array_idx(obj, array: Array, elipse = 0.01) -> int:
 	for i in range(array.size()):
@@ -143,3 +136,86 @@ func point_position_on_segment(P, A, B):
 	return Vector2(A.x + a_to_b[0]*t, A.y + a_to_b[1]*t )
 									  # Add the distance to A, moving
 									  #   towards B
+
+func merge_polygons_by_edge(p1: Array, p2: Array) -> Array:
+		
+	p1 = p1.duplicate()
+	p2 = p2.duplicate()
+	if equals(p1[0], p1[p1.size() - 1]):
+		p1.remove(p1.size() - 1)
+	if equals(p2[0], p2[p2.size() - 1]):
+		p2.remove(p2.size() - 1)
+	
+	
+	var common_idx: int = -1
+	for i in range(p1.size()):
+		if array_has(p1[i], p2):
+			common_idx = array_idx(p1[i], p1)
+	
+	if common_idx == -1:
+		return [p1, p2]
+	
+	var s = common_idx
+	var e = common_idx
+	
+	while true:
+		var s_test = (s - 1 + p1.size()) % p1.size()
+		if array_has(p1[s_test], p2):
+			s = s_test
+		else:
+			break
+	
+	while true:
+		var e_test = (e + 1 + p1.size()) % p1.size()
+		if array_has(p1[e_test], p2):
+			e = e_test
+		else:
+			break
+	
+	# Make both polygons go the same direction
+	var s_p2 = array_idx(p1[s], p2)
+	var e_p2 = array_idx(p1[e], p2)
+	if s > e and s_p2 < e_p2:
+		p2.invert()
+		var t = p2[p2.size() - 1]
+		p2.remove(p2.size() - 1)
+		p2.insert(0, t)
+	
+	var s_next = (s + 1 + p1.size()) % p1.size()
+	var start = p1[s]
+	var end = p1[e]
+	var jump = (e - s - 1) if s < e else abs(s - (p1.size() - 1) - e)
+	
+	# Make start the first item in polygon2
+	while not equals(p2[0], start):
+		var t = p2[0]
+		p2.remove(0)
+		p2.append(t)
+	
+	# If end is not where it is expected in polygon2, it must be inverted
+	if not equals(end, p2[jump % p2.size()]):
+		p2.invert()
+		p2.remove(p2.size() - 1)
+		p2.insert(0, start)
+	
+	# Remove all inbetweeners from polygon2
+	while not equals(p2[0], end):
+		p2.remove(0)
+	p2.remove(0)
+
+	# Remove all inbetweeners from polygon1
+	if (jump > 0):
+		while not equals(p1[s_next % p1.size()], end):
+			p1.remove(s_next)
+			e =  (e - 1 + p1.size()) % p1.size()
+
+	# Move remaining points in polygon2 to gap in polygon1
+	while p2.size() > 0:
+		var t = p2[0]
+		p2.remove(0)
+		p1.insert(s_next, t)
+	
+	# Make a looping polygon again
+	p1.append(p1[0])
+	
+	return [p1]

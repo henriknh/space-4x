@@ -65,10 +65,10 @@ func generate_world():
 	
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
-#	for idx in range(Random.randi_range(computers_min, computers_max)):
-#		var ai_faction = Factions.create(idx + 1)
-#		var start_planet = GenUtils.get_start_planet(all_planets, ai_faction.faction == 1)
-#		start_planet.faction = ai_faction.faction
+	for idx in range(Random.randi_range(computers_min, computers_max)):
+		var ai_faction = Factions.create(idx + 1)
+		var start_planet = GenUtils.get_start_planet(all_planets, ai_faction.faction == 1)
+		start_planet.faction = ai_faction.faction
 
 func add_node_deffered(node: Object):
 	gameScene.add_child(node)

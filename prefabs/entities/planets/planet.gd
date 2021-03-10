@@ -80,39 +80,6 @@ func _process(delta):
 	if self.visible:
 		.get_node("Sprite").rotation_degrees += rotation_speed * delta
 
-func _draw():
-	
-	var polyline_color = Enums.player_colors[faction]
-	var polyline_alpha = 0
-	if GameState.get_selection() == self:
-		polyline_color = Color(1,1,0)
-		polyline_color = Color(1,1,1)
-		polyline_alpha = 0.3
-	elif is_hover:
-		polyline_color = Color(1,1,1)
-		polyline_alpha = 0.1
-	elif Settings.get_show_planet_area():
-		polyline_alpha = 0.025
-	
-	if polyline_alpha > 0:
-		polyline_color.a = polyline_alpha
-		draw_polyline(self.planet_convex_hull, polyline_color, 1, true)
-	
-	var polylgon_color = Enums.player_colors[faction]
-	var polygon_alpha = 0
-	#if GameState.get_selection() == self:
-	#	polylgon_color = Color(1,1,0)
-	#	polygon_alpha = 0.2
-	#elif is_hover:
-	#	polygon_alpha = 0.1
-	if faction >= 0:
-		polygon_alpha = 0.08
-	
-	if polygon_alpha > 0:
-		
-		polylgon_color.a = polygon_alpha
-		draw_polygon(self.planet_convex_hull, [polylgon_color])
-
 func get_target_point():
 	var angle = 2 * PI * randf()
 	#var r = (.get_node("AreaPlanet").shape as CircleShape2D).radius * randf()

@@ -1,10 +1,49 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=2]
 
-[ext_resource path="res://shaders/faction_bounds_line.shader" type="Shader" id=1]
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+render_mode blend_mix;
+
+uniform vec2 origin = vec2(0f, 0f);
+uniform float width = 64f;
+uniform float speed: hint_range(-1, 1) = 0f;
+uniform float opacity: hint_range(0, 1) = 1f;
+
+void vertex() {
+	vec2 offset = vec2(0f);
+	
+	if (VERTEX.x < origin.x) {
+		offset.x = width / 2f;
+	} else {
+		offset.x = -width / 2f;
+	}
+	
+	if (VERTEX.y < origin.y) {
+		offset.y = width / 2f;
+	} else {
+		offset.y = -width / 2f;
+	}
+	
+	// VERTEX += offset;
+}
+
+void fragment() {
+	vec2 newuv = UV;
+	newuv.x += TIME * speed;
+	vec4 c = texture(TEXTURE, newuv);
+	if (c.a > 0.1f) {
+		c.a = c.a * opacity;
+		c.rgb = COLOR.rgb;
+	} else {
+		c.a = 0f;
+	}
+	COLOR = c;
+}"
 
 [resource]
-shader = ExtResource( 1 )
-shader_param/origin = Vector2( -50, 100 )
+shader = SubResource( 1 )
+shader_param/origin = Vector2( 0, 0 )
 shader_param/width = 64.0
-shader_param/speed = 1.0
+shader_param/speed = -0.25
 shader_param/opacity = 1.0

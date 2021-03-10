@@ -4,7 +4,7 @@ render_mode blend_mix;
 
 uniform vec2 origin = vec2(-50f, 100f);
 uniform float width = 64f;
-uniform float speed: hint_range(-5, 5) = 1f;
+uniform float speed: hint_range(-1, 1) = 0f;
 uniform float opacity: hint_range(0, 1) = 1f;
 
 void vertex() {
@@ -22,7 +22,7 @@ void vertex() {
 		offset.y = -width / 2f;
 	}
 	
-	VERTEX += offset;
+	// VERTEX += offset;
 }
 
 void fragment() {
