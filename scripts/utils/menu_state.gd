@@ -28,7 +28,6 @@ func set_over_ui(is_over_ui: bool) -> void:
 
 func reset() -> void:
 	_is_over_ui = false
-	_is_over_ui = 0
 	for menu in _menus:
 		if menu:
 			menu.queue_free()
