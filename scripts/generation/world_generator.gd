@@ -60,7 +60,6 @@ func generate_world():
 	player_planet.faction = player.faction
 
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
-	camera.target_position = player_planet.position
 	camera.position = player_planet.position
 	
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min

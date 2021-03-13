@@ -32,7 +32,7 @@ var camera_zoom = get_zoom()
 
 # Value meaning how near to the window edge (in px) the mouse must be,
 # to move a view.
-export (int) var camera_margin = 50
+export (int) var camera_margin = 20
 
 # It changes a camera zoom value in units... (?, but it works... it probably
 # multiplies camera size by 1+camera_zoom_speed)

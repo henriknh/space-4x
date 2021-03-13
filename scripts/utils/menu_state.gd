@@ -12,14 +12,17 @@ func _ready():
 func is_over_ui() -> bool:
 	if _menus.size() > 1:
 		return _menus[_menus.size() - 1].get('block_input') != false
-	else: 
+	else:
 		return _is_over_ui
 	
 func set_over_ui(is_over_ui: bool) -> void:
 	if is_over_ui:
-		_over_ui_semaphore = _over_ui_semaphore + 1
+		_over_ui_semaphore += 1
 	else:
-		_over_ui_semaphore = _over_ui_semaphore - 1
+		_over_ui_semaphore -= 1
+	
+	if _over_ui_semaphore < 0:
+		_over_ui_semaphore = 0
 	
 	_is_over_ui = _over_ui_semaphore > 0
 

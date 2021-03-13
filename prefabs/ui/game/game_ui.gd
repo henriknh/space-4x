@@ -61,3 +61,11 @@ func _on_planet_details():
 
 func _on_ship_movement():
 	get_parent().add_child(ship_movement_prefab.instance())
+
+
+func _on_mouse_entered_background():
+	MenuState.set_over_ui(false)
+
+
+func _on_mouse_exited_background():
+	MenuState.set_over_ui(true)
