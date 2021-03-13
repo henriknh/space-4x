@@ -1,57 +1,74 @@
 extends Camera2D
 
-var camera_pos_change = Vector2.ZERO
-onready var target_zoom = Vector2(10, 10)
-onready var target_position = Vector2.ZERO
-
+# Used to know if current camera state has changed. If it has, then it should be stored
 var last_pos = position
 var last_zoom = zoom
-onready var target_zoom_max: float = Consts.PLANET_SYSTEM_RADIUS / 500
 
+# Store state of current key presses
 var keys = {
-	KEY_A: false,
-	KEY_D: false,
-	KEY_W: false,
-	KEY_S: false,
+	'left': false,
+	'right': false,
+	'up': false,
+	'down': false,
 }
+
+# Store state of current touches
 var touches = {}
 
+# Right mouse button was or is pressed.
+var is_drag = false
+
+# Zoom limit
+export (int) var zoom_out_limit = Consts.PLANET_SYSTEM_RADIUS / 250
+
+# Limit bounds of camera 
+const limit = Consts.PLANET_SYSTEM_RADIUS * 1.2
+
+# Camera speed in px/s.
+export (int) var camera_speed = 450 
+
+# Initial zoom value taken from Editor.
+var camera_zoom = get_zoom()
+
+# Value meaning how near to the window edge (in px) the mouse must be,
+# to move a view.
+export (int) var camera_margin = 50
+
+# It changes a camera zoom value in units... (?, but it works... it probably
+# multiplies camera size by 1+camera_zoom_speed)
+const camera_zoom_speed = Vector2(0.5, 0.5)
+
+# Vector of camera's movement / second.
+var camera_movement = Vector2()
+
+# Previous mouse position used to count delta of the mouse movement.
+var _prev_mouse_pos = null
+
 func _ready():
-	
-	limit_left = -Consts.PLANET_SYSTEM_RADIUS * 1.2
-	limit_right = Consts.PLANET_SYSTEM_RADIUS * 1.2
-	limit_top = -Consts.PLANET_SYSTEM_RADIUS * 1.2
-	limit_bottom = Consts.PLANET_SYSTEM_RADIUS * 1.2
 	
 	GameState.connect("state_changed", self, "load_camera_state")
 	
 	var timer = Timer.new()
 	timer.connect("timeout",self,"set_camera_state") 
-	timer.wait_time = 5
+	timer.wait_time = 1
 	add_child(timer)
 	timer.start()
 	
-	position = target_position
-	zoom = target_zoom
+	set_h_drag_enabled(false)
+	set_v_drag_enabled(false)
+	set_enable_follow_smoothing(true)
+	set_follow_smoothing(4)
 	
 func load_camera_state():
 	var camera_state = GameState.get_camera_state()
-	var has_changed = false
 	
 	if camera_state.has('pos_x'):
 		position = Vector2(camera_state['pos_x'], camera_state['pos_y'])
-		has_changed = true
+		last_pos = position
 	
 	if camera_state.has('zoom'):
 		zoom = Vector2(camera_state['zoom'], camera_state['zoom'])
-		has_changed = true
-	
-	if has_changed:
-		camera_pos_change = Vector2.ZERO
-		target_zoom = zoom
 		last_zoom = zoom
-		target_position = position
-		last_pos = position
 
 func set_camera_state() -> void:
 	if last_pos != position or last_zoom != zoom:
@@ -63,17 +80,17 @@ func set_camera_state() -> void:
 		last_pos = position
 		last_zoom = zoom
 
-func _input(event):
+func _unhandled_input(event):
 	
 	if MenuState.is_over_ui():
 		return
 	
 	if Utils.is_mobile:
-		_handle_touch(event)
+		_handle_touch_event(event)
 	else:
-		_handle_desktop(event)
+		_handle_desktop_event(event)
 
-func _handle_touch(event: InputEvent):
+func _handle_touch_event(event: InputEvent):
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			touches[event.index] = event.position
@@ -81,7 +98,7 @@ func _handle_touch(event: InputEvent):
 			touches.erase(event.index)
 	elif event is InputEventScreenDrag:
 		if touches.keys().size() == 1:
-			target_position -= event.relative * zoom.x
+			position -= event.relative * zoom.x
 		elif touches.keys().size() == 2:
 			if touches.has(0) and touches.has(1):
 				var prev_dist = (touches[0] as Vector2).distance_squared_to(touches[1])
@@ -93,67 +110,99 @@ func _handle_touch(event: InputEvent):
 					curr_dist = (event.position as Vector2).distance_squared_to(touches[0])
 
 				var offset = clamp(prev_dist - curr_dist, -1, 1)
-				target_zoom = target_zoom + Vector2(offset, offset)
+				zoom = zoom + Vector2(offset, offset)
 				
 		touches[event.index] = event.position
 		
 		get_tree().set_input_as_handled()
 		
-		self._clamp_targets()
-		
-func _handle_desktop(event: InputEvent):
-	if event is InputEventKey:
-		
-		keys[event.scancode] = true if event.pressed else false
-		
-		if keys[KEY_A] and keys[KEY_D]:
-			camera_pos_change.x = 0
-		elif keys[KEY_A]:
-			camera_pos_change.x = -1
-		elif keys[KEY_D]:
-			camera_pos_change.x = 1
-		else:
-			camera_pos_change.x = 0
-		
-		if keys[KEY_W] and keys[KEY_S]:
-			camera_pos_change.y = 0
-		elif keys[KEY_W]:
-			camera_pos_change.y = -1
-		elif keys[KEY_S]:
-			camera_pos_change.y = 1
-		else:
-			camera_pos_change.y = 0
-		
-	target_position = position + camera_pos_change * zoom.x * 10
-
+func _handle_desktop_event(event: InputEvent):
 	if event is InputEventMouseButton:
-		match event.button_index:
-			BUTTON_WHEEL_UP:
-				zoom_at_point(1 / Consts.CAMERA_ZOOM_STEP, event.position)
-			BUTTON_WHEEL_DOWN:
-				zoom_at_point(Consts.CAMERA_ZOOM_STEP, event.position)
+		if event.button_index == BUTTON_RIGHT:
+			# Control by right mouse button.
+			is_drag = event.pressed
+		
+		# Checking if future zoom won't be under 0.
+		# In that cause engine will flip screen.
+		if event.button_index == BUTTON_WHEEL_UP and\
+		camera_zoom.x - camera_zoom_speed.x > 0 and\
+		camera_zoom.y - camera_zoom_speed.y > 0:
+			camera_zoom -= camera_zoom_speed
+			set_zoom(camera_zoom)
+			# Checking if future zoom won't be above zoom_out_limit.
+		if event.button_index == BUTTON_WHEEL_DOWN and\
+		camera_zoom.x + camera_zoom_speed.x < zoom_out_limit and\
+		camera_zoom.y + camera_zoom_speed.y < zoom_out_limit:
+			camera_zoom += camera_zoom_speed
+			set_zoom(camera_zoom)
 	
-	self._clamp_targets()
+	# Control by keyboard handled by InpuMap.
+	if event.is_action_pressed("ui_left"):
+		keys.left = true
+	if event.is_action_pressed("ui_right"):
+		keys.right = true
+	if event.is_action_pressed("ui_up"):
+		keys.up = true
+	if event.is_action_pressed("ui_down"):
+		keys.down = true
+	if event.is_action_released("ui_left"):
+		keys.left = false
+	if event.is_action_released("ui_right"):
+		keys.right = false
+	if event.is_action_released("ui_up"):
+		keys.up = false
+	if event.is_action_released("ui_down"):
+		keys.down = false
 
-func zoom_at_point(zoom_change, point):
-	# https://godotengine.org/qa/25983/camera2d-zoom-position-towards-the-mouse
-	var c0 = global_position # camera position
-	var v0 = get_viewport().size # vieport size
-	var c1 # next camera position
-	var z0 = zoom # current zoom value
-	var z1 = z0 * zoom_change # next zoom value
-
-	c1 = c0 + (-0.5*v0 + point)*(z0 - z1)
-	target_zoom = z1
-	target_position = c1
-
-func _clamp_targets():
+func _physics_process(delta):
 	
-	if target_zoom.x < Consts.CAMERA_ZOOM_MIN:
-		target_zoom = Vector2(Consts.CAMERA_ZOOM_MIN, Consts.CAMERA_ZOOM_MIN)
-	elif target_zoom.x > target_zoom_max:
-		target_zoom = Vector2(target_zoom_max, target_zoom_max)
+	if MenuState.is_over_ui():
+		return
+	
+	if Utils.is_mobile:
+		_handle_touch(delta)
+	else:
+		_handle_desktop(delta)
+	
+	# Update position of the camera.
+	position += camera_movement * get_zoom()
+	
+	# Check outside of bounds
+	var intersects = Geometry.segment_intersects_circle(Vector2.ZERO, position, Vector2.ZERO, limit)
+	if intersects != -1:
+		position = position * intersects
+	
+	# Set camera movement to zero, update old mouse position.
+	camera_movement = Vector2(0,0)
+	_prev_mouse_pos = get_local_mouse_position()
 
-func _process(delta):
-	zoom = lerp(zoom, target_zoom, Consts.CAMERA_LERPTIME_POS * delta)
-	position = lerp(position, target_position, 1 if Utils.is_mobile else Consts.CAMERA_LERPTIME_POS * delta)
+func _handle_touch(delta: float) -> void:
+	pass
+	
+func _handle_desktop(delta: float) -> void:
+	# Move camera by keys defined in InputMap (ui_left/right/up/down).
+	if keys.left:
+		camera_movement.x -= camera_speed * delta
+	if keys.right:
+		camera_movement.x += camera_speed * delta
+	if keys.up:
+		camera_movement.y -= camera_speed * delta
+	if keys.down:
+		camera_movement.y += camera_speed * delta
+	
+	# Move camera by mouse, when it's on the margin (defined by camera_margin).
+	var viewport = get_viewport().get_visible_rect().size
+	var mouse_pos = get_viewport().get_mouse_position()
+	if mouse_pos.x <= camera_margin:
+		camera_movement.x -= camera_speed * delta
+	if viewport.x - mouse_pos.x <= camera_margin:
+		camera_movement.x += camera_speed * delta
+	if mouse_pos.y <= camera_margin:
+		camera_movement.y -= camera_speed * delta
+	if viewport.y - mouse_pos.y <= camera_margin:
+		camera_movement.y += camera_speed * delta
+	
+	# When RMB is pressed, move camera by difference of mouse position
+	if is_drag:
+		camera_movement = _prev_mouse_pos - get_local_mouse_position()
+	
