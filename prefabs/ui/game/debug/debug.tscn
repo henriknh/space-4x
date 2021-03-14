@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://prefabs/ui/game/debug/debug.gd" type="Script" id=1]
+
+[node name="Debug" type="VBoxContainer"]
+margin_top = 42.0
+margin_right = 32.0
+margin_bottom = 128.0
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MousePos" type="Label" parent="."]
+margin_right = 96.0
+margin_bottom = 14.0
+text = "(12345, 67890)"
+
+[node name="Spawner" type="VBoxContainer" parent="."]
+margin_top = 18.0
+margin_right = 96.0
+margin_bottom = 110.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Faction" type="OptionButton" parent="Spawner"]
+margin_right = 96.0
+margin_bottom = 20.0
+focus_mode = 0
+enabled_focus_mode = 0
+
+[node name="ShipType" type="OptionButton" parent="Spawner"]
+margin_top = 24.0
+margin_right = 96.0
+margin_bottom = 44.0
+focus_mode = 0
+enabled_focus_mode = 0
+
+[node name="SetSpawnTarget" type="Button" parent="Spawner"]
+margin_top = 48.0
+margin_right = 96.0
+margin_bottom = 68.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "Set target"
+
+[node name="Spawn" type="Button" parent="Spawner"]
+margin_top = 72.0
+margin_right = 96.0
+margin_bottom = 92.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "Spawn"
+[connection signal="pressed" from="Spawner/SetSpawnTarget" to="." method="_on_set_spawn_target"]
+[connection signal="pressed" from="Spawner/Spawn" to="." method="_on_spawn_ship"]

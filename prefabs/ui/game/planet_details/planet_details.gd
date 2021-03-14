@@ -27,10 +27,10 @@ func _ready():
 	var viewport_size = get_viewport_rect().size
 	var offset = Vector2(viewport_size[0] * 0.4, 0)
 	
-	real_camera_position = camera.target_position
-	real_camera_zoom = camera.target_zoom
-	camera.target_position = GameState.get_selection().position + offset
-	camera.target_zoom = Vector2.ONE
+	real_camera_position = camera.position
+	real_camera_zoom = camera.zoom
+	camera.position = GameState.get_selection().position + offset
+	camera.zoom = Vector2.ONE
 	
 	$VBoxContainer/DistributionSpectra/ColorCombat.color = Enums.ship_colors[Enums.ship_types.combat]
 	$VBoxContainer/DistributionSpectra/ColorExplorer.color = Enums.ship_colors[Enums.ship_types.explorer]
@@ -44,8 +44,8 @@ func _ready():
 	_update_ui()
 	
 func queue_free():
-	camera.target_position = real_camera_position
-	camera.target_zoom = real_camera_zoom
+	camera.position = real_camera_position
+	camera.zoom = real_camera_zoom
 	.queue_free()
 	
 func _on_close():

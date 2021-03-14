@@ -1,0 +1,59 @@
+extends VBoxContainer
+
+var spawner_target_texture = preload('res://assets/icons/target.png')
+
+onready var node_mouse_pos = $MousePos as Label
+onready var node_spawner_faction = $Spawner/Faction as OptionButton
+onready var node_spawner_ship_type = $Spawner/ShipType as OptionButton
+onready var node_spawner_set_target = $Spawner/SetSpawnTarget as Button
+onready var node_spawner_spawn = $Spawner/Spawn as Button
+
+var setting_target = false
+var spawner_target: Node2D
+	
+func ready():
+	for faction in Factions.factions:
+		var image = Image.new()
+		image.create(12, 12, false, Image.FORMAT_RGB8)
+		image.fill(Factions.get_faction(faction).color)
+		var texture = ImageTexture.new()
+		texture.create_from_image(image)
+		node_spawner_faction.add_icon_item(texture, faction as String, faction)
+	
+	for ship_type in Enums.ship_types:
+		node_spawner_ship_type.add_item(ship_type, Enums.ship_types[ship_type])
+	var combat_idx = node_spawner_ship_type.get_item_index(Enums.ship_types.combat)
+	node_spawner_ship_type.select(combat_idx)
+
+func _process(delta):
+	var mouse_pos = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
+	node_mouse_pos.text = "(%d, %d)" % [stepify(mouse_pos.x, 0.01), stepify(mouse_pos.y, 0.01)]
+
+func _input(event: InputEvent) -> void:
+	if setting_target and event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed:
+			setting_target = false
+			get_tree().set_input_as_handled()
+			if not spawner_target:
+				spawner_target = Sprite.new()
+				spawner_target.texture = spawner_target_texture
+				get_node('/root/GameScene').add_child(spawner_target)
+			spawner_target.position = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
+
+func _update_ui():
+	node_spawner_set_target.disabled = setting_target
+	node_spawner_spawn.disabled = spawner_target == null or setting_target
+	if spawner_target:
+		spawner_target.scale = (get_node('/root/GameScene/Camera') as Camera2D).zoom
+
+func _on_set_spawn_target():
+	setting_target = true
+
+func _on_spawn_ship():
+	var override = {
+		'planet_system': GameState.get_planet_system(),
+		'position': spawner_target.position,
+		'faction': node_spawner_faction.get_selected_id()
+	}
+	var ship = Instancer.ship(node_spawner_ship_type.get_selected_id(), null, null, override)
+	get_node('/root/GameScene').add_child(ship)

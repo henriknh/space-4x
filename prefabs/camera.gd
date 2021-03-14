@@ -19,24 +19,21 @@ var touches = {}
 var is_drag = false
 
 # Zoom limit
-export (int) var zoom_out_limit = Consts.PLANET_SYSTEM_RADIUS / 250
+export (int) var zoom_in_limit = 1
+export (int) var zoom_out_limit = Consts.PLANET_SYSTEM_RADIUS / 200
 
 # Limit bounds of camera 
-const limit = Consts.PLANET_SYSTEM_RADIUS * 1.2
+const limit = Consts.PLANET_SYSTEM_RADIUS * 1.0
 
 # Camera speed in px/s.
-export (int) var camera_speed = 450 
-
-# Initial zoom value taken from Editor.
-var camera_zoom = get_zoom()
+export (int) var camera_speed = 450
 
 # Value meaning how near to the window edge (in px) the mouse must be,
 # to move a view.
 export (int) var camera_margin = 20
 
-# It changes a camera zoom value in units... (?, but it works... it probably
-# multiplies camera size by 1+camera_zoom_speed)
-const camera_zoom_speed = Vector2(0.5, 0.5)
+# Zoom speed factor that is used with current zoom to calculate next zoom value
+const camera_zoom_speed = 25
 
 # Vector of camera's movement / second.
 var camera_movement = Vector2()
@@ -86,11 +83,11 @@ func _unhandled_input(event):
 		return
 	
 	if Utils.is_mobile:
-		_handle_touch_event(event)
+		_handle_touch_input(event)
 	else:
-		_handle_desktop_event(event)
+		_handle_desktop_input(event)
 
-func _handle_touch_event(event: InputEvent):
+func _handle_touch_input(event: InputEvent):
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			touches[event.index] = event.position
@@ -116,25 +113,23 @@ func _handle_touch_event(event: InputEvent):
 		
 		get_tree().set_input_as_handled()
 		
-func _handle_desktop_event(event: InputEvent):
+func _handle_desktop_input(event: InputEvent):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_RIGHT:
 			# Control by right mouse button.
 			is_drag = event.pressed
 		
-		# Checking if future zoom won't be under 0.
-		# In that cause engine will flip screen.
-		if event.button_index == BUTTON_WHEEL_UP and\
-		camera_zoom.x - camera_zoom_speed.x > 0 and\
-		camera_zoom.y - camera_zoom_speed.y > 0:
-			camera_zoom -= camera_zoom_speed
-			set_zoom(camera_zoom)
-			# Checking if future zoom won't be above zoom_out_limit.
-		if event.button_index == BUTTON_WHEEL_DOWN and\
-		camera_zoom.x + camera_zoom_speed.x < zoom_out_limit and\
-		camera_zoom.y + camera_zoom_speed.y < zoom_out_limit:
-			camera_zoom += camera_zoom_speed
-			set_zoom(camera_zoom)
+		if event.button_index == BUTTON_WHEEL_UP:
+			zoom -= (zoom / camera_zoom_speed).ceil()
+			
+			if zoom.x < zoom_in_limit:
+				zoom = Vector2(zoom_in_limit, zoom_in_limit)
+		
+		if event.button_index == BUTTON_WHEEL_DOWN:
+			zoom += (zoom / camera_zoom_speed).ceil()
+			
+			if zoom.x > zoom_out_limit:
+				zoom = Vector2(zoom_out_limit, zoom_out_limit)
 	
 	# Control by keyboard handled by InpuMap.
 	if event.is_action_pressed("ui_left"):

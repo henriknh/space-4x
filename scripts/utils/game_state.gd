@@ -71,6 +71,8 @@ func set_loading(is_loading: bool) -> void:
 	loading_label = ''
 	emit_signal("state_changed")
 	emit_signal("update_ui")
+	if loading == false:
+		get_node('/root/GameScene/CanvasLayer/GameUI').ready()
 
 func is_loading() -> bool:
 	return loading

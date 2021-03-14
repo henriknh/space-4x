@@ -22,7 +22,7 @@ var script_combat = preload('res://prefabs/entities/ships/ship_combat.gd')
 var script_explorer = preload('res://prefabs/entities/ships/ship_explorer.gd')
 var script_miner = preload('res://prefabs/entities/ships/ship_miner.gd')
 
-func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null) -> Entity:
+func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, override: Dictionary = {}) -> Entity:
 	
 	var instance: Entity = prefab_ship.instance()
 	
@@ -47,6 +47,11 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null) -> E
 		instance.position = inherit.position
 		instance.parent = inherit
 	
+	for key in override:
+		print(instance.get(key))
+		instance.set(key, override[key])
+		print(instance.get(key))
+		
 	instance.ship_type = ship_type
 	
 	if copy_from == null:

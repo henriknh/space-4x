@@ -4,28 +4,35 @@ var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
 var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_movement.tscn')
 var planet_details_prefab = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 
-onready var node_asteroid_rocks = $Resources/ValueAsteroidRocks as Label
-onready var node_titanium = $Resources/ValueTitanium as Label
-onready var node_astral_dust = $Resources/ValueAstralDust as Label
-
+# Resources
+onready var node_asteroid_rocks = $TopLeft/HBox/AsteroidRocks/Value as Label
+onready var node_titanium = $TopLeft/HBox/Titanium/Value as Label
+onready var node_astral_dust = $TopLeft/HBox/AstralDust/Value as Label
+onready var node_debug = $Debug as Control
+onready var node_fps = $TopRight/MainMenu/LabelFPS as Label
+onready var node_btn_ship_movement = $BottomLeft/HBox/BtnShipMovement as TextureButton
+onready var node_btn_planet_details = $BottomRight/HBox/BtnPlanetDetails as TextureButton
 
 func _ready():
 	MenuState.push(self)
 	
+
+func ready():
 	GameState.connect("state_changed", self, "_update_ui")
 	GameState.connect("selection_changed", self, "_update_ui")
 	Settings.connect("settings_changed", self, "_update_ui")
-
+	
 	var timer = Timer.new()
 	timer.connect("timeout",self,"_update_ui")
-	timer.wait_time = 1
 	add_child(timer)
+	timer.wait_time = 1
 	timer.start()
-
+	
+	node_debug.ready()
+	_update_ui()
+	
 func _physics_process(delta):
-	var mouse_pos = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
-	$Debug/LabelMousePos.text = mouse_pos as String
-	$MainMenu/LabelFPS.text = Engine.get_frames_per_second() as String
+	node_fps.text = Engine.get_frames_per_second() as String
 
 func _ship_movement_disabled() -> bool:
 	if GameState.get_selection() == null:
@@ -37,12 +44,14 @@ func _ship_movement_disabled() -> bool:
 			if child.entity_type == Enums.entity_types.ship and child.faction == 0:
 				return false
 		return true
-		
+
 func _update_ui():
-	$Debug/LabelMousePos.visible = Settings.is_debug()
-	$MainMenu/LabelFPS.visible = Settings.get_show_fps()
-	$Bottom/BtnShipMovement.disabled = _ship_movement_disabled()
-	$Bottom/BtnPlanetDetails.disabled = GameState.get_selection() == null
+	node_debug.visible = Settings.is_debug()
+	if Settings.is_debug():
+		node_debug._update_ui()
+	node_fps.visible = Settings.get_show_fps()
+	node_btn_ship_movement.disabled = _ship_movement_disabled()
+	node_btn_planet_details.disabled = GameState.get_selection() == null
 	
 	var faction = Factions.get_faction(0)
 	if faction:
@@ -62,10 +71,9 @@ func _on_planet_details():
 func _on_ship_movement():
 	get_parent().add_child(ship_movement_prefab.instance())
 
+func _on_mouse_entered_ui():
+	MenuState.set_over_ui(true)
 
-func _on_mouse_entered_background():
+func _on_mouse_exited_ui():
 	MenuState.set_over_ui(false)
 
-
-func _on_mouse_exited_background():
-	MenuState.set_over_ui(true)
