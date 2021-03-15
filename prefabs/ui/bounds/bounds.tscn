@@ -9,8 +9,7 @@ script = ExtResource( 1 )
 
 [node name="Selection" type="Line2D" parent="."]
 material = ExtResource( 3 )
-points = PoolVector2Array( 912.827, 119.895 )
-width = 64.0
+width = 256.0
 default_color = Color( 1, 1, 1, 1 )
 texture = ExtResource( 2 )
 texture_mode = 1

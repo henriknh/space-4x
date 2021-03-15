@@ -219,3 +219,9 @@ func merge_polygons_by_edge(p1: Array, p2: Array) -> Array:
 	p1.append(p1[0])
 	
 	return [p1]
+	
+func calculate_angle(p1: Vector2, p2: Vector2, p3: Vector2) -> float:
+	# https://manivannan-ai.medium.com/find-the-angle-between-three-points-from-2d-using-python-348c513e2cd
+	var ang = rad2deg(atan2(p3.y - p2.y, p3.x - p2.x) - atan2(p1.y - p2.y, p1.x - p2.x))
+	return ang# + 360 if ang < 0 else ang
+	# https://riptutorial.com/math/example/25158/calculate-angle-from-three-points

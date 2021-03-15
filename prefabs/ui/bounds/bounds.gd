@@ -21,16 +21,38 @@ func _update_node(node: Line2D, polygon: Array):
 		polygon = polygon.duplicate()
 		polygon.remove(0)
 	
+	
+	#print('- - - - - - - -')
+	var p1 = Vector2(-2750.70874, 2529.555664)
+	var p2 = Vector2(1294.208984, 6467.255371)
+	var p3 = Vector2(-5179.823242, 16108.094727)
+	var pq = (p1 - p2).normalized() + (p3 - p2).normalized()
+	var pq_norm = pq.normalized()
+	#print(pq_norm)
+	
+	var angle_1_2_3 = Utils.calculate_angle(Vector2.ZERO, p2, p1)
+	#print("angle O p2 p1 %d" % angle_1_2_3)
+	
+	var angle_1_2_pq = Utils.calculate_angle(Vector2.ZERO, p2, pq * 1000)
+	#print("angle O p2 pq %d" % angle_1_2_pq)
+	var h_1 = (width / 2) / sin(angle_1_2_pq)
+	#print(h_1)
+	var angle_3_2_pq = Utils.calculate_angle(Vector2.ZERO, p2, p3)
+	#print("angle O p2 p3 %d" % angle_3_2_pq)
+	var h_3 = (width / 2) / sin(angle_3_2_pq)
+	
+	#print(pq_norm * h_1 + p2)
+
+
+	
 	var polygon_offset: Array = []
 	for i in range(polygon.size()):
 		var j = polygon.size() - 1 if i == 0 else i - 1
 		var k = 0 if i == polygon.size() - 1 else i + 1
 		
 		var d = (polygon[j] - polygon[i]).normalized() + (polygon[k] - polygon[i]).normalized()
-		
 		if not Geometry.is_point_in_polygon(d + polygon[i], polygon):
 			d *= -1
-		
 		polygon_offset.append(d * width / 2 + polygon[i])
 	
 	var edgepoint = Utils.get_midpoint(polygon_offset[0], polygon_offset[polygon_offset.size() - 1])
@@ -98,6 +120,7 @@ func _update_faction_bounds():
 			
 			var line = Line2D.new()
 			line.default_color = Enums.player_colors[faction]
+			line.default_color.a = 0.1
 			line.texture = faction_bound_texture
 			line.texture_mode = Line2D.LINE_TEXTURE_TILE
 			line.sharp_limit = 3
