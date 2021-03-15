@@ -14,6 +14,7 @@ var state = {
 signal state_changed
 signal selection_changed
 signal update_ui
+signal loading_changed
 
 func set_planet_system(planet_system: int) -> void:
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
@@ -69,8 +70,7 @@ func set_loading(is_loading: bool) -> void:
 	loading = is_loading
 	loading_progress = 0
 	loading_label = ''
-	emit_signal("state_changed")
-	emit_signal("update_ui")
+	emit_signal("loading_changed")
 	if loading == false:
 		get_node('/root/GameScene/CanvasLayer/GameUI').ready()
 
@@ -79,8 +79,7 @@ func is_loading() -> bool:
 
 func set_loading_progress(_loading_progress: float) -> void:
 	loading_progress = _loading_progress
-	emit_signal("state_changed")
-	emit_signal("update_ui")
+	emit_signal("loading_changed")
 
 func get_loading_progress() -> float:
 	return loading_progress

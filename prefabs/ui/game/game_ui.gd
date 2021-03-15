@@ -4,21 +4,20 @@ var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
 var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_movement.tscn')
 var planet_details_prefab = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 
-# Resources
-onready var node_asteroid_rocks = $TopLeft/HBox/AsteroidRocks/Value as Label
-onready var node_titanium = $TopLeft/HBox/Titanium/Value as Label
-onready var node_astral_dust = $TopLeft/HBox/AstralDust/Value as Label
+onready var node_asteroid_rocks = $TopLeft/Resources/AsteroidRocks/Value as Label
+onready var node_titanium = $TopLeft/Resources/Titanium/Value as Label
+onready var node_astral_dust = $TopLeft/Resources/AstralDust/Value as Label
 onready var node_debug = $Debug as Control
 onready var node_fps = $TopRight/MainMenu/LabelFPS as Label
-onready var node_btn_ship_movement = $BottomLeft/HBox/BtnShipMovement as TextureButton
-onready var node_btn_planet_details = $BottomRight/HBox/BtnPlanetDetails as TextureButton
+onready var node_btn_ship_movement = $BottomLeft/Actions/BtnShipMovement as TextureButton
+onready var node_btn_planet_details = $BottomRight/Info/BtnPlanetDetails as TextureButton
 
 func _ready():
 	MenuState.push(self)
 	
 
 func ready():
-	GameState.connect("state_changed", self, "_update_ui")
+	#GameState.connect("state_changed", self, "_update_ui")
 	GameState.connect("selection_changed", self, "_update_ui")
 	Settings.connect("settings_changed", self, "_update_ui")
 	
@@ -76,4 +75,3 @@ func _on_mouse_entered_ui():
 
 func _on_mouse_exited_ui():
 	MenuState.set_over_ui(false)
-

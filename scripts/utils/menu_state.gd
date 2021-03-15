@@ -7,7 +7,7 @@ var _menus = []
 signal menu_changed
 
 func _ready():
-	GameState.connect("update_ui", self, "update_visiblity")
+	GameState.connect("loading_changed", self, "update_visiblity")
 
 func is_over_ui() -> bool:
 	if _menus.size() > 1:

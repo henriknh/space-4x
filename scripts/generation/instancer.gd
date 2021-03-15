@@ -48,9 +48,7 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, over
 		instance.parent = inherit
 	
 	for key in override:
-		print(instance.get(key))
 		instance.set(key, override[key])
-		print(instance.get(key))
 		
 	instance.ship_type = ship_type
 	

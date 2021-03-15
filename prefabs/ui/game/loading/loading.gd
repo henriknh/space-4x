@@ -1,7 +1,7 @@
 extends VBoxContainer
 
 func _ready():
-	GameState.connect("state_changed", self, "_update_ui")
+	GameState.connect("loading_changed", self, "_update_ui")
 
 func _update_ui():
 	visible = GameState.loading
