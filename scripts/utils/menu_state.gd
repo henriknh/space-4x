@@ -49,7 +49,10 @@ func pop() -> void:
 func update_visiblity():
 	for menu in _menus:
 		menu.visible = false if GameState.loading else menu == _menus[_menus.size() - 1]
-		
+	
+	_over_ui_semaphore = 0
+	_is_over_ui = false
+	
 	emit_signal("menu_changed")
 
 func menus_size() -> int:
