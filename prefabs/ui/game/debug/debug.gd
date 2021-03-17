@@ -12,7 +12,7 @@ var setting_target = false
 var spawner_target: Node2D
 
 func _ready():
-	visible = Settings.is_debug()
+	_update_ui()
 	
 func ready():
 	Settings.connect("settings_changed", self, "_update_ui")
@@ -44,7 +44,8 @@ func _input(event: InputEvent) -> void:
 				spawner_target.texture = spawner_target_texture
 				get_node('/root/GameScene').add_child(spawner_target)
 			spawner_target.position = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
-
+			_update_ui()
+			
 func _update_ui():
 	node_spawner_set_target.disabled = setting_target
 	node_spawner_spawn.disabled = spawner_target == null or setting_target
