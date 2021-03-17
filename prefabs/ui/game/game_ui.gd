@@ -45,9 +45,6 @@ func _ship_movement_disabled() -> bool:
 		return true
 
 func _update_ui():
-	node_debug.visible = Settings.is_debug()
-	if Settings.is_debug():
-		node_debug._update_ui()
 	node_fps.visible = Settings.get_show_fps()
 	node_btn_ship_movement.disabled = _ship_movement_disabled()
 	node_btn_planet_details.disabled = GameState.get_selection() == null

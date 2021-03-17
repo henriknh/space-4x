@@ -10,8 +10,13 @@ onready var node_spawner_spawn = $Spawner/Spawn as Button
 
 var setting_target = false
 var spawner_target: Node2D
+
+func _ready():
+	visible = Settings.is_debug()
 	
 func ready():
+	Settings.connect("settings_changed", self, "_update_ui")
+	
 	for faction in Factions.factions:
 		var image = Image.new()
 		image.create(12, 12, false, Image.FORMAT_RGB8)
@@ -44,7 +49,9 @@ func _update_ui():
 	node_spawner_set_target.disabled = setting_target
 	node_spawner_spawn.disabled = spawner_target == null or setting_target
 	if spawner_target:
+		spawner_target.visible = Settings.is_debug()
 		spawner_target.scale = (get_node('/root/GameScene/Camera') as Camera2D).zoom
+	visible = Settings.is_debug()
 
 func _on_set_spawn_target():
 	setting_target = true
