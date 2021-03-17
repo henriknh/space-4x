@@ -2,8 +2,8 @@ extends Node2D
 
 onready var selection_polygon: Line2D = $Selection
 onready var selection_material: ShaderMaterial = selection_polygon.material
-onready var faction_bounds_container: Node = $FactionBoundsConatainer
-onready var site_bounds_container: Node = $SiteBoundsConatainer
+onready var faction_bounds_container: Node = $FactionBoundsContainer
+onready var site_bounds_container: Node = $SiteBoundsContainer
 const faction_bound_texture = preload("res://assets/border_bound_faded.png")
 const faction_bound_material = preload("res://shaders/faction_bounds_line.tres")
 

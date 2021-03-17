@@ -15,8 +15,8 @@ texture = ExtResource( 2 )
 texture_mode = 1
 sharp_limit = 3.0
 
-[node name="FactionBoundsConatainer" type="Node" parent="."]
+[node name="FactionBoundsContainer" type="Node" parent="."]
 
-[node name="SiteBoundsConatainer" type="Node" parent="."]
+[node name="SiteBoundsContainer" type="Node" parent="."]
 
 [node name="OrbitLines" type="Node" parent="."]
