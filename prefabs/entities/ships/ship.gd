@@ -1,5 +1,9 @@
 extends Entity
 
+const ship_texture_combat = preload("res://assets/ship_combat.png")
+const ship_texture_explorer = preload("res://assets/ship_explorer.png")
+const ship_texture_miner = preload("res://assets/ship_miner.png")
+
 class_name Ship
 
 # Temporary
@@ -27,6 +31,14 @@ func create():
 func ready():
 	var model = get_node("Sprite") as Sprite
 	var trail = get_node("Trail") as Node2D
+	
+	match ship_type:
+		Enums.ship_types.combat:
+			model.texture = ship_texture_combat
+		Enums.ship_types.explorer:
+			model.texture = ship_texture_explorer
+		Enums.ship_types.miner:
+			model.texture = ship_texture_miner
 	
 	if faction == 0:
 		model.self_modulate = Enums.ship_colors[ship_type]
