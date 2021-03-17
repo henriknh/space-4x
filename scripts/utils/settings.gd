@@ -6,6 +6,7 @@ var settings = {
 	'show_orbit_circles': true,
 	'show_planet_area': true,
 	'show_fps': false,
+	'vsync': false,
 	'debug': false
 }
 
@@ -17,6 +18,9 @@ func _ready():
 	
 func _after_change():
 	_save()
+	
+	OS.set_use_vsync(settings['vsync'])
+	
 	emit_signal("settings_changed")
 
 func set_show_orbit_circles(show_orbit_circles: bool) -> void:
@@ -40,6 +44,13 @@ func set_show_fps(show_fps: bool) -> void:
 func get_show_fps() -> bool:
 	return settings['show_fps']
 
+func set_vsync(vsync: bool) -> void:
+	settings['vsync'] = vsync
+	_after_change()
+	
+func get_vsync() -> bool:
+	return settings['vsync']
+
 func set_debug(debug: bool) -> void:
 	settings['debug'] = debug
 	_after_change()
@@ -59,6 +70,8 @@ func _load() -> bool:
 		settings[key] = json[key]
 	
 	load_settings.close()
+	
+	_after_change()
 	
 	return true
 	
