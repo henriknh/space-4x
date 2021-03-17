@@ -12,7 +12,7 @@ var patrolling_position: Vector2 = Vector2.INF
 
 func create():
 	ship_type = Enums.ship_types.combat
-	ship_speed_max = 2000
+	ship_speed_max = 800
 	.create()
 
 func ready():

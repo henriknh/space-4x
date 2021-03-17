@@ -10,7 +10,7 @@ var mining_timer: Timer
 
 func create():
 	ship_type = Enums.ship_types.miner
-	ship_speed_max = 1000
+	ship_speed_max = 200
 	asteroid_rocks_max = 1
 	.create()
 	

@@ -51,8 +51,8 @@ const GALAXY_SIZE = {
 }
 
 # Planet system
-const PLANET_SYSTEM_BASE_DISTANCE_TO_SUN = 2500
-const PLANET_SYSTEM_RADIUS = 20000
+const PLANET_SYSTEM_BASE_DISTANCE_TO_SUN = 1000
+const PLANET_SYSTEM_RADIUS = 4000
 const PLANET_SYSTEM_ORBITS = {
 	Enums.world_size.small: {
 		'min': 6, 
