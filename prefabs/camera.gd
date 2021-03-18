@@ -41,6 +41,8 @@ var camera_movement = Vector2()
 # Previous mouse position used to count delta of the mouse movement.
 var _prev_mouse_pos = null
 
+signal zoom_changed
+
 func _ready():
 	
 	GameState.connect("state_changed", self, "load_camera_state")
@@ -66,6 +68,7 @@ func load_camera_state():
 	if camera_state.has('zoom'):
 		zoom = Vector2(camera_state['zoom'], camera_state['zoom'])
 		last_zoom = zoom
+		emit_signal("zoom_changed")
 
 func set_camera_state() -> void:
 	if last_pos != position or last_zoom != zoom:
@@ -124,12 +127,14 @@ func _handle_desktop_input(event: InputEvent):
 			
 			if zoom.x < zoom_in_limit:
 				zoom = Vector2(zoom_in_limit, zoom_in_limit)
+			emit_signal("zoom_changed")
 		
 		if event.button_index == BUTTON_WHEEL_DOWN:
 			zoom += (zoom / camera_zoom_speed).ceil()
 			
 			if zoom.x > zoom_out_limit:
 				zoom = Vector2(zoom_out_limit, zoom_out_limit)
+			emit_signal("zoom_changed")
 	
 	# Control by keyboard handled by InpuMap.
 	if event.is_action_pressed("ui_left"):

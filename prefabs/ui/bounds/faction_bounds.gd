@@ -1,14 +1,16 @@
 extends Node
 
-const faction_bound_texture = preload("res://assets/border_bound_faded.png")
-const faction_bound_material = preload("res://shaders/faction_bounds_line.tres")
+onready var camera = get_node('/root/GameScene/Camera') as Camera2D
+
+const faction_bound_texture = preload("res://assets/border_bound.png")
+#const faction_bound_material = preload("res://shaders/faction_bounds_line.tres")
+
 var faction_original_data = []
 
 func _connect_changed_signals():
-	Settings.connect("settings_changed", self, "_on_changed")
 	Factions.connect("factions_changed", self, "_on_changed")
-	GameState.connect("selection_changed", self, "_on_changed")
 	GameState.connect("state_changed", self, "_on_changed")
+	camera.connect("zoom_changed", self, "_render_factions")
 
 func _on_changed():
 	_calc_original_data()
@@ -51,11 +53,11 @@ func _calc_original_data():
 		
 		var line = Line2D.new()
 		line.default_color = Enums.player_colors[faction]
-		line.modulate.a = 0.25
+		line.modulate.a = 1
 		line.texture = faction_bound_texture
 		line.texture_mode = Line2D.LINE_TEXTURE_TILE
 		line.sharp_limit = 3
-		line.material = faction_bound_material.duplicate()
+		#line.material = faction_bound_material.duplicate()
 			
 		add_child(line)
 		
@@ -65,10 +67,10 @@ func _calc_original_data():
 		})
 
 func _render_factions():
+	var width = camera.zoom.x * 3
+	
 	for faction_data in faction_original_data:
 		for polygon in faction_data.polygons:
-			
-			var width = 256
 	
 			polygon = Utils.array_remove_intitial_duplicate(polygon)
 			polygon = Utils.polygon_offset(polygon, width / 2)
