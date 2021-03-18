@@ -4,6 +4,7 @@ func _ready():
 	Settings.connect("settings_changed", self, "update")
 	
 func _draw():
+	return
 	if not Settings.is_debug():
 		return
 	
