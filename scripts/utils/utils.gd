@@ -245,8 +245,12 @@ func polygon_offset(polygon: Array, shrink_value: float) -> Array:
 		
 		var half_angle = abs(Utils.calculate_angle(polygon[j], polygon[i], polygon[k]) / 2)
 		var hypo = abs(shrink_value / sin(deg2rad(half_angle)))
+		var offset = pq_norm * hypo
 		
-		polygon_offset.append(pq_norm * hypo + polygon[i])
+		if not Geometry.is_point_in_polygon(offset + polygon[i], polygon):
+			offset *= -1
+		
+		polygon_offset.append(offset + polygon[i])
 	
 	return polygon_offset
 
