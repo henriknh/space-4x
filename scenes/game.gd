@@ -22,5 +22,4 @@ func redraw():
 			planet.update()
 	
 	self.update()
-	$OrbitLines.update()
 	$VoronoiSites.update()

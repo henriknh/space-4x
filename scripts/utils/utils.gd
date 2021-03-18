@@ -220,8 +220,41 @@ func merge_polygons_by_edge(p1: Array, p2: Array) -> Array:
 	
 	return [p1]
 	
-func calculate_angle(p1: Vector2, p2: Vector2, p3: Vector2) -> float:
+func calculate_angle(p1: Vector2, p2: Vector2, p3: Vector2, always_positive = false) -> float:
 	# https://manivannan-ai.medium.com/find-the-angle-between-three-points-from-2d-using-python-348c513e2cd
 	var ang = rad2deg(atan2(p3.y - p2.y, p3.x - p2.x) - atan2(p1.y - p2.y, p1.x - p2.x))
-	return ang# + 360 if ang < 0 else ang
-	# https://riptutorial.com/math/example/25158/calculate-angle-from-three-points
+	return ang + 360 if always_positive and ang < 0 else ang
+
+func array_remove_intitial_duplicate(array: Array) -> Array:
+	if array.size() >= 2 and equals(array[0], array[array.size() - 1]):
+		array = array.duplicate()
+		array.remove(0)
+	return array
+	
+func polygon_offset(polygon: Array, shrink_value: float) -> Array:
+	if polygon.size() < 3:
+		return polygon
+		
+	var polygon_offset: Array = []
+	for i in range(polygon.size()):
+		var j = polygon.size() - 1 if i == 0 else i - 1
+		var k = 0 if i == polygon.size() - 1 else i + 1
+		
+		var pq = (polygon[j] - polygon[i]).normalized() + (polygon[k] - polygon[i]).normalized()
+		var pq_norm = pq.normalized()
+		
+		var half_angle = abs(Utils.calculate_angle(polygon[j], polygon[i], polygon[k]) / 2)
+		var hypo = abs(shrink_value / sin(deg2rad(half_angle)))
+		
+		polygon_offset.append(pq_norm * hypo + polygon[i])
+	
+	return polygon_offset
+
+func polygon_add_midpoint_split(polygon: Array) -> Array:
+	if polygon.size() < 2:
+		return polygon
+	
+	var edgepoint = Utils.get_midpoint(polygon[0], polygon[polygon.size() - 1])
+	polygon.insert(0, edgepoint)
+	polygon.append(edgepoint)
+	return polygon
