@@ -42,14 +42,17 @@ func _calc_original_data():
 			var i = 0
 			while i < polygons.size():
 				var j = i + 1
+				var did_merge = false
 				while j < polygons.size():
 					var merge = Utils.merge_polygons_by_edge(polygons[i], polygons[j])
 					if merge.size() == 1:
 						polygons[i] = merge[0]
 						polygons.remove(j)
+						did_merge = true
 					else:
 						j += 1
-				i += 1
+				if not did_merge:
+					i += 1
 		
 		var line = Line2D.new()
 		line.default_color = Enums.player_colors[faction]
