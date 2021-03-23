@@ -92,7 +92,7 @@ func get_target_point():
 func _on_PlanetArea_body_entered(entity: Entity):
 	if self.planet_system == entity.planet_system:
 		children.append(entity)
-		if entity.object_type == Enums.object_types.asteroid:
+		if entity.prop_type == Enums.prop_types.asteroid:
 			asteroids.append(entity)
 		entity.parent = self
 		emit_signal("entity_changed")

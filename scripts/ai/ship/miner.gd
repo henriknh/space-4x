@@ -1,7 +1,7 @@
 extends Node
 
 func process(entity: Entity):
-	var has_asteroids = entity.parent.get_children_by_type(Enums.object_types.asteroid, 'object_type').size() > 0
+	var has_asteroids = entity.parent.get_children_by_type(Enums.prop_types.asteroid, 'prop_type').size() > 0
 	
 	if not has_asteroids:
 		print('ai miner has no asteroids')

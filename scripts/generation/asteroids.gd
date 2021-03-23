@@ -77,6 +77,6 @@ static func generate(planet_system_idx: int) -> Array:
 
 			position += position.normalized() * Random.randf() * Consts.ASTEROIDS_FORMATION_OFFSET
 			
-		asteroids.append(Instancer.object(Enums.object_types.asteroid, planet_system_idx, position))
+		asteroids.append(Instancer.prop(Enums.prop_types.asteroid, planet_system_idx, position))
 		
 	return asteroids

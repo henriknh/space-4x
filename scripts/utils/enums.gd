@@ -52,11 +52,11 @@ const ai_states = {
 const entity_types = {
 	'ship': 3000,
 	'planet': 3001,
-	'object': 3003
+	'prop': 3003
 }
 
 # Objects 4000 - 4999
-const object_types = {
+const prop_types = {
 	'asteroid': 4000
 }
 

@@ -3,7 +3,7 @@ extends Entity
 class_name Prop
 
 func create():
-	entity_type = Enums.entity_types.object
+	entity_type = Enums.entity_types.prop
 	.create()
 	
 func ready():

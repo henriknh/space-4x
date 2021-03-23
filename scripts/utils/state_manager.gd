@@ -49,7 +49,7 @@ func load_game() -> bool:
 	# the object it represents.
 	save_game.open(save_file_path, File.READ)
 	var node_data_planets = []
-	var node_data_objects = []
+	var node_data_props = []
 	var node_data_ships = []
 	while save_game.get_position() < save_game.get_len():
 		# Get the saved dictionary from the next line in the save file
@@ -58,8 +58,8 @@ func load_game() -> bool:
 			GameState.set_loaded_game_state(node_data['game_state'])
 		elif node_data['entity_type'] == Enums.entity_types.planet:
 			node_data_planets.append(node_data)
-		elif node_data['entity_type'] == Enums.entity_types.object:
-			node_data_objects.append(node_data)
+		elif node_data['entity_type'] == Enums.entity_types.prop:
+			node_data_props.append(node_data)
 		else:
 			node_data_ships.append(node_data)
 
@@ -67,7 +67,7 @@ func load_game() -> bool:
 	
 	var total_entities: float = 0
 	total_entities += node_data_planets.size()
-	total_entities += node_data_objects.size()
+	total_entities += node_data_props.size()
 	total_entities += node_data_ships.size()
 	var load_progress: float = 0
 	
@@ -77,8 +77,8 @@ func load_game() -> bool:
 		load_progress += 1
 		GameState.loading_progress = load_progress / total_entities
 	GameState.loading_label = 'Objects'
-	for node_data_object in node_data_objects:
-		self._instantiate_node_data(node_data_object)
+	for node_data_prop in node_data_props:
+		self._instantiate_node_data(node_data_prop)
 		load_progress += 1
 		GameState.loading_progress = load_progress / total_entities
 	GameState.loading_label = 'Ships'

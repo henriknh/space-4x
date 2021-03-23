@@ -59,11 +59,11 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, over
 	
 	return instance
 	
-func object(object_type: int, planet_system_idx: int, position: Vector2 = Vector2.INF) -> Entity:
+func prop(prop_type: int, planet_system_idx: int, position: Vector2 = Vector2.INF) -> Entity:
 	var instance: Entity
 
-	match object_type:
-		Enums.object_types.asteroid:
+	match prop_type:
+		Enums.prop_types.asteroid:
 			instance = prefab_asteroid.instance()
 
 	if position == Vector2.INF:

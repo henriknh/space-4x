@@ -163,7 +163,7 @@ func save():
 		"astral_dust_max": astral_dust_max,
 		
 		# Object
-		"object_type": object_type,
+		"prop_type": prop_type,
 		
 		# Planet
 		"planet_type": planet_type,
