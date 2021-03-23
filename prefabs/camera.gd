@@ -48,7 +48,7 @@ func _ready():
 	GameState.connect("state_changed", self, "load_camera_state")
 	
 	var timer = Timer.new()
-	timer.connect("timeout",self,"set_camera_state") 
+	timer.connect("timeout", self, "set_camera_state") 
 	timer.wait_time = 1
 	add_child(timer)
 	timer.start()

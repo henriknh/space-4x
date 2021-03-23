@@ -87,6 +87,8 @@ func create():
 	if hitpoints_max == -1:
 		hitpoints_max = 1
 	hitpoints = hitpoints_max
+
+func _ready():
 	ready()
 	
 func ready():

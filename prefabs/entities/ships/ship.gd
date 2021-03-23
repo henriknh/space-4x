@@ -7,6 +7,8 @@ const ship_texture_miner = preload("res://assets/ship_miner.png")
 class_name Ship
 
 onready var collision_shape = $CollisionShape
+onready var sprite: Sprite = $Sprite
+onready var trail: Node2D = $Trail
 
 # Temporary
 var nav_route = []
@@ -31,17 +33,33 @@ func create():
 	.create()
 	
 func ready():
-	var model = get_node("Sprite") as Sprite
-	var trail = get_node("Trail") as Node2D
+	sprite = $Sprite
+	trail = $Trail
 	
 	if faction == 0:
-		model.self_modulate = Enums.ship_colors[ship_type]
+		sprite.self_modulate = Enums.ship_colors[ship_type]
 		trail.set_color(Enums.ship_colors[ship_type])
 	else:
-		model.self_modulate = Enums.player_colors[faction]
+		sprite.self_modulate = Enums.player_colors[faction]
 		trail.set_color(Enums.player_colors[faction])
-	.ready()
 		
+	match ship_type:
+		Enums.ship_types.combat:
+			sprite.texture = ship_texture_combat
+		Enums.ship_types.explorer:
+			sprite.texture = ship_texture_explorer
+		Enums.ship_types.miner:
+			sprite.texture = ship_texture_miner
+	if ship_type == Enums.ship_types.disabled:
+		var timer = Timer.new()
+		timer.connect("timeout", self, "_rotate_sprite_texture")
+		timer.wait_time = 1
+		timer.one_shot = false
+		add_child(timer)
+		timer.start()
+	
+	.ready()
+	
 func process(delta: float):
 
 	if state != Enums.ship_states.idle:
@@ -179,3 +197,12 @@ func get_random_point_in_site() -> Vector2:
 		target = (target - parent.position) * intersects_circle + parent.position
 
 	return target
+
+func _rotate_sprite_texture():
+	print('_rotate_disabled_sprite')
+	if sprite.texture == ship_texture_combat:
+		sprite.texture = ship_texture_explorer
+	elif sprite.texture == ship_texture_explorer:
+		sprite.texture = ship_texture_miner
+	elif sprite.texture == ship_texture_miner:
+		sprite.texture = ship_texture_combat

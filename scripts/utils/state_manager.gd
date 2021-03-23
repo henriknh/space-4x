@@ -119,9 +119,6 @@ func _instantiate_node_data(node_data):
 				continue
 		
 		new_object.set(i, node_data[i])
-		
-	if new_object.has_method('ready'):
-		new_object.ready()
 	
 	get_node("/root/GameScene").add_child(new_object)
 

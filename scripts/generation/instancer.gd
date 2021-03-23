@@ -54,8 +54,6 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, over
 	
 	if copy_from == null:
 		instance.create()
-	else:
-		instance.ready()
 	
 	return instance
 	
