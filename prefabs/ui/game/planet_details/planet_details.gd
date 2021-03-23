@@ -1,12 +1,13 @@
 extends Control
 
-var ship_distribution_prefab = preload('res://prefabs/ui/game/planet_details/ship_distribution/ship_distribution.tscn')
+var planet_change_distribution_prefab = preload('res://prefabs/ui/game/planet_details/planet_change_distribution/planet_change_distribution.tscn')
 var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_movement.tscn')
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 onready var selection: Entity = GameState.get_selection()
 onready var faction = Factions.get_faction(selection.faction)
 
+onready var node_ship_distribution: Control = $VBoxContainer/ShipDistribution
 onready var node_convert_from_amount: Label = $VBoxContainer/Convertion/ConvertFromAmount
 onready var node_convert_to_amount: Label = $VBoxContainer/Convertion/ConvertToAmount
 onready var node_convert_to_titanium: TextureButton = $VBoxContainer/Convertion/ConvertToTitanium
@@ -32,15 +33,12 @@ func _ready():
 	camera.position = GameState.get_selection().position + offset
 	camera.zoom = Vector2.ONE
 	
-	$VBoxContainer/DistributionSpectra/ColorCombat.color = Enums.ship_colors[Enums.ship_types.combat]
-	$VBoxContainer/DistributionSpectra/ColorExplorer.color = Enums.ship_colors[Enums.ship_types.explorer]
-	$VBoxContainer/DistributionSpectra/ColorMiner.color = Enums.ship_colors[Enums.ship_types.miner]
-	$VBoxContainer/DistributionSpectra/ColorRebuilding.color = Color(0.5, 0.5, 0.5, 1)
-	$VBoxContainer/DistributionSpectra/ColorDisabled.color = Enums.ship_colors[Enums.ship_types.disabled]
-	
 	node_convert_to_titanium.connect("pressed", self, "_convert_resource", [ Enums.resource_types.titanium])
 	node_convert_to_astral_dust.connect("pressed", self, "_convert_resource", [ Enums.resource_types.astral_dust])
 
+	node_ship_distribution.update_distribution_by_selection(selection)
+	selection.connect("entity_changed", node_ship_distribution, "update_distribution_by_selection", [selection])
+	
 	_update_ui()
 	
 func queue_free():
@@ -82,60 +80,8 @@ func _update_ui():
 	# If debug, set current process number
 	node_debug_current_process.visible = Settings.is_debug()
 	node_debug_current_process.text = selection.process_target as String
-		
-	# Update ship distribution
-	var distribution_width = $VBoxContainer/DistributionSpectra.rect_size[0]
 	
-	var combat = 0
-	var explorer = 0
-	var miner = 0
-	var rebuilding = 0
-	var disabled = 0
-	
-	for child in selection.children:
-		if child.ship_type >= 0 and child.faction == 0:
-			if child.state == Enums.ship_states.travel:
-				continue
-			
-			if child.state == Enums.ship_states.rebuild:
-				rebuilding += 1
-				continue
-			
-			match(child.ship_type):
-				Enums.ship_types.disabled:
-					disabled += 1
-				Enums.ship_types.combat:
-					combat += 1
-				Enums.ship_types.explorer:
-					explorer += 1
-				Enums.ship_types.miner:
-					miner += 1
-					
-	var total: float = combat + explorer + miner + rebuilding + disabled
-	
-	$VBoxContainer/DistributionLabel/ShipCount.text = int(total) as String
-	$VBoxContainer/DistributionSpectra.visible = total > 0
-	
-	if total == 0:
-		return
-	
-	var combat_size = $VBoxContainer/DistributionSpectra/ColorCombat.rect_min_size
-	var explorer_size = $VBoxContainer/DistributionSpectra/ColorExplorer.rect_min_size
-	var miner_size = $VBoxContainer/DistributionSpectra/ColorMiner.rect_min_size
-	var rebuilding_size = $VBoxContainer/DistributionSpectra/ColorRebuilding.rect_min_size
-	var disabled_size = $VBoxContainer/DistributionSpectra/ColorDisabled.rect_min_size
-	
-	combat_size[0] = (combat / total) * distribution_width
-	explorer_size[0] = (explorer / total) * distribution_width
-	miner_size[0] = (miner / total) * distribution_width
-	rebuilding_size[0] = (rebuilding / total) * distribution_width
-	disabled_size[0] = (disabled / total) * distribution_width
-	
-	$VBoxContainer/DistributionSpectra/ColorCombat.rect_min_size = combat_size
-	$VBoxContainer/DistributionSpectra/ColorExplorer.rect_min_size = explorer_size
-	$VBoxContainer/DistributionSpectra/ColorMiner.rect_min_size = miner_size
-	$VBoxContainer/DistributionSpectra/ColorRebuilding.rect_min_size = rebuilding_size
-	$VBoxContainer/DistributionSpectra/ColorDisabled.rect_min_size = disabled_size
+	$VBoxContainer/DistributionLabel/ShipCount.text = int(0) as String
 	
 func _create_ship(ship_type: int):
 	if faction.resources.titanium >= Consts.SHIP_COST_TITANIUM:
@@ -152,9 +98,17 @@ func _on_production_ship():
 	
 	menu.popup()
 
-func _on_ship_distribution_input(event):
+func _on_planet_change_distribution_input(event):
 	if event is InputEventMouseButton and event.pressed:
-		get_parent().add_child(ship_distribution_prefab.instance())
+		var has_ships_to_distribute = selection.planet_disabled_ships > 0
+		if not has_ships_to_distribute:
+			for child in selection.children:
+				if child.entity_type == Enums.entity_types.ship:
+					has_ships_to_distribute = true
+					break
+		
+		if has_ships_to_distribute:
+			get_parent().add_child(planet_change_distribution_prefab.instance())
 
 func _on_ship_movement():
 	get_parent().add_child(ship_movement_prefab.instance())

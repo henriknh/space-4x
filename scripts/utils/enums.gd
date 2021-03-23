@@ -98,7 +98,7 @@ const ship_colors = {
 
 const ship_states = {
 	'idle': 0,
-	'rebase': 6101,
+	'disable': 6101,
 	'rebuild': 6102,
 	'travel': 6103,
 	'mine': 6104,

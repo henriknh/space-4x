@@ -6,7 +6,7 @@ const ship_texture_miner = preload("res://assets/ship_miner.png")
 
 class_name Ship
 
-onready var collision_shape = $CollisionShape2D
+onready var collision_shape = $CollisionShape
 
 # Temporary
 var nav_route = []
@@ -34,35 +34,6 @@ func ready():
 	var model = get_node("Sprite") as Sprite
 	var trail = get_node("Trail") as Node2D
 	
-	var collision_shape: Node2D
-	match ship_type:
-		Enums.ship_types.combat:
-			model.texture = ship_texture_combat
-			collision_shape = CollisionPolygon2D.new()
-			collision_shape.polygon = [
-				Vector2(8, 0),
-				Vector2(-8, 8),
-				Vector2(-8, -8)
-			]
-			
-		Enums.ship_types.explorer:
-			model.texture = ship_texture_explorer
-			collision_shape = CollisionShape2D.new()
-			var rectangle_shape = RectangleShape2D.new()
-			rectangle_shape.extents = Vector2(8, 4)
-			collision_shape.shape = rectangle_shape
-			
-		Enums.ship_types.miner:
-			model.texture = ship_texture_miner
-			collision_shape = CollisionShape2D.new()
-			var rectangle_shape = RectangleShape2D.new()
-			rectangle_shape.extents = Vector2(8, 8)
-			collision_shape.shape = rectangle_shape
-	
-	collision_shape.name = "CollisionShape"
-	add_child(collision_shape)
-	
-	
 	if faction == 0:
 		model.self_modulate = Enums.ship_colors[ship_type]
 		trail.set_color(Enums.ship_colors[ship_type])
@@ -77,7 +48,12 @@ func process(delta: float):
 		if idle_target != Vector2.INF:
 			idle_target = Vector2.INF
 
-	if state == Enums.ship_states.travel:
+	if state == Enums.ship_states.disable:
+		if not move(parent.position):
+			parent.planet_disabled_ships += 1
+			return queue_free()
+	
+	elif state == Enums.ship_states.travel:
 		if nav_route.size() == 0 and process_target >= 0:
 			nav_route = Nav.get_route(self, process_target)
 		

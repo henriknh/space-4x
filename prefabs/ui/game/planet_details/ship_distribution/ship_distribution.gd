@@ -1,72 +1,85 @@
-extends VBoxContainer
+extends HBoxContainer
 
-onready var selection: Entity = GameState.get_selection()
-onready var total_ui_width: int = $MarginContainer/Info/Distribution.rect_size[0]
+onready var total_ui_width: int = rect_size[0]
+
+signal distribution_changed
+
+enum color_types {
+	rebuilding,
+	current,
+	change
+}
+const SHIP_TYPE_DISABLED = 'disabled'
 
 var total_ships: float = 0
-var distribution = {
-	Enums.ship_types.combat: {
-		'current': 0,
-		'change': 0
-	},
-	Enums.ship_types.explorer: {
-		'current': 0,
-		'change': 0
-	},
-	Enums.ship_types.miner: {
-		'current': 0,
-		'change': 0
-	},
-}
-var disabled = 0;
-var rebuilding = 0;
+var distribution = {}
 
 func _ready():
-	MenuState.push(self)
-	
-	GameState.connect("update_ui", self, "_update_ui")
-	selection.connect("entity_changed", self, "_update_ui")
-	
-	_update_current_state()
-	
-	distribution[Enums.ship_types.combat].change = distribution[Enums.ship_types.combat].current
-	distribution[Enums.ship_types.explorer].change = distribution[Enums.ship_types.explorer].current
-	distribution[Enums.ship_types.miner].change = distribution[Enums.ship_types.miner].current
-	
-	_update_disabled()
-	
-	$MarginContainer/Info/Distribution/Combat/Color.color = Enums.ship_colors[Enums.ship_types.combat]
-	$MarginContainer/Info/Distribution/Explorer/Color.color = Enums.ship_colors[Enums.ship_types.explorer]
-	$MarginContainer/Info/Distribution/Miner/Color.color = Enums.ship_colors[Enums.ship_types.miner]
-	$MarginContainer/Info/Distribution/Rebuilding/Color.color = Color(0.5, 0.5, 0.5, 1)
-	$MarginContainer/Info/Distribution/Disabled/Color.color = Enums.ship_colors[Enums.ship_types.disabled]
-
-	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Decrease.connect("pressed", self, "_on_change", [Enums.ship_types.combat, -1])
-	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Increase.connect("pressed", self, "_on_change", [Enums.ship_types.combat, 1])
-	$MarginContainer/Info/LabelsAndActions/Explorer/Actions/Decrease.connect("pressed", self, "_on_change", [Enums.ship_types.explorer, -1])
-	$MarginContainer/Info/LabelsAndActions/Explorer/Actions/Increase.connect("pressed", self, "_on_change", [Enums.ship_types.explorer, 1])
-	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Decrease.connect("pressed", self, "_on_change", [Enums.ship_types.miner, -1])
-	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Increase.connect("pressed", self, "_on_change", [Enums.ship_types.miner, 1])
-	
-	_update_ui()
-	
-func _on_change(ship_type: int, change: int):
-	distribution[ship_type].change += change
-	
-	if distribution[ship_type].change < 0:
-		distribution[ship_type].change = 0
-	
-	_update_ui()
-	
-func _update_current_state():
-	
 	for ship_type in Enums.ship_types.values():
-		if not distribution.has(ship_type):
-			continue
-		distribution[ship_type].current = 0
-	rebuilding = 0
-	disabled = 0
+		for color_type in color_types.values():
+			_create_color_node(ship_type, color_type)
+	
+func _create_color_node(ship_type, color_type):
+	var color = ColorRect.new()
+	color.mouse_filter = Control.MOUSE_FILTER_PASS
+	
+	color.color = Enums.ship_colors[ship_type]
+	
+	color.rect_size = Vector2.ZERO
+	color.rect_min_size = Vector2(0, rect_size.y)
+	
+	add_child(color)
+	
+	match color_type:
+		color_types.current:
+			color.margin_top = 0
+		color_types.rebuilding:
+			color.margin_top = 24
+		color_types.change:
+			color.margin_top = 48
+	
+	if not distribution.has(ship_type):
+		distribution[ship_type] = {}
+	
+	if not distribution[ship_type].has(color_type):
+		distribution[ship_type][color_type] = {
+			'node': color,
+			'value': 0
+		}
+
+func update_distribution_globally():
 	total_ships = 0
+	for key in distribution.keys():
+		distribution[key][color_types.current].value = 0
+		distribution[key][color_types.rebuilding].value = 0
+	
+	for planet in get_tree().get_nodes_in_group('Planet'):
+		if planet.faction == 0:
+			distribution[Enums.ship_types.disabled][color_types.current].value += planet.planet_disabled_ships
+			total_ships += planet.planet_disabled_ships
+	for ship in get_tree().get_nodes_in_group('Ship'):
+		if ship.faction == 0:
+			if ship.state == Enums.ship_states.travel:
+				continue
+			
+			total_ships += 1
+			if ship.ship_type == Enums.ship_types.disabled or ship.state == Enums.ship_states.disable:
+				distribution[Enums.ship_types.disabled][color_types.rebuilding].value += 1
+			elif ship.state == Enums.ship_states.rebuild:
+				distribution[ship.ship_type][color_types.rebuilding].value += 1
+			else:
+				distribution[ship.ship_type][color_types.current].value += 1
+	
+	_update_ui()
+
+func update_distribution_by_selection(selection: Entity):
+	for key in distribution.keys():
+		distribution[key][color_types.current].value = 0
+		distribution[key][color_types.rebuilding].value = 0
+	
+	var count_disabled_ships = selection.planet_disabled_ships
+	distribution[Enums.ship_types.disabled][color_types.current].value = selection.planet_disabled_ships
+	total_ships = selection.planet_disabled_ships
 	
 	for child in selection.children:
 		if child.ship_type >= 0 and child.faction == 0:
@@ -75,105 +88,85 @@ func _update_current_state():
 			
 			total_ships += 1
 			
-			if child.state == Enums.ship_states.rebuild:
-				rebuilding += 1
-				continue
-			
-			match(child.ship_type):
-				Enums.ship_types.combat:
-					distribution[Enums.ship_types.combat].current += 1
-				Enums.ship_types.explorer:
-					distribution[Enums.ship_types.explorer].current += 1
-				Enums.ship_types.miner:
-					distribution[Enums.ship_types.miner].current += 1
-
-	_update_disabled()
-
-func _update_disabled():
-	disabled = total_ships
-	disabled -= distribution[Enums.ship_types.combat].change
-	disabled -= distribution[Enums.ship_types.explorer].change
-	disabled -= distribution[Enums.ship_types.miner].change
-	disabled -= rebuilding
-
-func _set_distribution(ui_elem: Control, value: float):
-	ui_elem.visible = value > 0
-	if total_ships > 0:
-		ui_elem.rect_min_size[0] = (value / total_ships) * total_ui_width
-	else:
-		ui_elem.rect_min_size[0] = 0
-	(ui_elem.get_node('Label') as Label).text = value as String
-
-func _has_changes() -> bool:
-	for ship_type in Enums.ship_types.values():
-		if not distribution.has(ship_type):
-			continue
-		if distribution[ship_type].change != distribution[ship_type].current:
-			return true
-	return false
+			if child.ship_type == Enums.ship_types.disabled or child.state == Enums.ship_states.disable:
+				distribution[Enums.ship_types.disabled][color_types.rebuilding].value += 1
+			elif child.state == Enums.ship_states.rebuild:
+				distribution[child.ship_type][color_types.rebuilding].value += 1
+			else:
+				distribution[child.ship_type][color_types.current].value += 1
 	
+	_update_ui()
+
 func _update_ui():
 	
-	_update_current_state()
+	if total_ships == 0:
+		return
+		
+	total_ui_width = rect_size[0]
 	
-	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Decrease.disabled = distribution[Enums.ship_types.combat].change == 0
-	$MarginContainer/Info/LabelsAndActions/Explorer/Actions/Decrease.disabled = distribution[Enums.ship_types.explorer].change == 0
-	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Decrease.disabled = distribution[Enums.ship_types.miner].change == 0
+	for key in distribution.keys():
+		
+		var node = distribution[key]
+		
+		# Rebuilding
+		var rebuilding_size = (node[color_types.rebuilding].value / total_ships) * total_ui_width
+		node[color_types.rebuilding].node.rect_size[0] = rebuilding_size
+		node[color_types.rebuilding].node.rect_min_size[0] = rebuilding_size
+		
+		if node[color_types.change].value > 0:
+			var current_size = (node[color_types.current].value / total_ships) * total_ui_width
+			node[color_types.current].node.rect_size[0] = current_size
+			node[color_types.current].node.rect_min_size[0] = current_size
+			
+			var change_size = (node[color_types.change].value / total_ships) * total_ui_width
+			node[color_types.change].node.rect_size[0] = change_size
+			node[color_types.change].node.rect_min_size[0] = change_size
+		else:
+			var actual_value = node[color_types.current].value + node[color_types.change].value
+			var current_size = (actual_value / total_ships) * total_ui_width
+			node[color_types.current].node.rect_size[0] = current_size
+			node[color_types.current].node.rect_min_size[0] = current_size
+			
+			node[color_types.change].node.rect_size[0] = 0
+			node[color_types.change].node.rect_min_size[0] = 0
 	
-	$MarginContainer/Info/LabelsAndActions/Combat/Actions/Increase.disabled = disabled == 0
-	$MarginContainer/Info/LabelsAndActions/Explorer/Actions/Increase.disabled = disabled == 0
-	$MarginContainer/Info/LabelsAndActions/Miner/Actions/Increase.disabled = disabled == 0
-	
-	_set_distribution($MarginContainer/Info/Distribution/Combat, distribution[Enums.ship_types.combat].change)
-	_set_distribution($MarginContainer/Info/Distribution/Explorer, distribution[Enums.ship_types.explorer].change)
-	_set_distribution($MarginContainer/Info/Distribution/Miner, distribution[Enums.ship_types.miner].change)
-	_set_distribution($MarginContainer/Info/Distribution/Rebuilding, rebuilding)
-	_set_distribution($MarginContainer/Info/Distribution/Disabled, disabled)
-	
-	$Actions/BtnConfirm.disabled = not _has_changes()
-	
-func _on_cancel():
-	MenuState.pop()
+	emit_signal("distribution_changed")
 
-func _on_confirm():
-	selection.disconnect("entity_changed", self, "_update_ui")
+func on_change(ship_type: int, change: int):
+	var diff = change - distribution[ship_type][color_types.current].value
 	
-	# Fetch ships to unallocate
-	var unallocated_children = []
-	for child in selection.get_children_sorted_by_distance():
-		if child.ship_type >= 0:
-			if child.ship_type == Enums.ship_types.disabled:
-				unallocated_children.append(child)
-			else:
-				for ship_type in Enums.ship_types.values():
-					if not distribution.has(ship_type):
-						continue
-					if child.ship_type == ship_type:
-						if distribution[ship_type].change < distribution[ship_type].current:
-							unallocated_children.append(child)
-							distribution[ship_type].change += 1
+	distribution[ship_type][color_types.change].value = change
 	
-	# Queue up ships with target type
-	var unhandled_unallocated = []
-	for unallocated_child in unallocated_children:
-		var handled = false
-		var ship_types = Enums.ship_types.values()
-		ship_types.shuffle()
-		for ship_type in ship_types:
-			if not distribution.has(ship_type):
-				continue
-			if distribution[ship_type].change > distribution[ship_type].current:
-				unallocated_child.set_entity_process(Enums.ship_states.rebuild, ship_type, Consts.SHIP_REBUILD_TIME)
-				distribution[ship_type].change -= 1
-				handled = true
-				break
-		if not handled:
-			unhandled_unallocated.append(unallocated_child)
+	var disabled_change = 0
+	for key in distribution.keys():
+		if key == Enums.ship_types.disabled:
+			continue
+		disabled_change -= distribution[key][color_types.change].value
+		
+	distribution[Enums.ship_types.disabled][color_types.change].value = disabled_change
 	
-	# Set the rest to disabled type, if they are not already disabled type
-	for unallocated_child in unhandled_unallocated:
-		if unallocated_child.ship_type != Enums.ship_types.disabled:
-			unallocated_child.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.disabled, Consts.SHIP_REBUILD_TIME)
-			unallocated_children.erase(unallocated_child)
-	
-	MenuState.pop()
+	_update_ui()
+
+func has_changes() -> bool:
+	return distribution[Enums.ship_types.disabled][color_types.change].value != 0
+
+func get_combat_current() -> int:
+	return distribution[Enums.ship_types.combat][color_types.current].value
+
+func get_explorer_current() -> int:
+	return distribution[Enums.ship_types.explorer][color_types.current].value
+
+func get_miner_current() -> int:
+	return distribution[Enums.ship_types.miner][color_types.current].value
+
+func get_combat_change() -> int:
+	return distribution[Enums.ship_types.combat][color_types.change].value
+
+func get_explorer_change() -> int:
+	return distribution[Enums.ship_types.explorer][color_types.change].value
+
+func get_miner_change() -> int:
+	return distribution[Enums.ship_types.miner][color_types.change].value
+
+func get_available_count() -> int:
+	return distribution[Enums.ship_types.disabled][color_types.current].value + distribution[Enums.ship_types.disabled][color_types.change].value

@@ -4,17 +4,17 @@ var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
 var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_movement.tscn')
 var planet_details_prefab = preload('res://prefabs/ui/game/planet_details/planet_details.tscn')
 
-onready var node_asteroid_rocks = $TopLeft/Resources/AsteroidRocks/Value as Label
-onready var node_titanium = $TopLeft/Resources/Titanium/Value as Label
-onready var node_astral_dust = $TopLeft/Resources/AstralDust/Value as Label
-onready var node_debug = $Debug as Control
-onready var node_fps = $TopRight/MainMenu/LabelFPS as Label
-onready var node_btn_ship_movement = $BottomLeft/Actions/BtnShipMovement as TextureButton
-onready var node_btn_planet_details = $BottomRight/Info/BtnPlanetDetails as TextureButton
+onready var node_asteroid_rocks: Label = $Control/TopLeft/Resources/AsteroidRocks/Value
+onready var node_titanium: Label = $Control/TopLeft/Resources/Titanium/Value
+onready var node_astral_dust: Label = $Control/TopLeft/Resources/AstralDust/Value
+onready var node_debug: Control = $Control/Debug
+onready var node_fps: Label = $Control/TopRight/MainMenu/LabelFPS
+onready var node_btn_ship_movement: TextureButton = $Control/BottomLeft/Actions/BtnShipMovement
+onready var node_btn_planet_details: TextureButton = $Control/BottomRight/Info/BtnPlanetDetails
+onready var node_ship_distribution: Control = $ShipDistribution
 
 func _ready():
 	MenuState.push(self)
-	
 
 func ready():
 	#GameState.connect("state_changed", self, "_update_ui")
@@ -24,7 +24,7 @@ func ready():
 	var timer = Timer.new()
 	timer.connect("timeout",self,"_update_ui")
 	add_child(timer)
-	timer.wait_time = 1
+	timer.wait_time = 0.1
 	timer.start()
 	
 	node_debug.ready()
@@ -54,6 +54,8 @@ func _update_ui():
 		node_asteroid_rocks.text = Utils.format_number(faction.resources.asteroid_rocks)
 		node_titanium.text = Utils.format_number(faction.resources.titanium)
 		node_astral_dust.text = Utils.format_number(faction.resources.astral_dust)
+	
+	node_ship_distribution.update_distribution_globally()
 
 func _on_game_menu():
 	get_parent().add_child(game_menu_prefab.instance())

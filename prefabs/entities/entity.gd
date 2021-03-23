@@ -43,6 +43,7 @@ var object_type: int = -1
 var planet_type: int = -1
 var planet_size: float = 1.0
 var planet_convex_hull = []
+var planet_disabled_ships = 0
 
 # Ship specific variables
 var ship_type: int = -1
