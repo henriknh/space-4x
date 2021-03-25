@@ -44,8 +44,12 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, over
 	if inherit:
 		instance.planet_system = inherit.planet_system
 		instance.faction = inherit.faction
-		instance.position = inherit.position
 		instance.parent = inherit
+		if inherit.entity_type == Enums.entity_types.planet:
+			var angle = Random.randf() * 2 * PI
+			instance.position = inherit.position + Vector2(cos(angle), sin(angle)) * inherit.planet_size * (Consts.PLANET_SIZE_FACTOR + 50)
+		else:
+		instance.position = inherit.position
 	
 	for key in override:
 		instance.set(key, override[key])
