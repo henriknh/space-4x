@@ -23,7 +23,7 @@ export (int) var zoom_in_limit = 1
 export (int) var zoom_out_limit = Consts.PLANET_SYSTEM_RADIUS / 200
 
 # Limit bounds of camera 
-const limit = Consts.PLANET_SYSTEM_RADIUS * 1.0
+const limit = Consts.PLANET_SYSTEM_RADIUS * 1.2
 
 # Camera speed in px/s.
 export (int) var camera_speed = 450
