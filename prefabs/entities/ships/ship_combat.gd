@@ -2,13 +2,14 @@ extends Ship
 
 class_name ShipCombat
 
-var target_enemy: Entity
+var prefab_laser = preload('res://prefabs/entities/ships/effects/laser.tscn')
+
+var target: Entity
 var weapon_damage: int = 10
 var weapon_ready: bool = true
-var weapon_timer: Timer
-var weapon_retreat_direction = Vector2.INF
 
-var patrolling_position: Vector2 = Vector2.INF
+var weapon_timer: Timer
+var target_timer: Timer
 
 func create():
 	ship_type = Enums.ship_types.combat
@@ -20,23 +21,14 @@ func _ready():
 	
 	weapon_timer = Timer.new()
 	weapon_timer.connect("timeout", self, "_weapon_ready")
-	weapon_timer.wait_time = 1
+	weapon_timer.wait_time = 1.2
 	weapon_timer.one_shot = true
 	add_child(weapon_timer)
 	
-	var area = Area2D.new()
-	var weapon_range = CollisionPolygon2D.new()
-	weapon_range.polygon = [
-		Vector2(0,0),
-		Vector2(180,-50),
-		Vector2(200,0),
-		Vector2(180,50)
-	]
-	area.add_child(weapon_range)
-	area.collision_layer = 0
-	area.collision_mask = 8
-	area.connect("body_entered", self, "_on_entity_in_range")
-	add_child(area)
+	target_timer = Timer.new()
+	target_timer.connect("timeout", self, "_update_target")
+	target_timer.wait_time = 0.5
+	add_child(target_timer)
 	
 	.ready()
 
@@ -45,68 +37,70 @@ func process(delta: float):
 		state = Enums.ship_states.combat
 	
 	if state == Enums.ship_states.combat:
-		if not target_enemy and _has_enemies_in_site():
-			target_enemy = _get_closest_enemy()
-			
-		if not target_enemy:
+		if not _has_enemies_in_site():
 			state = Enums.ship_states.idle
+		elif not target:
+			target = _get_closest_enemy()
+		
 		else:
 			if not weapon_ready:
-				_wait_for_weapon()
+				var retreat = position - (target.position - position)
+				move(retreat)
 			else:
-				move(target_enemy.position, false)
+				move(target.position)
+				if node_raycast.is_colliding() and node_raycast.get_collider() == target:
+					_shot()
 	.process(delta)
 
 func clear():
-	patrolling_position = Vector2.INF
 	.clear()
-
-func _on_entity_in_range(entity: Entity):
-	if not target_enemy:
-		return
-	if weapon_ready and entity == target_enemy:
-		_shot()
 	
 func _shot():
-	target_enemy.hitpoints -= weapon_damage
+	target.hitpoints -= weapon_damage
 	weapon_ready = false
 	weapon_timer.start()
 	
-	if not target_enemy.get("target_enemy") == null and target_enemy.target_enemy == self:
-		weapon_retreat_direction = target_enemy.position + (target_enemy.position - position) * 20000
-	else:
-		weapon_retreat_direction = Vector2.INF
-		
+	var laser = prefab_laser.instance()
+	get_node('/root/GameScene').add_child(laser)
+	var color = Enums.ship_colors[ship_type] if faction == 0 else Enums.player_colors[faction]
+	laser.emit(position, node_raycast.get_collision_point(), color)
+	
 func _weapon_ready():
+	target = _get_closest_enemy()
 	weapon_ready = true
-
-func _wait_for_weapon():
-	if weapon_retreat_direction != Vector2.INF:
-		move(weapon_retreat_direction, false)
-	else:
-		move(target_enemy.position, false)
-
+	
+func _is_parent_enemy() -> bool:
+	return parent.faction >= 0 and parent.faction != faction
+	
 func _has_enemies_in_site() -> bool:
+	
+	var has_enemies = false
 	for child in parent.children:
 		if child.ship_type >= 0 and child.faction != faction:
-			return true
-	return parent.faction != faction
+			has_enemies = true
+			break
+	
+	has_enemies = has_enemies or _is_parent_enemy()
+	
+	if has_enemies and target_timer.is_stopped():
+		target_timer.start()
+	else:
+		target_timer.stop()
+	return has_enemies
 	
 func _get_closest_enemy() -> Entity:
 	var enemies = []
 	for child in parent.children:
+		if child.is_dead():
+			continue
 		if child.ship_type >= 0 and child.faction != faction:
 			enemies.append(child)
 	
 	enemies.sort_custom(self, "sort_combat_type")
 	enemies.sort_custom(self, "sort_distance")
 	
-	if parent.faction != faction:
+	if _is_parent_enemy():
 		enemies.append(parent)
-	
-	for enemy in enemies:
-		if enemy.is_dead():
-			enemies.erase(enemy)
 	
 	if enemies.size() > 0:
 		return enemies[0]
@@ -120,3 +114,10 @@ func sort_distance(a: Entity, b: Entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b
+
+func _update_target():
+	if _has_enemies_in_site():
+		state = Enums.ship_states.combat
+		target = _get_closest_enemy()
+	else:
+		state = Enums.ship_states.idle

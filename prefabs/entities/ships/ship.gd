@@ -10,6 +10,7 @@ onready var collision_shape = $CollisionShape
 onready var sprite: Sprite = $Sprite
 onready var trail: Node2D = $Trail
 onready var node_obstacle_handler = $ObstacleHandler
+onready var node_raycast = $RayCast
 
 onready var velocity: Vector2 = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * ship_speed_max
 onready var acceleration: Vector2 = Vector2.ZERO
@@ -124,7 +125,7 @@ func move(target: Vector2 = Vector2.INF, decrease_speed: bool = true) -> bool:
 	else:
 		acceleration += steer(_calc_acceleration_to_target(target))
 		
-	if node_obstacle_handler.is_obsticle_ahead(target):
+	if node_obstacle_handler.is_obsticle_ahead():
 		acceleration += steer(node_obstacle_handler.obsticle_avoidance()) * Consts.SHIP_AVOIDANCE_FORCE
 	
 	velocity += acceleration * delta
@@ -159,17 +160,6 @@ func _calc_acceleration_to_target(target: Vector2) -> Vector2:
 		return -(target - position).normalized()# * (1 - de_accelerate)
 	else:
 		return (target - position).normalized()
-#	if decrease_speed and close_to_target(target_position):
-#		if nav_route.size() <= 1 and ship_speed >= 0:
-#			ship_speed -= ship_speed_max * delta
-#		if ship_speed < 0:
-#			ship_speed = 0
-#	elif ship_speed > ship_speed_max:
-#		ship_speed = ship_speed_max
-#	elif ship_speed < ship_speed_max:
-#		ship_speed += ship_speed_max * Consts.SHIP_ACCELERATION_FACTOR * delta
-#
-#	return ship_speed != 0
 
 func _update_travel_route():
 	if close_to_target(nav_route[0].position):

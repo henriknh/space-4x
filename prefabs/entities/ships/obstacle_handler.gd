@@ -18,9 +18,9 @@ func remove_exception(exception: Entity) -> void:
 	for ray in detectors:
 		ray.remove_exception(exception)
 
-func is_obsticle_ahead(target: Vector2) -> bool:
+func is_obsticle_ahead() -> bool:
 	for ray in detectors:
-		if ray.is_colliding() and ray.get_collider().position != target:
+		if ray.is_colliding():
 			return true
 	return false
 
