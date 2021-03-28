@@ -23,20 +23,9 @@ func is_obsticle_ahead(target: Vector2) -> bool:
 		if ray.is_colliding() and ray.get_collider().position != target:
 			return true
 	return false
-	
-func collision_count () -> int:
-	var count = 0
-	for ray in detectors:
-		if ray.is_colliding():
-			count += 1
-	return count
-	
-func collision_percentage() -> int:
-	return collision_count() / detectors.size()
 
 func obsticle_avoidance() -> Vector2:
 	for ray in sensors:
 		if not ray.is_colliding():
 			return ray.cast_to.rotated(ray.rotation + parent.rotation).normalized()
 	return Vector2(cos(parent.rotation - PI), sin(parent.rotation - PI)).normalized()
-
