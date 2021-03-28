@@ -12,6 +12,11 @@ var prefab_iron = preload('res://assets/PixelPlanets/GasPlanet/GasPlanet.tscn')
 var prefab_earth = preload('res://assets/PixelPlanets/LandMasses/LandMasses.tscn')
 var prefab_ice = preload('res://assets/PixelPlanets/IceWorld/IceWorld.tscn')
 
+onready var node_info = $InfoUI
+onready var node_collision: CollisionShape2D = $PlanetCollision
+onready var node_planet_area = $PlanetArea
+onready var node_planet_area_collision = $PlanetArea/PlanetAreaCollision
+
 func create():
 	entity_type = Enums.entity_types.planet
 	planet_size = Random.randf_range(1.0, 2.0)
@@ -22,30 +27,13 @@ func create():
 	visible = false
 	.create()
 	
-func ready():
-	get_node("InfoUI").set_label(label)
-	(get_node("PlanetArea/PlanetAreaCollision") as CollisionPolygon2D).polygon = self.planet_convex_hull
-	
-	Settings.connect("settings_changed", self, "update")
-	
-	var instance = null
-	match planet_type:
-		Enums.planet_types.lava:
-			instance = prefab_lava.instance()
-		Enums.planet_types.iron:
-			instance = prefab_iron.instance()
-		Enums.planet_types.earth:
-			instance = prefab_earth.instance()
-		Enums.planet_types.ice:
-			instance = prefab_ice.instance()
-			
-	var radius = (planet_size * 200) / 2
-	(instance as Control).rect_scale = Vector2(planet_size, planet_size)
-	(instance as Control).set_position(Vector2(-radius, -radius))
-	($PlanetCollision.shape as CircleShape2D).radius = radius
+func _ready():
+	node_info.set_label(label)
+	node_planet_area_collision.polygon = self.planet_convex_hull
+	node_collision.shape = CircleShape2D.new()
+	node_collision.shape.radius = planet_size * Consts.PLANET_SIZE_FACTOR
 
-	add_child(instance)
-	.ready()
+	._ready()
 
 func process(delta: float):
 	if state == Enums.planet_states.produce or state == Enums.planet_states.convertion:
@@ -71,6 +59,12 @@ func process(delta: float):
 
 	else:
 		.process(delta)
+
+func _draw():
+	if faction >= 0:
+		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Enums.player_colors[faction])
+	else:
+		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Color(0.25,0.25,0.25,1))
 	
 func kill():
 	faction = -1
@@ -94,7 +88,8 @@ func _on_PlanetArea_body_entered(entity: Entity):
 		children.append(entity)
 		if entity.prop_type == Enums.prop_types.asteroid:
 			asteroids.append(entity)
-		entity.parent = self
+		if entity.has_method('set_parent'):
+			entity.set_parent(self)
 		emit_signal("entity_changed")
 
 func _on_PlanetArea_body_exited(entity: Entity):
