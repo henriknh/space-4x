@@ -2,6 +2,8 @@ extends Entity
 
 class_name PlanetSystem
 
+onready var node_info = $InfoUI
+
 func create():
 	label = NameGenerator.get_name_galaxy()
 	indestructible = true
@@ -12,7 +14,7 @@ func _ready():
 	# Make node clickable with mouse
 	input_pickable = true
 	
-	$EntityGUI/Label.text = get_name()
+	node_info.set_name(label)
 
 func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
