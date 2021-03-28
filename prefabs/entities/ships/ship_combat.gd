@@ -28,17 +28,22 @@ func _ready():
 	var weapon_range = CollisionPolygon2D.new()
 	weapon_range.polygon = [
 		Vector2(0,0),
-		Vector2(400,-300),
-		Vector2(600,0),
-		Vector2(400,300)
+		Vector2(180,-50),
+		Vector2(200,0),
+		Vector2(180,50)
 	]
 	area.add_child(weapon_range)
+	area.collision_layer = 0
+	area.collision_mask = 8
 	area.connect("body_entered", self, "_on_entity_in_range")
 	add_child(area)
 	
 	.ready()
 
 func process(delta: float):
+	if state != Enums.ship_states.combat and _has_enemies_in_site():
+		state = Enums.ship_states.combat
+	
 	if state == Enums.ship_states.combat:
 		if not target_enemy and _has_enemies_in_site():
 			target_enemy = _get_closest_enemy()
