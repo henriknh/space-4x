@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://prefabs/entities/ships/effects/trail_line_backup.gd" type="Script" id=1]
 [ext_resource path="res://prefabs/entities/ships/effects/trail.gd" type="Script" id=2]
+[ext_resource path="res://assets/ship_miner.png" type="Texture" id=3]
 
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
@@ -9,11 +10,31 @@ _data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
 [sub_resource type="Gradient" id=2]
 colors = PoolColorArray( 0.537255, 0.619608, 0.937255, 0, 1, 1, 1, 0.4 )
 
+[sub_resource type="Gradient" id=4]
+colors = PoolColorArray( 1, 1, 1, 0.588235, 1, 1, 1, 0.235294 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[sub_resource type="Curve" id=6]
+_data = [ Vector2( 0, 0.731818 ), 0.0, -0.381818, 0, 1, Vector2( 1, 0.35 ), -0.381818, 0.0, 1, 0 ]
+
+[sub_resource type="CurveTexture" id=7]
+curve = SubResource( 6 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+flag_rotate_y = true
+gravity = Vector3( 0, 0, 0 )
+angle_random = 0.4
+scale_curve = SubResource( 7 )
+color_ramp = SubResource( 5 )
+
 [node name="Trail" type="Node2D"]
 show_behind_parent = true
 script = ExtResource( 2 )
 
 [node name="Line2D" type="Line2D" parent="."]
+visible = false
 show_behind_parent = true
 points = PoolVector2Array( 0.0774117, -0.0630035 )
 width = 4.0
@@ -22,4 +43,10 @@ default_color = Color( 1, 1, 1, 1 )
 gradient = SubResource( 2 )
 antialiased = true
 script = ExtResource( 1 )
-target_path = NodePath("")
+
+[node name="Particles2D" type="Particles2D" parent="."]
+visible = false
+fixed_fps = 8
+local_coords = false
+process_material = SubResource( 3 )
+texture = ExtResource( 3 )
