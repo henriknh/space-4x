@@ -6,8 +6,8 @@ func create():
 	entity_type = Enums.entity_types.prop
 	.create()
 	
-func ready():
-	.ready()
+func _ready():
+	._ready()
 	
 func process(delta: float):
 	.process(delta)
