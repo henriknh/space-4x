@@ -39,7 +39,7 @@ func process_seperation(ship: Entity, neighbors: Array):
 	var vector = Vector2.ZERO
 	var close_neighbors = []
 	for boid in neighbors:
-		if ship.position.distance_to(boid.position) < 50 / 2:
+		if ship.position.distance_to(boid.position) < 250:
 			close_neighbors.append(boid)
 	if close_neighbors.empty():
 		return vector
