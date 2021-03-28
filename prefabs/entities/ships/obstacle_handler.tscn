@@ -12,7 +12,7 @@ position = Vector2( 0, -8 )
 rotation = -1.5708
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RightRay" type="RayCast2D" parent="Detectors"]
@@ -20,7 +20,7 @@ position = Vector2( 0, 8 )
 rotation = -1.5708
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="Sensors" type="Node2D" parent="."]
@@ -29,54 +29,54 @@ collide_with_areas = true
 rotation = -1.74533
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RayCast2D2" type="RayCast2D" parent="Sensors"]
 rotation = -1.39626
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RayCast2D3" type="RayCast2D" parent="Sensors"]
 rotation = -1.0472
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RayCast2D4" type="RayCast2D" parent="Sensors"]
 rotation = -2.0944
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RayCast2D5" type="RayCast2D" parent="Sensors"]
 rotation = -0.698132
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RayCast2D6" type="RayCast2D" parent="Sensors"]
 rotation = -2.44346
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RayCast2D7" type="RayCast2D" parent="Sensors"]
 rotation = -0.349066
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
 
 [node name="RayCast2D8" type="RayCast2D" parent="Sensors"]
 rotation = -2.79253
 enabled = true
 cast_to = Vector2( 0, 100 )
-collision_mask = 22
+collision_mask = 54
 collide_with_areas = true
