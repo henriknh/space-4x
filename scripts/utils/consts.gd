@@ -37,8 +37,8 @@ const AI_DELAY_TIME = 1
 # Galaxy
 const GALAXY_SIZE = {
 	Enums.world_size.small: {
-		'min': 4, 
-		'max': 8, 
+		'min': 1, 
+		'max': 1, 
 	},
 	Enums.world_size.medium: {
 		'min': 6, 
@@ -103,8 +103,8 @@ const SHIP_COST_TITANIUM = 1
 const SHIP_ACCELERATION_FACTOR: float = 0.1 # Factor of max_speed
 const SHIP_STEER_FORCE: int = 50
 const SHIP_AVOIDANCE_FORCE: float = 13.0
-const SHIP_BOID_COHESION_FORCE: float = 0.6
-const SHIP_BOID_ALIGNMENT_FORCE: float = 0.3
+const SHIP_BOID_COHESION_FORCE: float = 1.0
+const SHIP_BOID_ALIGNMENT_FORCE: float = 1.0
 const SHIP_BOID_SEPARATION_FORCE: float = 1.0
 
 # Research
