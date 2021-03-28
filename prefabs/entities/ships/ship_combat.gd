@@ -12,10 +12,10 @@ var patrolling_position: Vector2 = Vector2.INF
 
 func create():
 	ship_type = Enums.ship_types.combat
-	ship_speed_max = 800
+	ship_speed_max = 200
 	.create()
 
-func ready():
+func _ready():
 	add_to_group('Combat')
 	
 	weapon_timer = Timer.new()
@@ -49,7 +49,7 @@ func process(delta: float):
 			if not weapon_ready:
 				_wait_for_weapon()
 			else:
-				move(target_enemy.position, false, -1)
+				move(target_enemy.position, false)
 	.process(delta)
 
 func clear():

@@ -37,7 +37,7 @@ var astral_dust: float = 0
 var astral_dust_max: int = 0
 
 # Object specific variables
-var object_type: int = -1
+var prop_type: int = -1
 
 # Planet specific variables
 var planet_type: int = -1
@@ -58,15 +58,18 @@ func _physics_process(_delta):
 	if queued_to_free:
 		return
 	
-	if entity_type != Enums.entity_types.planet:
-		if not parent:
-			return
+	if planet_system != GameState.get_planet_system() and entity_type == Enums.entity_types.prop:
+		return
 	
 	delta += _delta
 	
 	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
+		if entity_type != Enums.entity_types.planet:
+			if not parent:
+				return
+		
 		if hitpoints <= 0:
 			kill()
 		else:
@@ -89,8 +92,8 @@ func create():
 	hitpoints = hitpoints_max
 
 func _ready():
-	ready()
-	
+	pass
+
 func ready():
 	set_visible(planet_system == GameState.get_planet_system())
 
@@ -143,6 +146,7 @@ func save():
 		
 		# General
 		"id": id,
+		"disabled": disabled,
 		"variant": variant,
 		"entity_type": entity_type,
 		"label": label,
@@ -171,6 +175,7 @@ func save():
 		# Planet
 		"planet_type": planet_type,
 		"planet_size": planet_size,
+		"planet_disabled_ships": planet_disabled_ships,
 		
 		# Ship
 		"ship_type": ship_type,
@@ -186,4 +191,3 @@ func save():
 		i = i + 1
 	
 	return data
-

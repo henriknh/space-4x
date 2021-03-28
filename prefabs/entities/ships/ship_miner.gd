@@ -10,7 +10,7 @@ var mining_timer: Timer
 
 func create():
 	ship_type = Enums.ship_types.miner
-	ship_speed_max = 200
+	ship_speed_max = 100
 	asteroid_rocks_max = 1
 	.create()
 	
@@ -74,7 +74,7 @@ func deliver():
 	
 func _get_next_mining_target() -> void:
 	
-	#asteroids.sort_custom(self, "sort_asteroids")
+	#parent.asteroids.sort_custom(self, "sort_asteroids")
 	
 	if parent.asteroids.size() > 0:
 		var asteroid_idx = Random.randi() % parent.asteroids.size()

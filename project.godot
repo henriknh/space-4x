@@ -139,6 +139,7 @@ Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
 Factions="*res://scripts/utils/factions.gd"
 AI="*res://scripts/ai/ai.gd"
+Boid="*res://scripts/entities/boid.gd"
 
 [display]
 
@@ -206,9 +207,12 @@ ui_down={
  ]
 }
 
-[physics]
+[layer_names]
 
-common/physics_fps=30
+2d_physics/layer_2="Planet"
+2d_physics/layer_3="PlanetArea"
+2d_physics/layer_4="Ship"
+2d_physics/layer_5="Asteroid"
 
 [rendering]
 

@@ -76,16 +76,16 @@ const ASTEROIDS_BASE_DISTANCE_TO_SUN = PLANET_SYSTEM_BASE_DISTANCE_TO_SUN
 const ASTEROIDS_EXTRA_DISTANCE = PLANET_SYSTEM_BASE_DISTANCE_TO_SUN / 2
 const ASTEROIDS_PER_PLANET_SYSTEM = {
 	Enums.world_size.small: {
-		'min': 300, 
-		'max': 600, 
+		'min': 200, 
+		'max': 400, 
 	},
 	Enums.world_size.medium: {
-		'min': 600, 
-		'max': 1100, 
+		'min': 500, 
+		'max': 800, 
 	},
 	Enums.world_size.large: {
-		'min': 1100, 
-		'max': 2000, 
+		'min': 900, 
+		'max': 1300, 
 	}
 }
 
@@ -101,7 +101,11 @@ const SHIP_PRODUCTION_TIME = 10
 const SHIP_REBUILD_TIME = 10
 const SHIP_COST_TITANIUM = 1
 const SHIP_ACCELERATION_FACTOR: float = 0.1 # Factor of max_speed
-const SHIP_TURN_SPEED: int = 4
+const SHIP_STEER_FORCE: int = 50
+const SHIP_AVOIDANCE_FORCE: float = 13.0
+const SHIP_BOID_COHESION_FORCE: float = 0.6
+const SHIP_BOID_ALIGNMENT_FORCE: float = 0.3
+const SHIP_BOID_SEPARATION_FORCE: float = 1.0
 
 # Research
 const RESEARCH_COST_ASTRAL_DUST = 1
