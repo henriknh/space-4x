@@ -20,10 +20,11 @@ var is_drag = false
 
 # Zoom limit
 export (int) var zoom_in_limit = 1
-export (int) var zoom_out_limit = Consts.PLANET_SYSTEM_RADIUS / 200
+export (int) var zoom_out_limit = 1
+
 
 # Limit bounds of camera 
-const limit = Consts.PLANET_SYSTEM_RADIUS * 1.2
+var bounds_limit = 0
 
 # Camera speed in px/s.
 export (int) var camera_speed = 450
@@ -44,6 +45,14 @@ var _prev_mouse_pos = null
 signal zoom_changed
 
 func _ready():
+	
+	zoom_out_limit += Consts.PLANET_SYSTEM_BASE_DISTANCE_TO_SUN
+	zoom_out_limit += Consts.PLANET_SYSTEM_RADIUS 
+	zoom_out_limit /= 200
+	
+	bounds_limit += Consts.PLANET_SYSTEM_BASE_DISTANCE_TO_SUN
+	bounds_limit += Consts.PLANET_SYSTEM_RADIUS 
+	bounds_limit += Consts.ASTEROIDS_EXTRA_DISTANCE
 	
 	GameState.connect("state_changed", self, "load_camera_state")
 	
@@ -168,7 +177,7 @@ func _physics_process(delta):
 	position += camera_movement * get_zoom()
 	
 	# Check outside of bounds
-	var intersects = Geometry.segment_intersects_circle(Vector2.ZERO, position, Vector2.ZERO, limit)
+	var intersects = Geometry.segment_intersects_circle(Vector2.ZERO, position, Vector2.ZERO, bounds_limit)
 	if intersects != -1:
 		position = position * intersects
 	
