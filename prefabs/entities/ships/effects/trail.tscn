@@ -45,7 +45,6 @@ antialiased = true
 script = ExtResource( 1 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
-visible = false
 fixed_fps = 8
 local_coords = false
 process_material = SubResource( 3 )

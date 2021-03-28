@@ -7,11 +7,6 @@ var is_hover = false
 var children = []
 var asteroids = []
 
-var prefab_lava = preload('res://assets/PixelPlanets/LavaWorld/LavaWorld.tscn')
-var prefab_iron = preload('res://assets/PixelPlanets/GasPlanet/GasPlanet.tscn')
-var prefab_earth = preload('res://assets/PixelPlanets/LandMasses/LandMasses.tscn')
-var prefab_ice = preload('res://assets/PixelPlanets/IceWorld/IceWorld.tscn')
-
 onready var node_info = $InfoUI
 onready var node_collision: CollisionShape2D = $PlanetCollision
 onready var node_planet_area = $PlanetArea

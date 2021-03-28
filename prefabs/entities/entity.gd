@@ -146,7 +146,6 @@ func save():
 		
 		# General
 		"id": id,
-		"disabled": disabled,
 		"variant": variant,
 		"entity_type": entity_type,
 		"label": label,
