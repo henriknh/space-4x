@@ -1,4 +1,6 @@
 extends VBoxContainer
 
+onready var node_label: Label = $Label
+
 func set_label(label: String):
-	$Label.text = label
+	node_label.text = label

@@ -49,7 +49,7 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, over
 			var angle = Random.randf() * 2 * PI
 			instance.position = inherit.position + Vector2(cos(angle), sin(angle)) * inherit.planet_size * (Consts.PLANET_SIZE_FACTOR + 50)
 		else:
-		instance.position = inherit.position
+			instance.position = inherit.position
 	
 	for key in override:
 		instance.set(key, override[key])
