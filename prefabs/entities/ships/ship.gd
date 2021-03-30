@@ -11,14 +11,16 @@ onready var sprite: Sprite = $Sprite
 onready var trail: Node2D = $Trail
 onready var node_obstacle_handler = $ObstacleHandler
 onready var node_raycast = $RayCast
+onready var node_animation: AnimationPlayer = $AnimationPlayer
 
 onready var velocity: Vector2 = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * ship_speed_max
 onready var acceleration: Vector2 = Vector2.ZERO
 onready var ship_idle_speed: float = 500
+var target: Node2D = null setget set_target
+var target_reached: bool = false
 
 # Temporary
 var nav_route = []
-var idle_target: Vector2
 
 func create():
 	entity_type = Enums.entity_types.ship
@@ -67,28 +69,22 @@ func _ready():
 	
 func process(delta: float):
 
-	if state != Enums.ship_states.idle:
-		if idle_target != Vector2.INF:
-			idle_target = Vector2.INF
-
-	if state == Enums.ship_states.disable:
-		if not move(parent.position):
-			parent.planet_disabled_ships += 1
-			return queue_free()
+	if state == Enums.ship_states.disable and target_reached:
+		parent.planet_disabled_ships += 1
+		return queue_free()
 	
 	elif state == Enums.ship_states.travel:
 		if nav_route.size() == 0 and process_target >= 0:
 			nav_route = Nav.get_route(self, process_target)
 		
-		move(nav_route[0].position)
+		move()
 		_update_travel_route()
 		
 		if nav_route.size() == 0:
 			process_target = -1
 			state = Enums.ship_states.idle
 			
-	elif state == Enums.ship_states.rebuild:
-		if not move(parent.position):
+	elif state == Enums.ship_states.rebuild and target_reached:
 			
 			# Replace old ship instance with disabled
 			if ship_type != Enums.ship_types.disabled:
@@ -104,10 +100,10 @@ func process(delta: float):
 				get_node('/root/GameScene').add_child(Instancer.ship(ship_type, self))
 				return queue_free()
 	
-	elif state == Enums.ship_states.idle and ship_type != Enums.ship_types.disabled:
+	elif ship_type != Enums.ship_types.disabled:
 		move()
-	else:
-		.process(delta)
+	
+	.process(delta)
 	
 func kill():
 	hitpoints = 0
@@ -117,49 +113,76 @@ func clear():
 	process_target = -1 
 	nav_route = [Nav.get_route(self, process_target)]
 
-func move(target: Vector2 = Vector2.INF, decrease_speed: bool = true) -> bool:
-	if target == Vector2.INF:
+func set_target(_target: Entity):
+	if target:
+		node_obstacle_handler.remove_exception(target)
+	
+	target = _target
+	target_reached = false
+	
+	if target and target.entity_type == Enums.entity_types.ship:
+		node_obstacle_handler.add_exception(target)
+
+func move(target_pos: Vector2 = Vector2.INF) -> void:
+	
+	var target_diff = Vector2.ZERO
+	if target_pos != Vector2.INF:
+		target_diff = target_pos - position
+	elif target:
+		target_diff = target.position - position
+	
+	if target_diff != Vector2.ZERO:
+		acceleration += steer(target_diff.normalized())
+	else:
 		var boids_target = Boid.process(self)
 		if boids_target != Vector2.ZERO:
 			acceleration += steer(boids_target)
-	else:
-		acceleration += steer(_calc_acceleration_to_target(target))
 		
 	if node_obstacle_handler.is_obsticle_ahead():
 		acceleration += steer(node_obstacle_handler.obsticle_avoidance()) * Consts.SHIP_AVOIDANCE_FORCE
 	
-	velocity += acceleration * delta
+	var dist_target = target_diff.length_squared()
+	var near_target = dist_target <= pow(ship_speed_max, 2)
+	
+	if dist_target <= 1:
+		velocity = Vector2.ZERO
+	elif near_target:
+		velocity = target_diff * delta * 25
+		if velocity.length() < 25:
+			velocity = velocity.normalized() * 25
+		pass
+	else:
+		velocity += acceleration * delta
+	
 	velocity = velocity.clamped(ship_speed_max)
 	rotation = velocity.angle()
-	
 	translate(velocity * delta)
 	
-	var moving = velocity != Vector2.ZERO
+	target_reached = near_target and dist_target <= 1
 	
 	if visible:
-		if not moving and trail.is_emitting():
+		if not target_reached and trail.is_emitting():
 			trail.set_emitting(false)
 		elif not trail.is_emitting():
 			trail.set_emitting(true)
-	
-	return moving
-	
+
 func steer(var target):
 	target *= ship_speed_max
 	var steer = target - velocity
 	steer = steer.normalized() * Consts.SHIP_STEER_FORCE
 	return steer
 
-func _calc_acceleration_to_target(target: Vector2) -> Vector2:
-	var acceleration: Vector2 = Vector2.ZERO
-	var distance_to_target: float = position.distance_squared_to(target)
-	var break_threashold: float = pow(ship_speed_max, 2)
-	var de_accelerate: float = 0
-	if distance_to_target <= break_threashold:
-		de_accelerate = distance_to_target / break_threashold
-		return -(target - position).normalized()# * (1 - de_accelerate)
-	else:
-		return (target - position).normalized()
+
+
+
+
+
+
+
+
+
+
+
 
 func _update_travel_route():
 	if close_to_target(nav_route[0].position):

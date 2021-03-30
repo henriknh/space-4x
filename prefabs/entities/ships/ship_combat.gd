@@ -4,7 +4,6 @@ class_name ShipCombat
 
 var prefab_laser = preload('res://prefabs/entities/ships/effects/laser.tscn')
 
-var target: Entity
 var weapon_damage: int = 10
 var weapon_ready: bool = true
 
@@ -33,23 +32,24 @@ func _ready():
 	.ready()
 
 func process(delta: float):
-	if state != Enums.ship_states.combat and _has_enemies_in_site():
-		state = Enums.ship_states.combat
+	var has_enemies = _has_enemies_in_site()
 	
-	if state == Enums.ship_states.combat:
-		if not _has_enemies_in_site():
-			state = Enums.ship_states.idle
-		elif not target:
-			target = _get_closest_enemy()
+	if state != Enums.ship_states.combat and has_enemies:
+		state = Enums.ship_states.combat
+		target = _get_closest_enemy()
 		
-		else:
-			if not weapon_ready:
-				var retreat = position - (target.position - position)
-				move(retreat)
-			else:
-				move(target.position)
-				if node_raycast.is_colliding() and node_raycast.get_collider() == target:
-					_shot()
+	elif state == Enums.ship_states.combat and not has_enemies:
+		state = Enums.ship_states.idle
+	
+	elif state == Enums.ship_states.combat and not weapon_ready:
+		var retreat = position - (target.position - position)
+		return move(retreat)
+	
+	elif state == Enums.ship_states.combat \
+		and node_raycast.is_colliding() \
+		and node_raycast.get_collider() == target:
+			_shot()
+
 	.process(delta)
 
 func clear():
