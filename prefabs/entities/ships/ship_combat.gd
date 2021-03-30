@@ -34,14 +34,19 @@ func process(delta: float):
 	
 	if state == Enums.ship_states.combat and not target:
 		state = Enums.ship_states.idle
+		
+	if state == Enums.ship_states.combat and target.faction == -1:
+		state = Enums.ship_states.idle
+		target = null
+		
+	if state == Enums.ship_states.combat and not has_enemies:
+		state = Enums.ship_states.idle
+		target = null
 	
 	if state != Enums.ship_states.combat and has_enemies:
 		state = Enums.ship_states.combat
 		target = _get_closest_enemy()
 		
-	elif state == Enums.ship_states.combat and not has_enemies:
-		state = Enums.ship_states.idle
-	
 	elif state == Enums.ship_states.combat and not weapon_ready:
 		var retreat = position - (target.position - position)
 		return move(retreat)
