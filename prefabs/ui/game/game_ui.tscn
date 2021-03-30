@@ -23,8 +23,8 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
-margin_right = 960.0
-margin_bottom = 530.0
+margin_right = 640.0
+margin_bottom = 350.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -230,11 +230,9 @@ enabled_focus_mode = 0
 texture_normal = ExtResource( 10 )
 
 [node name="ShipDistribution" parent="." instance=ExtResource( 8 )]
-anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 534.0
-margin_right = 960.0
-margin_bottom = 540.0
+margin_top = 354.0
+margin_bottom = 360.0
 rect_min_size = Vector2( 0, 6 )
 size_flags_vertical = 1
 [connection signal="mouse_entered" from="Control/TopLeft" to="." method="_on_mouse_entered_ui"]
