@@ -2,8 +2,6 @@ extends Ship
 
 class_name ShipCombat
 
-var prefab_laser = preload('res://prefabs/entities/ships/effects/laser.tscn')
-
 var weapon_damage: int = 10
 var weapon_ready: bool = true
 
@@ -34,6 +32,9 @@ func _ready():
 func process(delta: float):
 	var has_enemies = _has_enemies_in_site()
 	
+	if state == Enums.ship_states.combat and not target:
+		state = Enums.ship_states.idle
+	
 	if state != Enums.ship_states.combat and has_enemies:
 		state = Enums.ship_states.combat
 		target = _get_closest_enemy()
@@ -57,10 +58,8 @@ func _shot():
 	weapon_ready = false
 	weapon_timer.start()
 	
-	var laser = prefab_laser.instance()
-	get_node('/root/GameScene').add_child(laser)
 	var color = Enums.ship_colors[ship_type] if faction == 0 else Enums.player_colors[faction]
-	laser.emit(position, node_raycast.get_collision_point(), color)
+	Instancer.laser(position, node_raycast.get_collision_point(), color)
 	
 func _weapon_ready():
 	target = _get_closest_enemy()
