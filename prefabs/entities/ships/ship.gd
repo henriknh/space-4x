@@ -18,6 +18,7 @@ onready var acceleration: Vector2 = Vector2.ZERO
 onready var ship_idle_speed: float = 500
 var target: Node2D = null setget set_target
 var target_reached: bool = false
+var approach_target: bool = false
 
 # Temporary
 var nav_route = []
@@ -116,8 +117,11 @@ func set_target(_target: Entity):
 	target = _target
 	target_reached = false
 	
-	if target and target.entity_type == Enums.entity_types.ship:
-		node_obstacle_handler.add_exception(target)
+	if target:
+		approach_target = not target.entity_type == Enums.entity_types.ship
+	
+		if target.entity_type == Enums.entity_types.ship:
+			node_obstacle_handler.add_exception(target)
 
 func move(target_pos: Vector2 = Vector2.INF) -> void:
 	
@@ -137,12 +141,13 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 	if node_obstacle_handler.is_obsticle_ahead():
 		acceleration += steer(node_obstacle_handler.obsticle_avoidance()) * Consts.SHIP_AVOIDANCE_FORCE
 	
-	var dist_target = target_diff.length_squared()
-	var near_target = dist_target <= pow(ship_speed_max, 2)
 	
-	if dist_target <= 1:
+	var dist_to_target = target_diff.length_squared()
+	var near_target = dist_to_target <= pow(ship_speed_max, 2)
+	
+	if approach_target and dist_to_target <= 1:
 		velocity = Vector2.ZERO
-	elif near_target:
+	elif approach_target and near_target:
 		velocity = target_diff * delta * 25
 		if velocity.length() < 25:
 			velocity = velocity.normalized() * 25
@@ -154,7 +159,7 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 	rotation = velocity.angle()
 	translate(velocity * delta)
 	
-	target_reached = near_target and dist_target <= 1
+	target_reached = near_target and dist_to_target <= 1
 	
 	if visible:
 		if not target_reached and trail.is_emitting():
