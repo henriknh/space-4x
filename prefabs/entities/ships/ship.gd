@@ -108,10 +108,6 @@ func process(delta: float):
 func kill():
 	hitpoints = 0
 	queue_free()
-	
-func clear():
-	process_target = -1 
-	nav_route = [Nav.get_route(self, process_target)]
 
 func set_target(_target: Entity):
 	if target:

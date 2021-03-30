@@ -51,9 +51,6 @@ func process(delta: float):
 			_shot()
 
 	.process(delta)
-
-func clear():
-	.clear()
 	
 func _shot():
 	target.hitpoints -= weapon_damage

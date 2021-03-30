@@ -30,6 +30,3 @@ func process(delta: float):
 			kill()
 	
 	.process(delta)
-
-func clear():
-	.clear()

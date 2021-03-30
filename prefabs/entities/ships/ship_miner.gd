@@ -70,12 +70,6 @@ func process(delta: float):
 		return 
 	
 	.process(delta)
-
-func clear():
-	self.target = null
-	miner_ready = false
-	miner_timer.stop()
-	.clear()
 	
 func _on_miner_ready():
 	miner_ready = true
