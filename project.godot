@@ -215,6 +215,10 @@ ui_down={
 2d_physics/layer_5="Asteroid"
 2d_physics/layer_6="PlanetSystemBounds"
 
+[physics]
+
+common/physics_fps=30
+
 [rendering]
 
 threads/thread_model=2
