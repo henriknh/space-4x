@@ -60,6 +60,7 @@ func _calc_original_data():
 		line.texture = faction_bound_texture
 		line.texture_mode = Line2D.LINE_TEXTURE_TILE
 		line.sharp_limit = 3
+		line.antialiased = true
 		#line.material = faction_bound_material.duplicate()
 			
 		add_child(line)
