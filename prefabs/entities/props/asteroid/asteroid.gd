@@ -21,7 +21,8 @@ func _ready():
 	connect("entity_changed", self, "_update_size")
 	
 	node_collision.shape = RectangleShape2D.new()
-	node_sprite.self_modulate = Color.from_hsv(0, 0, float((variant % 30) + 60) / 100)
+	#node_sprite.self_modulate = Color.from_hsv(0, 0, float((variant % 30) + 60) / 100)
+	node_sprite.self_modulate = Color.white
 	_update_size()
 	
 	._ready()
@@ -40,3 +41,6 @@ func _update_size():
 	var size = asteroid_rocks + 16
 	node_collision.shape.extents = Vector2.ONE * size / 2
 	node_sprite.scale = Vector2.ONE * size / texture_size
+	
+	if asteroid_rocks == 0:
+		Instancer.asteroid_dust(self, true)

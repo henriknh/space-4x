@@ -24,6 +24,7 @@ var script_miner = preload('res://prefabs/entities/ships/ship_miner.gd')
 
 # Effect
 var prefab_laser = preload('res://prefabs/entities/ships/effects/laser.tscn')
+var prefab_asteroid_dust = preload('res://prefabs/entities/props/asteroid/effects/asteroid_dust.tscn')
 
 func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, override: Dictionary = {}) -> Entity:
 	
@@ -120,4 +121,16 @@ func laser(from: Vector2, to: Vector2, color: Color) -> Entity:
 	laser.to = to
 	laser.color = color
 	get_node('/root/GameScene').add_child(laser)
+	return null
+
+func asteroid_dust(parent: Node2D, is_large: bool) -> Entity:
+	var asteroid_dust = prefab_asteroid_dust.instance()
+	
+	asteroid_dust.position = parent.position
+	asteroid_dust.rotation_degrees = parent.rotation_degrees
+	asteroid_dust.is_large = is_large
+	if parent.get('node_sprite') and parent.get('node_sprite').get('self_modulate'):
+		asteroid_dust.color = parent.node_sprite.self_modulate
+	
+	get_node('/root/GameScene').add_child(asteroid_dust)
 	return null

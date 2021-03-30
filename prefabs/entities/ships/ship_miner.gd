@@ -3,7 +3,7 @@ extends Ship
 class_name ShipMiner
 
 const ANIMATION_CHARGE_MINER = 'charge_miner'
-var mining_power = 2
+var mining_power = 8
 
 var miner_ready: bool = false
 var miner_timer: Timer
@@ -11,7 +11,7 @@ var miner_timer: Timer
 func create():
 	ship_type = Enums.ship_types.miner
 	ship_speed_max = 100
-	asteroid_rocks_max = 4
+	asteroid_rocks_max = 64
 	.create()
 	
 func _ready():
@@ -84,6 +84,7 @@ func _do_mine():
 	var mine_amount = min(target.asteroid_rocks, can_mine)
 	asteroid_rocks += mine_amount
 	target.asteroid_rocks -= mine_amount
+	Instancer.asteroid_dust(self, false)
 	target.emit_signal("entity_changed")
 
 func deliver():
