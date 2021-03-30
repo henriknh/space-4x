@@ -22,6 +22,9 @@ var script_combat = preload('res://prefabs/entities/ships/ship_combat.gd')
 var script_explorer = preload('res://prefabs/entities/ships/ship_explorer.gd')
 var script_miner = preload('res://prefabs/entities/ships/ship_miner.gd')
 
+# Effect
+var prefab_laser = preload('res://prefabs/entities/ships/effects/laser.tscn')
+
 func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, override: Dictionary = {}) -> Entity:
 	
 	var instance: Entity = prefab_ship.instance()
@@ -110,3 +113,11 @@ func planet_system(planet_system_idx: int) -> Entity:
 	instance.create()
 	
 	return instance
+
+func laser(from: Vector2, to: Vector2, color: Color) -> Entity:
+	var laser = prefab_laser.instance()
+	laser.from = from
+	laser.to = to
+	laser.color = color
+	get_node('/root/GameScene').add_child(laser)
+	return null
