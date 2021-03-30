@@ -12,18 +12,17 @@ func create():
 	label = NameGenerator.get_name_asteroid()
 	rotation_speed = Random.randf_range(-1, 1) * 10
 	
-	asteroid_rocks = Random.randf_range(4, 32)
+	asteroid_rocks = Random.randi_range(4, 32)
 	
 	.create()
 	
 func _ready():
-	var texture_size = node_sprite.texture.get_size()
-	var scale = int(ceil(asteroid_rocks / 8))
+	
+	connect("entity_changed", self, "_update_size")
 	
 	node_collision.shape = RectangleShape2D.new()
-	node_collision.shape.extents = (texture_size / 2) * scale 
-	node_sprite.scale = Vector2.ONE * scale
 	node_sprite.self_modulate = Color.from_hsv(0, 0, float((variant % 30) + 60) / 100)
+	_update_size()
 	
 	._ready()
 	
@@ -32,6 +31,12 @@ func process(delta: float):
 		kill()
 		
 	if visible:
-		node_sprite.rotation_degrees += rotation_speed * delta
+		rotation_degrees += rotation_speed * delta
 	
 	.process(delta)
+
+func _update_size():
+	var texture_size = node_sprite.texture.get_size()
+	var size = asteroid_rocks + 16
+	node_collision.shape.extents = Vector2.ONE * size / 2
+	node_sprite.scale = Vector2.ONE * size / texture_size
