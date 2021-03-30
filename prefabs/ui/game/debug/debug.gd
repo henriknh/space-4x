@@ -14,7 +14,7 @@ var spawner_target: Node2D
 func _ready():
 	_update_ui()
 	
-func ready():
+func init():
 	Settings.connect("settings_changed", self, "_update_ui")
 	
 	for faction in Factions.factions:

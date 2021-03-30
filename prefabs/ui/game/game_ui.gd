@@ -16,7 +16,7 @@ onready var node_ship_distribution: Control = $ShipDistribution
 func _ready():
 	MenuState.push(self)
 
-func ready():
+func init():
 	#GameState.connect("state_changed", self, "_update_ui")
 	GameState.connect("selection_changed", self, "_update_ui")
 	Settings.connect("settings_changed", self, "_update_ui")
@@ -27,7 +27,7 @@ func ready():
 	timer.wait_time = 0.1
 	timer.start()
 	
-	node_debug.ready()
+	node_debug.init()
 	_update_ui()
 	
 func _physics_process(delta):

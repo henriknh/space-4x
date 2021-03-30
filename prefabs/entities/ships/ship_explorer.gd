@@ -10,9 +10,9 @@ func create():
 	ship_speed_max = 150
 	.create()
 	
-func ready():
+func _ready():
 	add_to_group('Explorer')
-	.ready()
+	._ready()
 
 func process(delta: float):
 	

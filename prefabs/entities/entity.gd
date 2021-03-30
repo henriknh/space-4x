@@ -85,9 +85,6 @@ func create():
 	hitpoints = hitpoints_max
 
 func _ready():
-	pass
-
-func ready():
 	set_visible(planet_system == GameState.get_planet_system())
 
 func process(delta: float):

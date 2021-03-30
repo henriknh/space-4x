@@ -27,7 +27,7 @@ func _ready():
 	target_timer.wait_time = 0.5
 	add_child(target_timer)
 	
-	.ready()
+	._ready()
 
 func process(delta: float):
 	var has_enemies = _has_enemies_in_site()
