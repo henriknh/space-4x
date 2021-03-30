@@ -6,9 +6,8 @@ const ship_texture_miner = preload("res://assets/ship_miner.png")
 
 class_name Ship
 
-onready var collision_shape = $CollisionShape
-onready var sprite: Sprite = $Sprite
-onready var trail: Node2D = $Trail
+onready var node_sprite: Sprite = $Sprite
+onready var node_trail: Node2D = $Trail
 onready var node_obstacle_handler = $ObstacleHandler
 onready var node_raycast = $RayCast
 onready var node_animation: AnimationPlayer = $AnimationPlayer
@@ -43,21 +42,21 @@ func create():
 	
 func _ready():
 	if faction == 0:
-		sprite.self_modulate = Enums.ship_colors[ship_type]
-		trail.set_color(Enums.ship_colors[ship_type])
+		node_sprite.self_modulate = Enums.ship_colors[ship_type]
+		node_trail.set_color(Enums.ship_colors[ship_type])
 	else:
-		sprite.self_modulate = Enums.player_colors[faction]
-		trail.set_color(Enums.player_colors[faction])
+		node_sprite.self_modulate = Enums.player_colors[faction]
+		node_trail.set_color(Enums.player_colors[faction])
 	
 	
 	match ship_type:
 		Enums.ship_types.combat:
-			sprite.texture = ship_texture_combat
+			node_sprite.texture = ship_texture_combat
 		Enums.ship_types.explorer:
-			sprite.texture = ship_texture_explorer
+			node_sprite.texture = ship_texture_explorer
 		Enums.ship_types.miner:
-			sprite.texture = ship_texture_miner
-	trail.set_texture(sprite.texture)
+			node_sprite.texture = ship_texture_miner
+	node_trail.set_texture(node_sprite.texture)
 	if ship_type == Enums.ship_types.disabled:
 		var timer = Timer.new()
 		timer.connect("timeout", self, "_rotate_sprite_texture")
@@ -162,10 +161,10 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 	target_reached = near_target and dist_to_target <= 1
 	
 	if visible:
-		if not target_reached and trail.is_emitting():
-			trail.set_emitting(false)
-		elif not trail.is_emitting():
-			trail.set_emitting(true)
+		if not target_reached and node_trail.is_emitting():
+			node_trail.set_emitting(false)
+		elif not node_trail.is_emitting():
+			node_trail.set_emitting(true)
 
 func steer(var target):
 	target *= ship_speed_max
@@ -206,7 +205,7 @@ func set_visible(in_data) -> void:
 	else:
 		visible = planet_system == in_data
 	if not visible:
-		trail.set_emitting(false)
+		node_trail.set_emitting(false)
 
 func get_random_point_in_site() -> Vector2:
 	var parent_hull = parent.planet_convex_hull
@@ -241,12 +240,12 @@ func get_random_point_in_site() -> Vector2:
 
 func _rotate_sprite_texture():
 	print('_rotate_disabled_sprite')
-	if sprite.texture == ship_texture_combat:
-		sprite.texture = ship_texture_explorer
-	elif sprite.texture == ship_texture_explorer:
-		sprite.texture = ship_texture_miner
-	elif sprite.texture == ship_texture_miner:
-		sprite.texture = ship_texture_combat
+	if node_sprite.texture == ship_texture_combat:
+		node_sprite.texture = ship_texture_explorer
+	elif node_sprite.texture == ship_texture_explorer:
+		node_sprite.texture = ship_texture_miner
+	elif node_sprite.texture == ship_texture_miner:
+		node_sprite.texture = ship_texture_combat
 
 func set_parent(planet: Entity) -> void:
 	if parent:
