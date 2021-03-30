@@ -58,18 +58,11 @@ func _physics_process(_delta):
 	if queued_to_free:
 		return
 	
-	if planet_system != GameState.get_planet_system() and entity_type == Enums.entity_types.prop:
-		return
-	
 	delta += _delta
 	
 	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
-		if entity_type != Enums.entity_types.planet:
-			if not parent:
-				return
-		
 		if hitpoints <= 0:
 			kill()
 		else:
