@@ -83,6 +83,7 @@ func _on_PlanetArea_body_entered(entity: Entity):
 		children.append(entity)
 		if entity.prop_type == Enums.prop_types.asteroid:
 			asteroids.append(entity)
+			asteroids.sort_custom(self, "sort_asteroids")
 		if entity.has_method('set_parent'):
 			entity.set_parent(self)
 		emit_signal("entity_changed")
@@ -90,7 +91,7 @@ func _on_PlanetArea_body_entered(entity: Entity):
 func _on_PlanetArea_body_exited(entity: Entity):
 	if self.planet_system == entity.planet_system:
 		children.erase(entity)
-		asteroids.append(entity)
+		asteroids.erase(entity)
 		emit_signal("entity_changed")
 		
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
@@ -130,3 +131,8 @@ func get_children_by_type(type: int, specific_type: String = 'entity_type') -> A
 		if child[specific_type] == type and (child.faction == faction or child.faction == -1):
 			children_by_type.append(child)
 	return children_by_type
+	
+func sort_asteroids(a: Entity, b: Entity) -> bool:
+	var dist_a = self.position.distance_squared_to(a.position)
+	var dist_b = self.position.distance_squared_to(b.position)
+	return dist_a < dist_b
