@@ -3,7 +3,7 @@ extends VBoxContainer
 var spawner_target_texture = preload('res://assets/icons/target.png')
 
 onready var node_mouse_pos = $MousePos as Label
-onready var node_spawner_faction = $Spawner/Faction as OptionButton
+onready var node_spawner_corporation = $Spawner/Corporation as OptionButton
 onready var node_spawner_ship_type = $Spawner/ShipType as OptionButton
 onready var node_spawner_set_target = $Spawner/SetSpawnTarget as Button
 onready var node_spawner_spawn = $Spawner/Spawn as Button
@@ -17,13 +17,13 @@ func _ready():
 func init():
 	Settings.connect("settings_changed", self, "_update_ui")
 	
-	for faction in Factions.factions:
+	for corporation in Corporations.get_all():
 		var image = Image.new()
 		image.create(12, 12, false, Image.FORMAT_RGB8)
-		image.fill(Factions.get_faction(faction).color)
+		image.fill(corporation.color)
 		var texture = ImageTexture.new()
 		texture.create_from_image(image)
-		node_spawner_faction.add_icon_item(texture, faction as String, faction)
+		node_spawner_corporation.add_icon_item(texture, corporation.corporation_id as String, corporation.corporation_id)
 	
 	for ship_type in Enums.ship_types:
 		node_spawner_ship_type.add_item(ship_type, Enums.ship_types[ship_type])
@@ -61,7 +61,7 @@ func _on_spawn_ship():
 	var override = {
 		'planet_system': GameState.get_planet_system(),
 		'position': spawner_target.position,
-		'faction': node_spawner_faction.get_selected_id()
+		'corporation_id': node_spawner_corporation.get_selected_id()
 	}
 	var ship = Instancer.ship(node_spawner_ship_type.get_selected_id(), null, null, override)
 	get_node('/root/GameScene').add_child(ship)

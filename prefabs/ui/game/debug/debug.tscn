@@ -25,7 +25,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Faction" type="OptionButton" parent="Spawner"]
+[node name="Corporation" type="OptionButton" parent="Spawner"]
 margin_right = 96.0
 margin_bottom = 20.0
 focus_mode = 0

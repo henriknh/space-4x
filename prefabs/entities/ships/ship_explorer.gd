@@ -16,16 +16,16 @@ func _ready():
 
 func process(delta: float):
 	
-	if parent.faction == 0:
+	if parent.corporation_id == 0:
 		state = Enums.ship_states.colonize
 	
 	if state == Enums.ship_states.colonize:
-		if parent.faction != 0:
+		if parent.corporation_id != 0:
 			state = Enums.ship_states.idle
 		elif move(parent.position):
 			pass
 		else:
-			parent.faction = faction
+			parent.corporation_id = corporation_id
 			parent.update()
 			kill()
 	

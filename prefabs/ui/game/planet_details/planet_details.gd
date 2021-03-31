@@ -5,7 +5,7 @@ var ship_movement_prefab = preload('res://prefabs/ui/game/ship_movement/ship_mov
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 onready var selection: Entity = GameState.get_selection()
-onready var faction = Factions.get_faction(selection.faction)
+onready var corporation = Corporations.get_corporation(selection.corporation_id)
 
 onready var node_ship_distribution: Control = $VBoxContainer/ShipDistribution
 onready var node_convert_from_amount: Label = $VBoxContainer/Convertion/ConvertFromAmount
@@ -60,10 +60,10 @@ func _update_ui():
 	var cant_produce_ship = true
 	var cant_produce_research = true
 
-	if faction:
-		cant_convert = faction.resources.asteroid_rocks < Consts.RESOURCE_CONVERTION_COST
-		cant_produce_ship = faction.resources.titanium < Consts.SHIP_COST_TITANIUM
-		cant_produce_research = faction.resources.astral_dust < Consts.RESEARCH_COST_ASTRAL_DUST
+	if corporation:
+		cant_convert = corporation.resources.asteroid_rocks < Consts.RESOURCE_CONVERTION_COST
+		cant_produce_ship = corporation.resources.titanium < Consts.SHIP_COST_TITANIUM
+		cant_produce_research = corporation.resources.astral_dust < Consts.RESEARCH_COST_ASTRAL_DUST
 	
 	node_convert_to_titanium.disabled = busy or cant_convert
 	node_convert_to_astral_dust.disabled = busy or cant_convert
@@ -84,8 +84,8 @@ func _update_ui():
 	$VBoxContainer/DistributionLabel/ShipCount.text = int(0) as String
 	
 func _create_ship(ship_type: int):
-	if faction.resources.titanium >= Consts.SHIP_COST_TITANIUM:
-		faction.resources.titanium -= Consts.SHIP_COST_TITANIUM
+	if corporation.resources.titanium >= Consts.SHIP_COST_TITANIUM:
+		corporation.resources.titanium -= Consts.SHIP_COST_TITANIUM
 		selection.set_entity_process(Enums.planet_states.produce, ship_type, Consts.SHIP_PRODUCTION_TIME)
 
 func _on_production_ship():
@@ -114,6 +114,6 @@ func _on_ship_movement():
 	get_parent().add_child(ship_movement_prefab.instance())
 
 func _convert_resource(convertion_resource: int):
-	if faction.resources.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
-		faction.resources.asteroid_rocks -= Consts.RESOURCE_CONVERTION_COST
+	if corporation.resources.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
+		corporation.resources.asteroid_rocks -= Consts.RESOURCE_CONVERTION_COST
 		selection.set_entity_process(Enums.planet_states.convertion, convertion_resource, Consts.RESOURCE_CONVERTION_TIME)

@@ -39,13 +39,13 @@ func process(delta: float):
 				if process_target in Enums.ship_types.values():
 					get_node('/root/GameScene').add_child(Instancer.ship(process_target, null, self))
 			elif state == Enums.planet_states.convertion:
-				var faction = Factions.get_faction(self.faction)
+				var corporation = Corporations.get_corporation(self.corporation_id)
 				var converted_amount = Consts.RESOURCE_CONVERTION_COST * Consts.RESOURCE_CONVERTION_RATIO
 				match process_target:
 					Enums.resource_types.titanium:
-						faction.resources.titanium += converted_amount
+						corporation.resources.titanium += converted_amount
 					Enums.resource_types.astral_dust:
-						faction.resources.astral_dust += converted_amount
+						corporation.resources.astral_dust += converted_amount
 			
 			process_time = 0
 			state = Enums.planet_states.idle
@@ -56,29 +56,20 @@ func process(delta: float):
 		.process(delta)
 
 func _draw():
-	if faction == 0:
+	if corporation_id == 0:
 		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Color(0.25,0.25,0.25,1))
 	else:
-		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Enums.player_colors[faction])
+		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Enums.corporation_colors[corporation_id])
 	
 		
 func kill():
-	self.faction = 0
+	self.corporation_id = 0
 	self.hitpoints = hitpoints_max
 	update()
 	
 func _process(delta):
 	if self.visible:
 		.get_node("Sprite").rotation_degrees += rotation_speed * delta
-
-func get_target_point():
-	var angle = 2 * PI * randf()
-	#var r = (.get_node("AreaPlanet").shape as CircleShape2D).radius * randf()
-	
-	#var x = r * cos(angle) + self.global_transform.origin.x
-	#var y = r * sin(angle) + self.global_transform.origin.y
-	
-	return position #Vector2(x, y)
 
 func _on_PlanetArea_body_entered(entity: Entity):
 	if self.planet_system == entity.planet_system:
@@ -107,7 +98,7 @@ func _on_PlanetArea_input_event(viewport, event, shape_idx):
 		elif (event as InputEventMouseButton).button_index == BUTTON_RIGHT:
 			var curr_selection = GameState.get_selection()
 			for ship in get_tree().get_nodes_in_group('Ship'):
-				if ship.planet_system == self.planet_system and ship.has_method("set_target_id") and ship.faction == curr_selection.faction and ship.parent == curr_selection:
+				if ship.planet_system == self.planet_system and ship.has_method("set_target_id") and ship.corporation_id == curr_selection.corporation_id and ship.parent == curr_selection:
 					ship.set_target_id(self.id)
 
 func _on_hover_enter():
@@ -130,7 +121,7 @@ func sort_closest(a: Entity, b: Entity) -> bool:
 func get_children_by_type(type: int, specific_type: String = 'entity_type') -> Array:
 	var children_by_type = []
 	for child in children:
-		if child[specific_type] == type and (child.faction == faction or child.faction == 0):
+		if child[specific_type] == type and (child.corporation_id == corporation_id or child.corporation_id == 0):
 			children_by_type.append(child)
 	return children_by_type
 	

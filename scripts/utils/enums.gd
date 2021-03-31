@@ -1,6 +1,6 @@
 extends Node
 
-const player_colors = {
+const corporation_colors = {
 	0: Color(0.5, 0.5, 0.5),
 	1: Color(0.9, 0.9, 0.9), # white
 	2: Color(0.321, 0.517, 1), # blue

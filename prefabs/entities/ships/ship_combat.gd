@@ -35,7 +35,7 @@ func process(delta: float):
 	if state == Enums.ship_states.combat and not target:
 		state = Enums.ship_states.idle
 		
-	if state == Enums.ship_states.combat and target.faction == 0:
+	if state == Enums.ship_states.combat and target.corporation_id == 0:
 		state = Enums.ship_states.idle
 		target = null
 		
@@ -63,7 +63,7 @@ func _shot():
 	weapon_ready = false
 	weapon_timer.start()
 	
-	var color = Enums.ship_colors[ship_type] if faction == Consts.PLAYER_FACTION else Enums.player_colors[faction]
+	var color = Enums.ship_colors[ship_type] if corporation_id == Consts.PLAYER_CORPORATION else Enums.corporation_colors[corporation_id]
 	Instancer.laser(position, node_raycast.get_collision_point(), color)
 	
 func _weapon_ready():
@@ -71,13 +71,13 @@ func _weapon_ready():
 	weapon_ready = true
 	
 func _is_parent_enemy() -> bool:
-	return parent.faction != 0 and abs(int(ceil(parent.faction))) != faction
+	return parent.corporation_id != 0 and abs(int(ceil(parent.corporation_id))) != corporation_id
 	
 func _has_enemies_in_site() -> bool:
 	
 	var has_enemies = false
 	for child in parent.children:
-		if child.ship_type != 0 and abs(int(ceil(child.faction))) != faction:
+		if child.ship_type != 0 and abs(int(ceil(child.corporation_id))) != corporation_id:
 			has_enemies = true
 			break
 	
@@ -94,7 +94,7 @@ func _get_closest_enemy() -> Entity:
 	for child in parent.children:
 		if child.is_dead():
 			continue
-		if child.ship_type >= 0 and child.faction != faction:
+		if child.ship_type >= 0 and child.corporation_id != corporation_id:
 			enemies.append(child)
 	
 	enemies.sort_custom(self, "sort_combat_type")

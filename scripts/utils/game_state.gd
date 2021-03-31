@@ -39,7 +39,7 @@ func set_selection(new_selection: Entity = null):
 	
 	emit_signal("selection_changed")
 	
-func get_selection():
+func get_selection() -> Entity:
 	return _selection
 
 func _update_visible():

@@ -2,22 +2,22 @@ extends Node
 
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 
-const faction_bound_texture = preload("res://assets/border_bound.png")
-#const faction_bound_material = preload("res://shaders/faction_bounds_line.tres")
+const corporation_bound_texture = preload("res://assets/border_bound.png")
+#const corporation_bound_material = preload("res://shaders/corporation_bounds_line.tres")
 
-var faction_original_data = []
+var corporation_original_data = []
 
 func _connect_changed_signals():
-	Factions.connect("factions_changed", self, "_on_changed")
+	Corporations.connect("corporations_changed", self, "_on_changed")
 	GameState.connect("state_changed", self, "_on_changed")
-	camera.connect("zoom_changed", self, "_render_factions")
+	camera.connect("zoom_changed", self, "_render_corporations")
 
 func _on_changed():
 	_calc_original_data()
-	_render_factions()
+	_render_corporations()
 	
 func _calc_original_data():
-	faction_original_data = []
+	corporation_original_data = []
 	for child in get_children():
 		child.visible = false
 		child.queue_free()
@@ -28,10 +28,10 @@ func _calc_original_data():
 		if planet.planet_system == planet_system:
 			planets.append(planet)
 	
-	for faction in Factions.factions:
+	for corporation in Corporations.get_all():
 		var polygons = []
 		for planet in planets:
-			if planet.faction == faction:
+			if planet.corporation_id == corporation.corporation_id:
 				var polygon = []
 				for point in planet.planet_convex_hull:
 					polygon.append(point + planet.position)
@@ -55,30 +55,30 @@ func _calc_original_data():
 					i += 1
 		
 		var line = Line2D.new()
-		line.default_color = Enums.player_colors[faction]
+		line.default_color = corporation.color
 		line.modulate.a = 1
-		line.texture = faction_bound_texture
+		line.texture = corporation_bound_texture
 		line.texture_mode = Line2D.LINE_TEXTURE_TILE
 		line.sharp_limit = 3
 		line.antialiased = true
-		#line.material = faction_bound_material.duplicate()
+		#line.material = corporation_bound_material.duplicate()
 			
 		add_child(line)
 		
-		faction_original_data.append({
+		corporation_original_data.append({
 			"polygons": polygons,
 			"line": line
 		})
 
-func _render_factions():
+func _render_corporations():
 	var width = camera.zoom.x * 3
 	
-	for faction_data in faction_original_data:
-		for polygon in faction_data.polygons:
+	for corporation_data in corporation_original_data:
+		for polygon in corporation_data.polygons:
 	
 			polygon = Utils.array_remove_intitial_duplicate(polygon)
 			polygon = Utils.polygon_offset(polygon, width / 2)
 			polygon = Utils.polygon_add_midpoint_split(polygon)
 			
-			faction_data.line.points = polygon
-			faction_data.line.width = width
+			corporation_data.line.points = polygon
+			corporation_data.line.width = width

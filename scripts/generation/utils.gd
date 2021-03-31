@@ -3,7 +3,7 @@ extends Node
 static func get_start_planet(planets: Array, is_human: bool) -> Entity:
 	var possible_planets = []
 	for planet in planets:
-		if (is_human and planet.planet_system == 0 or not is_human) and planet.faction == 0:
+		if (is_human and planet.planet_system == 0 or not is_human) and planet.corporation_id == 0:
 			possible_planets.append(planet)
 	
 	return possible_planets[Random.randi() % possible_planets.size()]

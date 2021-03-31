@@ -8,7 +8,7 @@ const INACTIVE_TIME_PERIOD: float = 0.05
 # Temporary
 var delta: float = 0
 var queued_to_free: bool = false
-var _faction_object
+var _corporation: Corporation
 signal entity_changed
 
 # General
@@ -20,7 +20,7 @@ var label: String = ''
 var hitpoints: int = 1
 var hitpoints_max: int = -1
 var indestructible: bool = false
-var faction: int = 0 setget _set_faction
+var corporation_id: int = 0 setget _set_corporation
 var planet_system: int = -1
 var rotation_speed: float = 0
 var state: int = 0
@@ -66,8 +66,8 @@ func _physics_process(_delta):
 		if hitpoints <= 0:
 			kill()
 		else:
-			var faction = get_faction()
-			if faction and faction.is_computer:
+			var corporation = get_corporation()
+			if corporation and corporation.is_computer:
 				AI.process_entity(self, delta)
 			process(delta)
 			
@@ -112,16 +112,16 @@ func get_process_progress() -> float:
 		return 0.0
 	return process_time / _process_time_total
 
-func _set_faction(faction_value):
-	faction = faction_value
-	_faction_object = Factions.get_faction(faction)
+func _set_corporation(_corporation_id):
+	corporation_id = _corporation_id
+	_corporation = Corporations.get_corporation(corporation_id)
 	if entity_type == Enums.entity_types.planet:
-		Factions.emit_signal("factions_changed")
+		Corporations.emit_signal("corporations_changed")
 	
-func get_faction() -> Faction:
-	if faction > 0 and _faction_object == null:
-		_faction_object = Factions.get_faction(faction)
-	return _faction_object
+func get_corporation() -> Corporation:
+	if corporation_id > 0 and _corporation == null:
+		_corporation = Corporations.get_corporation(corporation_id)
+	return _corporation
 	
 func save():
 	var data = {
@@ -139,7 +139,7 @@ func save():
 		"hitpoints": hitpoints,
 		"hitpoints_max": hitpoints_max,
 		"indestructible": indestructible,
-		"faction": faction,
+		"corporation_id": corporation_id,
 		"planet_system": planet_system,
 		"rotation_speed": rotation_speed,
 		"state": state,

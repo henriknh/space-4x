@@ -55,9 +55,10 @@ func generate_world():
 	GameState.set_planet_system(0)
 	
 	var all_planets = get_tree().get_nodes_in_group('Planet')
-	var player = Factions.create(Consts.PLAYER_FACTION)
+	var player = Corporations.create(Consts.PLAYER_CORPORATION)
+	print(player.corporation_id)
 	var player_planet = GenUtils.get_start_planet(all_planets, true)
-	player_planet.faction = player.faction
+	player_planet.corporation_id = player.corporation_id
 
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
 	camera.position = player_planet.position
@@ -65,9 +66,9 @@ func generate_world():
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
 	for idx in range(Random.randi_range(computers_min, computers_max)):
-		var ai_faction = Factions.create(Consts.PLAYER_FACTION + 1 + idx)
-		var start_planet = GenUtils.get_start_planet(all_planets, ai_faction.faction == (Consts.PLAYER_FACTION + 1))
-		start_planet.faction = ai_faction.faction
+		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx)
+		var start_planet = GenUtils.get_start_planet(all_planets, ai_corporation.corporation_id == (Consts.PLAYER_CORPORATION + 1))
+		start_planet.corporation_id = ai_corporation.corporation_id
 
 func add_node_deffered(node: Object):
 	gameScene.add_child(node)

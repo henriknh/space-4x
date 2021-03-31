@@ -36,11 +36,11 @@ func _physics_process(delta):
 func _ship_movement_disabled() -> bool:
 	if GameState.get_selection() == null:
 		return true
-	elif GameState.get_selection().get('faction') == null:
+	elif GameState.get_selection().corporation_id == null:
 		return true
 	else:
 		for child in GameState.get_selection().children:
-			if child.entity_type == Enums.entity_types.ship and child.faction == Consts.PLAYER_FACTION:
+			if child.entity_type == Enums.entity_types.ship and child.corporation_id == Consts.PLAYER_CORPORATION:
 				return false
 		return true
 
@@ -49,11 +49,11 @@ func _update_ui():
 	node_btn_ship_movement.disabled = _ship_movement_disabled()
 	node_btn_planet_details.disabled = GameState.get_selection() == null
 	
-	var faction = Factions.get_faction(Consts.PLAYER_FACTION)
-	if faction:
-		node_asteroid_rocks.text = Utils.format_number(faction.resources.asteroid_rocks)
-		node_titanium.text = Utils.format_number(faction.resources.titanium)
-		node_astral_dust.text = Utils.format_number(faction.resources.astral_dust)
+	var corporation = Corporations.get_corporation(Consts.PLAYER_CORPORATION)
+	if corporation:
+		node_asteroid_rocks.text = Utils.format_number(corporation.resources.asteroid_rocks)
+		node_titanium.text = Utils.format_number(corporation.resources.titanium)
+		node_astral_dust.text = Utils.format_number(corporation.resources.astral_dust)
 	
 	node_ship_distribution.update_distribution_globally()
 

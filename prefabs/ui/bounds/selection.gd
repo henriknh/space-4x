@@ -3,7 +3,7 @@ extends Line2D
 onready var camera = get_node('/root/GameScene/Camera') as Camera2D
 
 var original_selection: Array = []
-var selection_has_faction = false
+var selection_has_corporation = false
 
 func _connect_changed_signals():
 	GameState.connect("selection_changed", self, "_on_changed")
@@ -22,11 +22,11 @@ func _calc_original_data():
 		original_selection = []
 	else:
 		print('Selection id: %d' % selection.id)
-		print('Faction: %d' % selection.faction)
+		print('Coporation: %d' % selection.corporation_id)
 		
-		selection_has_faction = selection.faction > 0
-		if selection_has_faction:
-			default_color = Enums.player_colors[selection.faction]
+		selection_has_corporation = selection.corporation_id > 0
+		if selection_has_corporation:
+			default_color = Enums.corporation_colors[selection.corporation_id]
 			modulate.a = 1
 		else:
 			default_color = Color(1,1,1,1)
@@ -38,7 +38,7 @@ func _calc_original_data():
 
 func _render_selection():
 	var width = camera.zoom.x * 3
-	var offset = (width * 1.5) if selection_has_faction else (width * 0.5)
+	var offset = (width * 1.5) if selection_has_corporation else (width * 0.5)
 	
 	var polygon = Utils.array_remove_intitial_duplicate(original_selection)
 	polygon = Utils.polygon_offset(polygon, offset)

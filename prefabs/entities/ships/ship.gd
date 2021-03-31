@@ -41,12 +41,12 @@ func create():
 	.create()
 	
 func _ready():
-	if faction == Consts.PLAYER_FACTION:
+	if corporation_id == Consts.PLAYER_CORPORATION:
 		node_sprite.self_modulate = Enums.ship_colors[ship_type]
 		node_trail.set_color(Enums.ship_colors[ship_type])
 	else:
-		node_sprite.self_modulate = Enums.player_colors[faction]
-		node_trail.set_color(Enums.player_colors[faction])
+		node_sprite.self_modulate = Enums.corporation_colors[corporation_id]
+		node_trail.set_color(Enums.corporation_colors[corporation_id])
 	
 	
 	match ship_type:

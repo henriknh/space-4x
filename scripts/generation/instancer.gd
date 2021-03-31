@@ -47,7 +47,7 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, over
 	
 	if inherit:
 		instance.planet_system = inherit.planet_system
-		instance.faction = inherit.faction
+		instance.corporation_id = inherit.corporation_id
 		instance.parent = inherit
 		if inherit.entity_type == Enums.entity_types.planet:
 			var angle = Random.randf() * 2 * PI

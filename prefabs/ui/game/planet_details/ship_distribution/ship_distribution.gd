@@ -54,11 +54,11 @@ func update_distribution_globally():
 		distribution[key][color_types.rebuilding].value = 0
 	
 	for planet in get_tree().get_nodes_in_group('Planet'):
-		if planet.faction == Consts.PLAYER_FACTION:
+		if planet.corporation_id == Consts.PLAYER_CORPORATION:
 			distribution[Enums.ship_types.disabled][color_types.current].value += planet.planet_disabled_ships
 			total_ships += planet.planet_disabled_ships
 	for ship in get_tree().get_nodes_in_group('Ship'):
-		if ship.faction == Consts.PLAYER_FACTION:
+		if ship.corporation_id == Consts.PLAYER_CORPORATION:
 			if ship.state == Enums.ship_states.travel:
 				continue
 			
@@ -82,7 +82,7 @@ func update_distribution_by_selection(selection: Entity):
 	total_ships = selection.planet_disabled_ships
 	
 	for child in selection.children:
-		if child.ship_type >= 0 and child.faction == Consts.PLAYER_FACTION:
+		if child.ship_type >= 0 and child.corporation_id == Consts.PLAYER_CORPORATION:
 			if child.state == Enums.ship_states.travel:
 				continue
 			

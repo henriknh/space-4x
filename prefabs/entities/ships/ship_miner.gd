@@ -48,7 +48,7 @@ func process(delta: float):
 		state = Enums.ship_states.idle
 		self.target = null
 		
-	if state == Enums.ship_states.idle and faction == parent.faction:
+	if state == Enums.ship_states.idle and corporation_id == parent.corporation_id:
 		self.target = _get_mining_target()
 		if target:
 			state = Enums.ship_states.mine
@@ -88,7 +88,7 @@ func _do_mine():
 	target.emit_signal("entity_changed")
 
 func deliver():
-	self.get_faction().resources.asteroid_rocks += asteroid_rocks
+	self.get_corporation().resources.asteroid_rocks += asteroid_rocks
 	asteroid_rocks = 0
 	parent.emit_signal("entity_changed")
 	
