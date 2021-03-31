@@ -14,15 +14,15 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://prefabs/entities/props/asteroid/asteroid.gd"
 }, {
+"base": "Node",
+"class": "Corporation",
+"language": "GDScript",
+"path": "res://scripts/utils/corporation.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Entity",
 "language": "GDScript",
 "path": "res://prefabs/entities/entity.gd"
-}, {
-"base": "Node",
-"class": "Faction",
-"language": "GDScript",
-"path": "res://scripts/utils/faction.gd"
 }, {
 "base": "Node2D",
 "class": "Game",
@@ -96,8 +96,8 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Asteroid": "",
+"Corporation": "",
 "Entity": "",
-"Faction": "",
 "Game": "",
 "Planet": "",
 "PlanetEarth": "",
@@ -137,7 +137,7 @@ Nav="*res://scripts/utils/navigation.gd"
 Voronoi="*res://scripts/voronoi/voronoi.gd"
 Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
-Factions="*res://scripts/utils/factions.gd"
+Corporations="*res://scripts/utils/corporations.gd"
 AI="*res://scripts/ai/ai.gd"
 Boid="*res://scripts/entities/boid.gd"
 
