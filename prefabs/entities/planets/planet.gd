@@ -39,7 +39,7 @@ func process(delta: float):
 				if process_target in Enums.ship_types.values():
 					get_node('/root/GameScene').add_child(Instancer.ship(process_target, null, self))
 			elif state == Enums.planet_states.convertion:
-				var corporation = Corporations.get_corporation(self.corporation_id)
+				var corporation = get_corporation()
 				var converted_amount = Consts.RESOURCE_CONVERTION_COST * Consts.RESOURCE_CONVERTION_RATIO
 				match process_target:
 					Enums.resource_types.titanium:
