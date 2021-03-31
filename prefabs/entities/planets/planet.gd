@@ -63,7 +63,9 @@ func _draw():
 	
 func kill():
 	faction = -1
+	Factions.emit_signal("factions_changed")
 	hitpoints = hitpoints_max
+	update()
 	
 func _process(delta):
 	if self.visible:
