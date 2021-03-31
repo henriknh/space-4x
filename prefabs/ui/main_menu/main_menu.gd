@@ -15,12 +15,12 @@ func _ready():
 	
 	_update_view_state()
 	
-	var timer = Timer.new()
-	timer.one_shot = true
-	timer.wait_time = 0.005
-	timer.connect("timeout", self, "_on_create")
-	add_child(timer)
-	timer.start()
+#	var timer = Timer.new()
+#	timer.one_shot = true
+#	timer.wait_time = 0.005
+#	timer.connect("timeout", self, "_on_create")
+#	add_child(timer)
+#	timer.start()
 	
 func _update_view_state():
 	$VBox/CreateGame/ButtonCreate.disabled = StateManager.has_save()
