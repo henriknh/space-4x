@@ -23,7 +23,7 @@ func process_cohesion(ship: Entity, neighbors: Array):
 	for boid in neighbors:
 		vector += boid.position
 	vector /= neighbors.size()
-	return ship.steer((vector - ship.position).normalized() * ship.ship_speed_max)
+	return ship.steer((vector - ship.position).normalized() * ship.ship_speed)
 
 func process_alignments(ship: Entity, neighbors: Array):
 	var vector = Vector2.ZERO
@@ -33,7 +33,7 @@ func process_alignments(ship: Entity, neighbors: Array):
 	for boid in neighbors:
 		vector += boid.velocity
 	vector /= neighbors.size()
-	return ship.steer(vector.normalized() * ship.ship_speed_max)
+	return ship.steer(vector.normalized() * ship.ship_speed)
 
 func process_seperation(ship: Entity, neighbors: Array):
 	var vector = Vector2.ZERO
@@ -49,4 +49,4 @@ func process_seperation(ship: Entity, neighbors: Array):
 		vector += difference.normalized() / difference.length()
 
 	vector /= close_neighbors.size()
-	return ship.steer(vector.normalized() * ship.ship_speed_max)
+	return ship.steer(vector.normalized() * ship.ship_speed)

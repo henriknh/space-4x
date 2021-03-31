@@ -6,15 +6,18 @@ const ship_texture_miner = preload("res://assets/ship_miner.png")
 
 class_name Ship
 
+var ship_type: int = -1
+var ship_speed: int = 100
+
 onready var node_sprite: Sprite = $Sprite
 onready var node_trail: Node2D = $Trail
 onready var node_obstacle_handler = $ObstacleHandler
 onready var node_raycast = $RayCast
 onready var node_animation: AnimationPlayer = $AnimationPlayer
 
-onready var velocity: Vector2 = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * ship_speed_max
+var parent: Entity
+onready var velocity: Vector2 = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * ship_speed
 onready var acceleration: Vector2 = Vector2.ZERO
-onready var ship_idle_speed: float = 500
 var target: Node2D = null setget set_target
 var target_reached: bool = false
 var approach_target: bool = false
@@ -28,16 +31,7 @@ func create():
 	
 	if hitpoints_max == -1:
 		hitpoints_max = 50
-	
-	if asteroid_rocks_max < 0:
-		asteroid_rocks_max = 0
-	if titanium_max < 0:
-		titanium_max = 0
-	if titanium_max < 0:
-		titanium_max = 10
-	if ship_cargo_size < 0:
-		ship_cargo_size = asteroid_rocks_max + titanium_max
-	
+
 	.create()
 	
 func _ready():
@@ -78,7 +72,7 @@ func process(delta: float):
 			nav_route = Nav.get_route(self, process_target)
 		
 		move()
-		_update_travel_route()
+		#_update_travel_route()
 		
 		if nav_route.size() == 0:
 			process_target = -1
@@ -141,7 +135,7 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 	
 	
 	var dist_to_target = target_diff.length_squared()
-	var near_target = dist_to_target <= pow(ship_speed_max, 2)
+	var near_target = dist_to_target <= pow(ship_speed, 2)
 	
 	if approach_target and dist_to_target <= 1:
 		velocity = Vector2.ZERO
@@ -153,7 +147,7 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 	else:
 		velocity += acceleration * delta
 	
-	velocity = velocity.clamped(ship_speed_max)
+	velocity = velocity.clamped(ship_speed)
 	rotation = velocity.angle()
 	translate(velocity * delta)
 	
@@ -166,76 +160,15 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 			node_trail.set_emitting(true)
 
 func steer(var target):
-	target *= ship_speed_max
+	target *= ship_speed
 	var steer = target - velocity
 	steer = steer.normalized() * Consts.SHIP_STEER_FORCE
 	return steer
 
-
-
-
-
-
-
-
-
-
-
-
-
-func _update_travel_route():
-	if close_to_target(nav_route[0].position):
-		if nav_route.size() > 1:
-			nav_route.pop_front()
-		else:
-			nav_route = []
-			process_target = -1
-
-func close_to_target(target_position: Vector2) -> bool:
-	if not target_position:
-		return false
-	
-	var distance_to_target = global_transform.origin.distance_squared_to(target_position)
-	return distance_to_target <= pow(max(160, ship_speed), 2)
-
 func set_visible(in_data) -> void:
-	if typeof(in_data) == TYPE_BOOL:
-		visible = in_data
-	else:
-		visible = planet_system == in_data
+	.set_visible(in_data)
 	if not visible:
 		node_trail.set_emitting(false)
-
-func get_random_point_in_site() -> Vector2:
-	var parent_hull = parent.planet_convex_hull
-	var hull = parent_hull.duplicate() if parent_hull[0] == parent_hull[parent_hull.size() - 1] else parent_hull
-	
-	var hull_shrinked: PoolVector2Array = []
-	for point in hull:
-		var point_shrinked = point * 0.8
-		hull_shrinked.append(point_shrinked + parent.position)
-	
-	var distance = Consts.PLANET_SYSTEM_RADIUS * Random.randf()
-	var angle = 2 * PI * Random.randf()
-	var target = Vector2(distance * cos(angle), distance * sin(angle)) + parent.position
-	
-	
-	# Check convex hull segments
-	var prev = hull_shrinked[0]
-	var curr = null
-	for i in range(1, hull_shrinked.size()):
-		curr = hull_shrinked[i]
-		var intersects = Geometry.segment_intersects_segment_2d(parent.position, target, prev, curr)
-		if intersects != null:
-			target = intersects
-		prev = curr
-	
-	# Check planet system bounds
-	var intersects_circle = Geometry.segment_intersects_circle(parent.position, target, Vector2.ZERO, Consts.PLANET_SYSTEM_RADIUS)
-	if intersects_circle != -1:
-		target = (target - parent.position) * intersects_circle + parent.position
-
-	return target
 
 func _rotate_sprite_texture():
 	print('_rotate_disabled_sprite')
@@ -251,3 +184,10 @@ func set_parent(planet: Entity) -> void:
 		node_obstacle_handler.remove_exception(parent.node_planet_area)
 	parent = planet
 	node_obstacle_handler.add_exception(parent.node_planet_area)
+
+
+func save():
+	var save = .save()
+	save["ship_type"] = ship_type
+	save["ship_speed"] = ship_speed
+	return save

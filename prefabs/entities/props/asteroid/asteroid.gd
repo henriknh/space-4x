@@ -2,6 +2,8 @@ extends Prop
 
 class_name Asteroid
 
+var asteroid_rocks: float = 0
+
 var sprite_size = 0
 
 onready var node_sprite: Sprite = $Sprite
@@ -10,7 +12,6 @@ onready var node_collision: CollisionShape2D = $CollisionShape
 func create():
 	prop_type = Enums.prop_types.asteroid
 	label = NameGenerator.get_name_asteroid()
-	rotation_speed = Random.randf_range(-1, 1) * 10
 	
 	asteroid_rocks = Random.randi_range(4, 32)
 	
@@ -30,9 +31,6 @@ func _ready():
 func process(delta: float):
 	if asteroid_rocks <= 0:
 		kill()
-		
-	if visible:
-		rotation_degrees += rotation_speed * delta
 	
 	.process(delta)
 
@@ -44,3 +42,8 @@ func _update_size():
 	
 	if asteroid_rocks == 0:
 		Instancer.asteroid_dust(self, true)
+
+func save():
+	var save = .save()
+	save["asteroid_rocks"] = asteroid_rocks
+	return save

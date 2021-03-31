@@ -6,7 +6,6 @@ onready var node_info = $InfoUI
 
 func create():
 	label = NameGenerator.get_name_galaxy()
-	indestructible = true
 	visible = false
 	.create()
 	
@@ -15,6 +14,9 @@ func _ready():
 	input_pickable = true
 	
 	node_info.set_name(label)
+	
+func kill():
+	pass
 
 func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:

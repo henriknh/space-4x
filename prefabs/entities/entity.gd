@@ -9,47 +9,28 @@ const INACTIVE_TIME_PERIOD: float = 0.05
 var delta: float = 0
 var queued_to_free: bool = false
 var _corporation: Corporation
+
 signal entity_changed
 
 # General
 var id: int = -1
 var variant: int = -1
-var parent: Entity
 var entity_type: int = -1
+var planet_system: int = -1
+var corporation_id: int = 0 setget _set_corporation
+
+# Make into "label" module
 var label: String = ''
+
+# Make into "hitpoint" module
 var hitpoints: int = 1
 var hitpoints_max: int = -1
-var indestructible: bool = false
-var corporation_id: int = 0 setget _set_corporation
-var planet_system: int = -1
-var rotation_speed: float = 0
+
+# Make into "state" module
 var state: int = 0
 var process_target: int
 var process_time: float = 0
 var _process_time_total: float = 0
-
-# Resources
-var asteroid_rocks: float = 0
-var asteroid_rocks_max: int = 0
-var titanium: float = 0
-var titanium_max: int = 0
-var astral_dust: float = 0
-var astral_dust_max: int = 0
-
-# Object specific variables
-var prop_type: int = -1
-
-# Planet specific variables
-var planet_type: int = -1
-var planet_size: float = 1.0
-var planet_convex_hull = []
-var planet_disabled_ships = 0
-
-# Ship specific variables
-var ship_type: int = -1
-var ship_speed: float = 0.0
-var ship_speed_max: int = 500
-var ship_cargo_size: int = 20
 
 func _physics_process(_delta):
 	if GameState.loading:
@@ -91,8 +72,6 @@ func kill():
 	queue_free()
 
 func is_dead() -> bool:
-	if indestructible:
-		return false
 	return hitpoints <= 0
 	
 func set_visible(in_data):
@@ -135,45 +114,18 @@ func save():
 		"id": id,
 		"variant": variant,
 		"entity_type": entity_type,
+		"planet_system": planet_system,
+		"corporation_id": corporation_id,
+		
 		"label": label,
+		
 		"hitpoints": hitpoints,
 		"hitpoints_max": hitpoints_max,
-		"indestructible": indestructible,
-		"corporation_id": corporation_id,
-		"planet_system": planet_system,
-		"rotation_speed": rotation_speed,
+		
 		"state": state,
 		"process_target": process_target,
 		"process_time": process_time,
 		"_process_time_total": _process_time_total,
-		
-		# Resources
-		"asteroid_rocks": asteroid_rocks,
-		"asteroid_rocks_max": asteroid_rocks_max,
-		"titanium": titanium,
-		"titanium_max": titanium_max,
-		"astral_dust": astral_dust,
-		"astral_dust_max": astral_dust_max,
-		
-		# Object
-		"prop_type": prop_type,
-		
-		# Planet
-		"planet_type": planet_type,
-		"planet_size": planet_size,
-		"planet_disabled_ships": planet_disabled_ships,
-		
-		# Ship
-		"ship_type": ship_type,
-		"ship_speed": ship_speed,
-		"ship_speed_max": ship_speed_max,
-		"ship_cargo_size": ship_cargo_size
 	}
-	
-	var i = 0
-	for point in planet_convex_hull:
-		data['planet_convex_hull_%d_x' % i] = point.x
-		data['planet_convex_hull_%d_y' % i] = point.y
-		i = i + 1
 	
 	return data

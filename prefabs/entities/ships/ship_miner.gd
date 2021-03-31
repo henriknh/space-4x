@@ -2,16 +2,19 @@ extends Ship
 
 class_name ShipMiner
 
+var asteroid_rocks: float = 0
+var asteroid_rocks_max: int = 64
+
 const ANIMATION_CHARGE_MINER = 'charge_miner'
 var mining_power = 8
 
 var miner_ready: bool = false
 var miner_timer: Timer
 
+
 func create():
 	ship_type = Enums.ship_types.miner
-	ship_speed_max = 100
-	asteroid_rocks_max = 64
+	ship_speed = 100
 	.create()
 	
 func _ready():
@@ -97,3 +100,9 @@ func _get_mining_target() -> Entity:
 		if not asteroid.is_dead() and asteroid.asteroid_rocks > 0:
 			return asteroid
 	return null
+
+func save():
+	var save = .save()
+	save["asteroid_rocks"] = asteroid_rocks
+	save["asteroid_rocks_max"] = asteroid_rocks_max
+	return save

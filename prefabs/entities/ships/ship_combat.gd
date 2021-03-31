@@ -10,7 +10,7 @@ var target_timer: Timer
 
 func create():
 	ship_type = Enums.ship_types.combat
-	ship_speed_max = 200
+	ship_speed = 200
 	.create()
 
 func _ready():
@@ -77,6 +77,8 @@ func _has_enemies_in_site() -> bool:
 	
 	var has_enemies = false
 	for child in parent.children:
+		if child.entity_type != Enums.entity_types.ship or child.is_dead():
+			continue
 		if child.ship_type != 0 and abs(int(ceil(child.corporation_id))) != corporation_id:
 			has_enemies = true
 			break
@@ -92,7 +94,7 @@ func _has_enemies_in_site() -> bool:
 func _get_closest_enemy() -> Entity:
 	var enemies = []
 	for child in parent.children:
-		if child.is_dead():
+		if child.entity_type != Enums.entity_types.ship or child.is_dead():
 			continue
 		if child.ship_type >= 0 and child.corporation_id != corporation_id:
 			enemies.append(child)

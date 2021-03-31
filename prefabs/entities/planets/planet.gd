@@ -2,6 +2,11 @@ extends Entity
 
 class_name Planet
 
+var planet_type: int = -1
+var planet_size: float = 1.0
+var planet_convex_hull = []
+var planet_disabled_ships = 0
+
 var is_hover = false
 
 var children = []
@@ -15,9 +20,7 @@ onready var node_planet_area_collision = $PlanetArea/PlanetAreaCollision
 func create():
 	entity_type = Enums.entity_types.planet
 	planet_size = Random.randf_range(1.0, 2.0)
-	rotation_speed = Random.randf_range(-1, 1) * 10
 	label = NameGenerator.get_name_planet()
-	indestructible = true
 	hitpoints_max = 250
 	visible = false
 	.create()
@@ -67,18 +70,17 @@ func kill():
 	self.hitpoints = hitpoints_max
 	update()
 	
-func _process(delta):
-	if self.visible:
-		.get_node("Sprite").rotation_degrees += rotation_speed * delta
-
 func _on_PlanetArea_body_entered(entity: Entity):
 	if self.planet_system == entity.planet_system:
 		children.append(entity)
-		if entity.prop_type == Enums.prop_types.asteroid:
-			asteroids.append(entity)
-			asteroids.sort_custom(self, "sort_asteroids")
-		if entity.has_method('set_parent'):
-			entity.set_parent(self)
+		match entity.entity_type:
+			Enums.entity_types.prop:
+				if entity.prop_type == Enums.prop_types.asteroid:
+					asteroids.append(entity)
+					asteroids.sort_custom(self, "sort_asteroids")
+			Enums.entity_types.ship:
+				if entity.has_method('set_parent'):
+					entity.set_parent(self)
 		emit_signal("entity_changed")
 
 func _on_PlanetArea_body_exited(entity: Entity):
@@ -129,3 +131,18 @@ func sort_asteroids(a: Entity, b: Entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b
+
+func save():
+	var save = .save()
+	
+	save["planet_type"] = planet_type
+	save["planet_size"] = planet_size
+	save["planet_disabled_ships"] = planet_disabled_ships
+	
+	var i = 0
+	for point in planet_convex_hull:
+		save['planet_convex_hull_%d_x' % i] = point.x
+		save['planet_convex_hull_%d_y' % i] = point.y
+		i = i + 1
+	
+	return save

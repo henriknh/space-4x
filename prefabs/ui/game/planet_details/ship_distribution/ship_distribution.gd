@@ -82,6 +82,8 @@ func update_distribution_by_selection(selection: Entity):
 	total_ships = selection.planet_disabled_ships
 	
 	for child in selection.children:
+		if child.entity_type != Enums.entity_types.ship:
+			continue
 		if child.ship_type >= 0 and child.corporation_id == Consts.PLAYER_CORPORATION:
 			if child.state == Enums.ship_states.travel:
 				continue
