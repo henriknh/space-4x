@@ -59,6 +59,20 @@ func generate_world():
 	print(player.corporation_id)
 	var player_planet = GenUtils.get_start_planet(all_planets, true)
 	player_planet.corporation_id = player.corporation_id
+	
+	var ship_types = []
+	for i in range(10):
+		ship_types.append(Enums.ship_types.combat)
+	for i in range(0):
+		ship_types.append(Enums.ship_types.explorer)
+	for i in range(0):
+		ship_types.append(Enums.ship_types.miner)
+	player_planet.planet_disabled_ships = 3
+		
+	for ship_type in ship_types:
+		var ship = Instancer.ship(ship_type, null, player_planet)
+		ship.corporation_id = Random.randi() % 2 + 1
+		get_node('/root/GameScene').add_child(ship)
 
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
 	camera.position = player_planet.position
