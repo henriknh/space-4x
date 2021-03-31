@@ -72,10 +72,6 @@ func _physics_process(_delta):
 			process(delta)
 			
 		delta = 0
-		
-func queue_free():
-	queued_to_free = true
-	.queue_free()
 
 func create():
 	id = WorldGenerator.unique_id
@@ -91,7 +87,8 @@ func process(delta: float):
 	pass
 
 func kill():
-	pass
+	queued_to_free = true
+	queue_free()
 
 func is_dead() -> bool:
 	if indestructible:

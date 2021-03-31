@@ -71,7 +71,7 @@ func process(delta: float):
 
 	if state == Enums.ship_states.disable and target_reached:
 		parent.planet_disabled_ships += 1
-		return queue_free()
+		return kill()
 	
 	elif state == Enums.ship_states.travel:
 		if nav_route.size() == 0 and process_target >= 0:
@@ -89,7 +89,7 @@ func process(delta: float):
 			# Replace old ship instance with disabled
 			if ship_type != Enums.ship_types.disabled:
 				get_node('/root/GameScene').add_child(Instancer.ship(Enums.ship_types.disabled, self))
-				return queue_free()
+				return kill()
 			process_time += delta
 			
 			if get_process_progress() > 1:
@@ -98,7 +98,7 @@ func process(delta: float):
 				state = Enums.ship_states.idle
 				
 				get_node('/root/GameScene').add_child(Instancer.ship(ship_type, self))
-				return queue_free()
+				return kill()
 	
 	elif ship_type != Enums.ship_types.disabled:
 		move()
@@ -106,8 +106,7 @@ func process(delta: float):
 	.process(delta)
 	
 func kill():
-	hitpoints = 0
-	queue_free()
+	.kill()
 
 func set_target(_target: Entity):
 	if target:

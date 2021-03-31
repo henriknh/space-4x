@@ -14,4 +14,4 @@ func process(delta: float):
 
 func kill():
 	hitpoints = 0
-	queue_free()
+	.kill()
