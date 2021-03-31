@@ -20,7 +20,7 @@ var label: String = ''
 var hitpoints: int = 1
 var hitpoints_max: int = -1
 var indestructible: bool = false
-var faction: int = -1 setget _set_faction
+var faction: int = 0 setget _set_faction
 var planet_system: int = -1
 var rotation_speed: float = 0
 var state: int = 0
@@ -119,7 +119,7 @@ func _set_faction(faction_value):
 		Factions.emit_signal("factions_changed")
 	
 func get_faction() -> Faction:
-	if faction >= 0 and _faction_object == null:
+	if faction > 0 and _faction_object == null:
 		_faction_object = Factions.get_faction(faction)
 	return _faction_object
 	

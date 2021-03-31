@@ -16,11 +16,11 @@ func _ready():
 
 func process(delta: float):
 	
-	if parent.faction == -1:
+	if parent.faction == 0:
 		state = Enums.ship_states.colonize
 	
 	if state == Enums.ship_states.colonize:
-		if parent.faction != -1:
+		if parent.faction != 0:
 			state = Enums.ship_states.idle
 		elif move(parent.position):
 			pass

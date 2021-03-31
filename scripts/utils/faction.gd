@@ -3,7 +3,7 @@ extends Node
 class_name Faction
 	
 var is_computer = true
-var faction = -1
+var faction = 0
 var difficulty = Random.randi() % Consts.AI_DIFFICULTY_LEVELS
 var friendliness = (Random.randf() * 2) - 1
 var explorer = Random.randf()
@@ -15,6 +15,6 @@ var resources = {
 }
 	
 func _init(faction: int) -> void:
-	self.is_computer = faction != 0
+	self.is_computer = faction > Consts.PLAYER_FACTION
 	self.faction = faction
 	self.color = Enums.player_colors[faction]

@@ -55,7 +55,7 @@ func generate_world():
 	GameState.set_planet_system(0)
 	
 	var all_planets = get_tree().get_nodes_in_group('Planet')
-	var player = Factions.create(0)
+	var player = Factions.create(Consts.PLAYER_FACTION)
 	var player_planet = GenUtils.get_start_planet(all_planets, true)
 	player_planet.faction = player.faction
 
@@ -65,8 +65,8 @@ func generate_world():
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
 	for idx in range(Random.randi_range(computers_min, computers_max)):
-		var ai_faction = Factions.create(idx + 1)
-		var start_planet = GenUtils.get_start_planet(all_planets, ai_faction.faction == 1)
+		var ai_faction = Factions.create(Consts.PLAYER_FACTION + 1 + idx)
+		var start_planet = GenUtils.get_start_planet(all_planets, ai_faction.faction == (Consts.PLAYER_FACTION + 1))
 		start_planet.faction = ai_faction.faction
 
 func add_node_deffered(node: Object):

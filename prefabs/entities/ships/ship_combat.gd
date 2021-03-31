@@ -35,7 +35,7 @@ func process(delta: float):
 	if state == Enums.ship_states.combat and not target:
 		state = Enums.ship_states.idle
 		
-	if state == Enums.ship_states.combat and target.faction == -1:
+	if state == Enums.ship_states.combat and target.faction == 0:
 		state = Enums.ship_states.idle
 		target = null
 		
@@ -63,7 +63,7 @@ func _shot():
 	weapon_ready = false
 	weapon_timer.start()
 	
-	var color = Enums.ship_colors[ship_type] if faction == 0 else Enums.player_colors[faction]
+	var color = Enums.ship_colors[ship_type] if faction == Consts.PLAYER_FACTION else Enums.player_colors[faction]
 	Instancer.laser(position, node_raycast.get_collision_point(), color)
 	
 func _weapon_ready():
@@ -71,13 +71,13 @@ func _weapon_ready():
 	weapon_ready = true
 	
 func _is_parent_enemy() -> bool:
-	return parent.faction >= 0 and parent.faction != faction
+	return parent.faction != 0 and abs(int(ceil(parent.faction))) != faction
 	
 func _has_enemies_in_site() -> bool:
 	
 	var has_enemies = false
 	for child in parent.children:
-		if child.ship_type >= 0 and child.faction != faction:
+		if child.ship_type != 0 and abs(int(ceil(child.faction))) != faction:
 			has_enemies = true
 			break
 	

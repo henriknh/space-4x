@@ -56,15 +56,15 @@ func process(delta: float):
 		.process(delta)
 
 func _draw():
-	if faction >= 0:
-		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Enums.player_colors[faction])
-	else:
+	if faction == 0:
 		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Color(0.25,0.25,0.25,1))
+	else:
+		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Enums.player_colors[faction])
 	
+		
 func kill():
-	faction = -1
-	Factions.emit_signal("factions_changed")
-	hitpoints = hitpoints_max
+	self.faction = 0
+	self.hitpoints = hitpoints_max
 	update()
 	
 func _process(delta):
@@ -130,7 +130,7 @@ func sort_closest(a: Entity, b: Entity) -> bool:
 func get_children_by_type(type: int, specific_type: String = 'entity_type') -> Array:
 	var children_by_type = []
 	for child in children:
-		if child[specific_type] == type and (child.faction == faction or child.faction == -1):
+		if child[specific_type] == type and (child.faction == faction or child.faction == 0):
 			children_by_type.append(child)
 	return children_by_type
 	

@@ -40,7 +40,7 @@ func _ship_movement_disabled() -> bool:
 		return true
 	else:
 		for child in GameState.get_selection().children:
-			if child.entity_type == Enums.entity_types.ship and child.faction == 0:
+			if child.entity_type == Enums.entity_types.ship and child.faction == Consts.PLAYER_FACTION:
 				return false
 		return true
 
@@ -49,7 +49,7 @@ func _update_ui():
 	node_btn_ship_movement.disabled = _ship_movement_disabled()
 	node_btn_planet_details.disabled = GameState.get_selection() == null
 	
-	var faction = Factions.get_faction(0)
+	var faction = Factions.get_faction(Consts.PLAYER_FACTION)
 	if faction:
 		node_asteroid_rocks.text = Utils.format_number(faction.resources.asteroid_rocks)
 		node_titanium.text = Utils.format_number(faction.resources.titanium)

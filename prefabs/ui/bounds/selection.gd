@@ -24,7 +24,7 @@ func _calc_original_data():
 		print('Selection id: %d' % selection.id)
 		print('Faction: %d' % selection.faction)
 		
-		selection_has_faction = selection.faction >= 0
+		selection_has_faction = selection.faction > 0
 		if selection_has_faction:
 			default_color = Enums.player_colors[selection.faction]
 			modulate.a = 1

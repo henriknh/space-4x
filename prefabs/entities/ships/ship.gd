@@ -41,7 +41,7 @@ func create():
 	.create()
 	
 func _ready():
-	if faction == 0:
+	if faction == Consts.PLAYER_FACTION:
 		node_sprite.self_modulate = Enums.ship_colors[ship_type]
 		node_trail.set_color(Enums.ship_colors[ship_type])
 	else:

@@ -10,9 +10,9 @@ func process(entity: Entity):
 
 class AIShipCombatSort:
 	static func sort_combat(a: Entity, b: Entity):
-		if a.faction == -1 and b.faction == -1:
+		if a.faction == 0 and b.faction == 0:
 			return a.id < b.id
-		elif a.faction >= 0 and b.faction == -1:
+		elif a.faction > 0 and b.faction == 0:
 			return false
-		elif a.faction == -1 and b.faction >= 0:
+		elif a.faction == 0 and b.faction > 0:
 			return true
