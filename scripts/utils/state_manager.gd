@@ -92,6 +92,7 @@ func load_game() -> bool:
 	return true
 
 func _instantiate_node_data(node_data):
+	WorldGenerator.test_unique_id(node_data.id)
 	
 	var new_object: KinematicBody2D = load(node_data["filename"]).instance()
 	new_object.set_script(load(node_data["script"]))

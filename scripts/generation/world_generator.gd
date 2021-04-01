@@ -12,10 +12,14 @@ var load_progress: float = 0
 var total_entities: float  = 0
 
 signal objects_loaded
-	
+
 func get_unique_id() -> int:
 	unique_id += 1
 	return unique_id
+	
+func test_unique_id(_id: int) -> void:
+	if unique_id < _id:
+		unique_id = _id
 
 func generate_world():
 	print('Generate world with seed: %d' % Random.get_seed())
