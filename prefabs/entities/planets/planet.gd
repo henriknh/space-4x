@@ -21,13 +21,11 @@ onready var node_planet_area_collision = $PlanetArea/PlanetAreaCollision
 func create():
 	entity_type = Enums.entity_types.planet
 	planet_size = Random.randf_range(1.0, 2.0)
-	label = NameGenerator.get_name_planet()
 	hitpoints = Consts.PLANET_HITPOINTS
 	visible = false
 	.create()
 	
 func _ready():
-	node_info.set_label(label)
 	node_planet_area_collision.polygon = self.planet_convex_hull
 	node_collision.shape = CircleShape2D.new()
 	node_collision.shape.radius = planet_size * Consts.PLANET_SIZE_FACTOR

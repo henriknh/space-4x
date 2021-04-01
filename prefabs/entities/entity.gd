@@ -19,9 +19,6 @@ var entity_type: int = -1
 var planet_system: int = -1
 var corporation_id: int = 0 setget _set_corporation
 
-# Make into "label" module
-var label: String = ''
-
 # Make into "state" module
 var state: int = 0
 var process_target: int
@@ -109,8 +106,6 @@ func save():
 		"entity_type": entity_type,
 		"planet_system": planet_system,
 		"corporation_id": corporation_id,
-		
-		"label": label,
 		
 		"state": state,
 		"process_target": process_target,

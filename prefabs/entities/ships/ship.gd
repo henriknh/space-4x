@@ -28,7 +28,6 @@ var nav_route = []
 
 func create():
 	entity_type = Enums.entity_types.ship
-	label = NameGenerator.get_name_ship()
 
 	.create()
 	

@@ -11,7 +11,6 @@ onready var node_collision: CollisionShape2D = $CollisionShape
 
 func create():
 	prop_type = Enums.prop_types.asteroid
-	label = NameGenerator.get_name_asteroid()
 	
 	asteroid_rocks = Random.randi_range(4, 32)
 	

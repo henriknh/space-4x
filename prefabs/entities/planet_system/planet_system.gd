@@ -5,15 +5,12 @@ class_name PlanetSystem
 onready var node_info = $InfoUI
 
 func create():
-	label = NameGenerator.get_name_galaxy()
 	visible = false
 	.create()
 	
 func _ready():
 	# Make node clickable with mouse
 	input_pickable = true
-	
-	node_info.set_name(label)
 	
 func kill():
 	pass
