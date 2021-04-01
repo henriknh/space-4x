@@ -70,7 +70,7 @@ func kill():
 	update()
 
 func is_dead() -> bool:
-	return hitpoints <= 0 or corporation_id == 0
+	return hitpoints <= 0
 	
 func _on_PlanetArea_body_entered(entity: Entity):
 	if self.planet_system == entity.planet_system:
