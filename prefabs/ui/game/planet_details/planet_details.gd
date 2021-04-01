@@ -51,9 +51,6 @@ func _on_close():
 
 func _update_ui():
 	
-	# Set name of selection
-	$VBoxContainer/Info/LabelSelection.text = selection.label
-	
 	# Enable/disable actions
 	var busy = selection.state != Enums.planet_states.idle
 	var cant_convert = true

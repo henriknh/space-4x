@@ -56,7 +56,7 @@ func _on_confirm():
 	# Fetch ships to unallocate
 	var unallocated_children = []
 	for child in selection.get_children_sorted_by_distance():
-		if child.ship_type >= 0:
+		if child.entity_type == Enums.entity_types.ship and child.ship_type >= 0:
 			for ship_type in Enums.ship_types.values():
 				if child.ship_type == ship_type:
 					match child.ship_type:
