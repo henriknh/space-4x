@@ -4,8 +4,9 @@ class_name Planet
 
 var planet_type: int = -1
 var planet_size: float = 1.0
-var planet_convex_hull = []
 var planet_disabled_ships = 0
+var hitpoints: int = 0
+var planet_convex_hull = []
 
 var is_hover = false
 
@@ -21,7 +22,7 @@ func create():
 	entity_type = Enums.entity_types.planet
 	planet_size = Random.randf_range(1.0, 2.0)
 	label = NameGenerator.get_name_planet()
-	hitpoints_max = 250
+	hitpoints = Consts.PLANET_HITPOINTS
 	visible = false
 	.create()
 	
@@ -67,8 +68,11 @@ func _draw():
 		
 func kill():
 	self.corporation_id = 0
-	self.hitpoints = hitpoints_max
+	self.hitpoints = Consts.PLANET_HITPOINTS
 	update()
+
+func is_dead() -> bool:
+	return hitpoints <= 0 or corporation_id == 0
 	
 func _on_PlanetArea_body_entered(entity: Entity):
 	if self.planet_system == entity.planet_system:
@@ -138,6 +142,7 @@ func save():
 	save["planet_type"] = planet_type
 	save["planet_size"] = planet_size
 	save["planet_disabled_ships"] = planet_disabled_ships
+	save["hitpoints"] = hitpoints
 	
 	var i = 0
 	for point in planet_convex_hull:

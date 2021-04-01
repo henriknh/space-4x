@@ -7,7 +7,8 @@ var explore_position: Vector2 = Vector2.INF
 
 func create():
 	ship_type = Enums.ship_types.explorer
-	ship_speed = 150
+	hitpoints = Consts.SHIP_HITPOINTS_EXPLORER
+	ship_speed = Consts.SHIP_SPEED_EXPLORER
 	.create()
 	
 func _ready():

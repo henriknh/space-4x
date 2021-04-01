@@ -15,7 +15,6 @@ func process(delta: float):
 	.process(delta)
 
 func kill():
-	hitpoints = 0
 	.kill()
 
 func save():

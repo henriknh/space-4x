@@ -8,6 +8,7 @@ class_name Ship
 
 var ship_type: int = -1
 var ship_speed: int = 100
+var hitpoints: int = 0
 
 onready var node_sprite: Sprite = $Sprite
 onready var node_trail: Node2D = $Trail
@@ -28,9 +29,6 @@ var nav_route = []
 func create():
 	entity_type = Enums.entity_types.ship
 	label = NameGenerator.get_name_ship()
-	
-	if hitpoints_max == -1:
-		hitpoints_max = 50
 
 	.create()
 	
@@ -101,6 +99,9 @@ func process(delta: float):
 	
 func kill():
 	.kill()
+
+func is_dead() -> bool:
+	return hitpoints <= 0
 
 func set_target(_target: Entity):
 	if target:
@@ -190,4 +191,5 @@ func save():
 	var save = .save()
 	save["ship_type"] = ship_type
 	save["ship_speed"] = ship_speed
+	save["hitpoints"] = hitpoints
 	return save

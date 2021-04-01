@@ -14,7 +14,8 @@ var miner_timer: Timer
 
 func create():
 	ship_type = Enums.ship_types.miner
-	ship_speed = 100
+	hitpoints = Consts.SHIP_HITPOINTS_MINER
+	ship_speed = Consts.SHIP_SPEED_MINER
 	.create()
 	
 func _ready():

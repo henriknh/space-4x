@@ -10,7 +10,8 @@ var target_timer: Timer
 
 func create():
 	ship_type = Enums.ship_types.combat
-	ship_speed = 200
+	hitpoints = Consts.SHIP_HITPOINTS_COMBAT
+	ship_speed = Consts.SHIP_SPEED_COMBAT
 	.create()
 
 func _ready():

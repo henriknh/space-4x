@@ -22,10 +22,6 @@ var corporation_id: int = 0 setget _set_corporation
 # Make into "label" module
 var label: String = ''
 
-# Make into "hitpoint" module
-var hitpoints: int = 1
-var hitpoints_max: int = -1
-
 # Make into "state" module
 var state: int = 0
 var process_target: int
@@ -44,7 +40,7 @@ func _physics_process(_delta):
 	if visible and delta < ACTIVE_TIME_PERIOD or not visible and delta < INACTIVE_TIME_PERIOD:
 		return
 	else:
-		if hitpoints <= 0:
+		if is_dead():
 			kill()
 		else:
 			var corporation = get_corporation()
@@ -57,9 +53,6 @@ func _physics_process(_delta):
 func create():
 	id = WorldGenerator.unique_id
 	variant = Random.randi()
-	if hitpoints_max == -1:
-		hitpoints_max = 1
-	hitpoints = hitpoints_max
 
 func _ready():
 	set_visible(planet_system == GameState.get_planet_system())
@@ -72,7 +65,7 @@ func kill():
 	queue_free()
 
 func is_dead() -> bool:
-	return hitpoints <= 0
+	return false
 	
 func set_visible(in_data):
 	if typeof(in_data) == TYPE_BOOL:
@@ -118,9 +111,6 @@ func save():
 		"corporation_id": corporation_id,
 		
 		"label": label,
-		
-		"hitpoints": hitpoints,
-		"hitpoints_max": hitpoints_max,
 		
 		"state": state,
 		"process_target": process_target,
