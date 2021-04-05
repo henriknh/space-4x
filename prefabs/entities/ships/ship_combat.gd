@@ -75,6 +75,8 @@ func _is_parent_enemy() -> bool:
 	return parent.corporation_id != 0 and abs(int(ceil(parent.corporation_id))) != corporation_id
 	
 func _has_enemies_in_site() -> bool:
+	if not parent:
+		return false
 	
 	var has_enemies = false
 	for child in parent.children:
@@ -93,23 +95,23 @@ func _has_enemies_in_site() -> bool:
 	return has_enemies
 	
 func _get_closest_enemy() -> Entity:
+	
+	var enemy: Entity = null
+	var dist_enemy: float = INF
+	
 	var enemies = []
 	for child in parent.children:
-		if child.entity_type != Enums.entity_types.ship or child.is_dead():
-			continue
-		if child.ship_type >= 0 and child.corporation_id != corporation_id:
-			enemies.append(child)
+		if child.entity_type == Enums.entity_types.ship and not child.is_dead() and child != self:
+			var _dist_enemy: float = position.distance_squared_to(child.position)
+			if _dist_enemy < dist_enemy:
+				if _dist_enemy / dist_enemy < 0.8:
+					enemy = child
+					dist_enemy = _dist_enemy
 	
-	enemies.sort_custom(self, "sort_combat_type")
-	enemies.sort_custom(self, "sort_distance")
+	if not enemy and _is_parent_enemy():
+		enemy = parent
 	
-	if _is_parent_enemy():
-		enemies.append(parent)
-	
-	if enemies.size() > 0:
-		return enemies[0]
-	else:
-		return null
+	return enemy
 
 func sort_combat_type(a: Entity, b: Entity) -> bool:
 	return b.ship_type != Enums.ship_types.combat
