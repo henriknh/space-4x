@@ -48,13 +48,14 @@ func generate_world():
 		total_entities += planet_system.planets.size()
 		total_entities += planet_system.asteroids.size()
 		
-		call_deferred("add_node_deffered", planet_system.planet_system)
+	for planet_system in planet_systems:
+		call("add_node_deffered", planet_system.planet_system)
 		for planet in planet_system.planets:
-			call_deferred("add_node_deffered", planet)
+			call("add_node_deffered", planet)
 		for asteroid in planet_system.asteroids:
-			call_deferred("add_node_deffered", asteroid)
+			call("add_node_deffered", asteroid)
 	
-	yield(self, "objects_loaded")
+	#yield(self, "objects_loaded")
 	
 	GameState.set_planet_system(0)
 	
@@ -63,20 +64,6 @@ func generate_world():
 	print(player.corporation_id)
 	var player_planet = GenUtils.get_start_planet(all_planets, true)
 	player_planet.corporation_id = player.corporation_id
-	
-	var ship_types = []
-	for i in range(10):
-		ship_types.append(Enums.ship_types.combat)
-	for i in range(0):
-		ship_types.append(Enums.ship_types.explorer)
-	for i in range(0):
-		ship_types.append(Enums.ship_types.miner)
-	player_planet.planet_disabled_ships = 3
-		
-	for ship_type in ship_types:
-		var ship = Instancer.ship(ship_type, null, player_planet)
-		ship.corporation_id = Random.randi() % 2 + 1
-		get_node('/root/GameScene').add_child(ship)
 
 	var camera = get_node('/root/GameScene/Camera') as Camera2D
 	camera.position = player_planet.position
@@ -87,7 +74,38 @@ func generate_world():
 		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx)
 		var start_planet = GenUtils.get_start_planet(all_planets, ai_corporation.corporation_id == (Consts.PLAYER_CORPORATION + 1))
 		start_planet.corporation_id = ai_corporation.corporation_id
+		
+		
+	var debug_timer = Timer.new()
+	debug_timer.one_shot = true
+	debug_timer.wait_time = 0.25
+	debug_timer.connect("timeout", self, "_after_generation_debug")
+	gameScene.add_child(debug_timer)
+	debug_timer.start()
 
+func _after_generation_debug():
+	
+	var player_planet: Entity = null
+	for planet in get_tree().get_nodes_in_group('Planet'):
+		if planet.corporation_id == Consts.PLAYER_CORPORATION:
+			player_planet = planet
+	
+	var ship_types = []
+	for i in range(50):
+		ship_types.append(Enums.ship_types.combat)
+	for i in range(0):
+		ship_types.append(Enums.ship_types.explorer)
+	for i in range(0):
+		ship_types.append(Enums.ship_types.miner)
+	player_planet.planet_disabled_ships = 3
+	
+	var i = 0
+	for ship_type in ship_types:
+		var ship = Instancer.ship(ship_type, null, player_planet)
+		ship.corporation_id = i % 2 + 1
+		i += 1
+		get_node('/root/GameScene').add_child(ship)
+	
 func add_node_deffered(node: Object):
 	gameScene.add_child(node)
 	
