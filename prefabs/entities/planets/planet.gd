@@ -5,6 +5,7 @@ class_name Planet
 var planet_type: int = -1
 var planet_size: float = 1.0
 var planet_disabled_ships = 0
+var planet_explorer_ships = 0
 var hitpoints: int = 0
 var planet_convex_hull = []
 
@@ -33,6 +34,15 @@ func _ready():
 	._ready()
 
 func process(delta: float):
+	
+	if state != Enums.planet_states.colonize:
+		process_time += delta * planet_explorer_ships
+		
+		if get_process_progress() > 1:
+			
+			process_time = 0
+			state = Enums.planet_states.idle
+		
 	if state == Enums.planet_states.produce or state == Enums.planet_states.convertion:
 		process_time += delta
 		
@@ -58,9 +68,13 @@ func process(delta: float):
 		.process(delta)
 
 func _draw():
-	if corporation_id == 0:
+	if corporation_id <= 0:
 		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Color(0.25,0.25,0.25,1))
-	else:
+
+	if corporation_id < 0:
+		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR * get_process_progress(), Enums.corporation_colors[corporation_id])
+	
+	if corporation_id > 0:
 		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Enums.corporation_colors[corporation_id])
 	
 		
@@ -140,6 +154,7 @@ func save():
 	save["planet_type"] = planet_type
 	save["planet_size"] = planet_size
 	save["planet_disabled_ships"] = planet_disabled_ships
+	save["planet_explorer_ships"] = planet_explorer_ships
 	save["hitpoints"] = hitpoints
 	
 	var i = 0

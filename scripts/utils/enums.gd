@@ -71,7 +71,8 @@ const planet_types = {
 const planet_states = {
 	'idle': 0,
 	'produce': 5101,
-	'convertion': 5102
+	'convertion': 5102,
+	'colonize': 5103
 }
 
 const planet_scripts = {
