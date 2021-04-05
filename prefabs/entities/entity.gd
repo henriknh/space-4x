@@ -21,6 +21,10 @@ var corporation_id: int = 0 setget _set_corporation
 
 # Make into "state" module
 var state: int = 0
+var state_target: int = 0
+var state_time: float = 0
+var state_time_end: float = 0
+
 var process_target: int
 var process_time: float = 0
 var _process_time_total: float = 0
@@ -70,6 +74,33 @@ func set_visible(in_data):
 	else:
 		visible = planet_system == in_data
 
+func set_state(state: int, target: int = 0, time: int = 0):
+	self.state = state
+	self.state_target = target
+	self.state_time = 0
+	self.state_time_end = time
+
+func get_state() -> int:
+	return self.state
+
+func get_state_target() -> int:
+	return self.state_target
+	
+func state_progress_increase(time: float) -> bool:
+	self.state_time += time
+	return state_progressed()
+	
+func state_progress() -> float:
+	if self.state_time_end <= 0:
+		return 0.0
+	return self.state_time / self.state_time_end
+
+func state_progressed() -> bool:
+	return self.state_time >= self.state_time_end
+
+
+
+
 func set_entity_process(state: int, target: int, total_time: int = 0) -> void:
 	self.state = state
 	process_target = target
@@ -108,9 +139,9 @@ func save():
 		"corporation_id": corporation_id,
 		
 		"state": state,
-		"process_target": process_target,
-		"process_time": process_time,
-		"_process_time_total": _process_time_total,
+		"state_target": state_target,
+		"state_time": state_time,
+		"state_time_end": state_time_end,
 	}
 	
 	return data
