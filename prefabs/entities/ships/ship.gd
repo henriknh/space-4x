@@ -111,9 +111,7 @@ func set_target(_target: Entity):
 	
 	if target:
 		approach_target = not target.entity_type == Enums.entity_types.ship
-	
-		if target.entity_type == Enums.entity_types.ship:
-			node_obstacle_handler.add_exception(target)
+		node_obstacle_handler.add_exception(target)
 
 func move(target_pos: Vector2 = Vector2.INF) -> void:
 	
