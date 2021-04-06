@@ -5,7 +5,7 @@ onready var sensors = $Sensors.get_children()
 onready var node_middle_ray: RayCast2D = $RayCastForward
 onready var parent: Node2D = get_owner()
 
-func add_exception(exception: Entity) -> void:
+func add_exception(exception: Object) -> void:
 	for ray in detectors:
 		ray.add_exception(exception)
 
@@ -14,13 +14,14 @@ func add_exceptions(exceptions: Array) -> void:
 		for exception in exceptions:
 			ray.add_exception(exception)
 
-func remove_exception(exception: Entity) -> void:
+func remove_exception(exception: Object) -> void:
 	for ray in detectors:
 		ray.remove_exception(exception)
 
 func is_obsticle_ahead() -> bool:
 	for ray in detectors:
 		if ray.is_colliding():
+			print(ray.get_collider())
 			return true
 	return false
 
