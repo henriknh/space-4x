@@ -147,7 +147,10 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 	else:
 		velocity += acceleration * delta
 	
-	velocity = velocity.clamped(ship_speed)
+	if state == Enums.ship_states.idle:
+		velocity = velocity.clamped(Consts.SHIP_SPEED_IDLE)
+	else:
+		velocity = velocity.clamped(ship_speed)
 	rotation = velocity.angle()
 	translate(velocity * delta)
 	
@@ -160,7 +163,10 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 			node_trail.set_emitting(true)
 
 func steer(var target):
-	target *= ship_speed
+	if state == Enums.ship_states.idle:
+		target *= Consts.SHIP_SPEED_IDLE
+	else:
+		target *= ship_speed
 	var steer = target - velocity
 	steer = steer.normalized() * Consts.SHIP_STEER_FORCE
 	return steer
