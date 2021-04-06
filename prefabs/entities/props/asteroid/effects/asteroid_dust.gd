@@ -22,5 +22,4 @@ func _ready():
 	timer.start()
 
 func _on_destroy():
-	print('destroy')
 	queue_free()

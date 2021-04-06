@@ -55,7 +55,6 @@ func process(delta: float):
 	elif state == Enums.ship_states.combat \
 		and node_raycast.is_colliding() \
 		and node_raycast.get_collider() == target:
-			print("shot %d" % target.id)
 			_shot()
 
 	.process(delta)
@@ -118,7 +117,6 @@ func _get_closest_enemy() -> Entity:
 					enemy = child
 					dist_enemy = _dist_enemy
 	
-	print(not enemy)
 	if not enemy and _is_parent_enemy():
 		enemy = parent
 	
