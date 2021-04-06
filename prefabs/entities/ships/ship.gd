@@ -113,7 +113,7 @@ func set_target(_target: Entity):
 		approach_target = not target.entity_type == Enums.entity_types.ship
 		node_obstacle_handler.add_exception(target)
 
-func move(target_pos: Vector2 = Vector2.INF) -> void:
+func move(target_pos: Vector2 = Vector2.INF) -> bool:
 	
 	var target_diff = Vector2.ZERO
 	if target_pos != Vector2.INF:
@@ -159,6 +159,8 @@ func move(target_pos: Vector2 = Vector2.INF) -> void:
 			node_trail.set_emitting(false)
 		elif not node_trail.is_emitting():
 			node_trail.set_emitting(true)
+			
+	return target_reached
 
 func steer(var target):
 	if state == Enums.ship_states.idle:
