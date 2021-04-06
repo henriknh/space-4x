@@ -103,7 +103,7 @@ func _get_closest_enemy() -> Entity:
 	if not weapon_ready:
 		return target as Entity
 	
-	var enemy: Entity = target
+	var enemy: Entity = target if target and target.entity_type == Enums.entity_types.ship else null
 	var dist_enemy: float = position.distance_squared_to(enemy.position) if enemy else INF
 	
 	var enemies = []
