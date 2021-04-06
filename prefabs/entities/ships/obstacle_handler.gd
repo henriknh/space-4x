@@ -21,7 +21,6 @@ func remove_exception(exception: Object) -> void:
 func is_obsticle_ahead() -> bool:
 	for ray in detectors:
 		if ray.is_colliding():
-			print(ray.get_collider())
 			return true
 	return false
 
