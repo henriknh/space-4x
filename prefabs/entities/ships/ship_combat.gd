@@ -25,7 +25,7 @@ func _ready():
 	
 	target_timer = Timer.new()
 	target_timer.connect("timeout", self, "_update_target")
-	target_timer.wait_time = 0.5
+	target_timer.wait_time = 0.25
 	add_child(target_timer)
 	
 	._ready()
@@ -55,6 +55,7 @@ func process(delta: float):
 	elif state == Enums.ship_states.combat \
 		and node_raycast.is_colliding() \
 		and node_raycast.get_collider() == target:
+			print("shot %d" % target.id)
 			_shot()
 
 	.process(delta)
@@ -69,10 +70,12 @@ func _shot():
 	
 func _weapon_ready():
 	target = _get_closest_enemy()
+	target_timer.start()
+	
 	weapon_ready = true
 	
 func _is_parent_enemy() -> bool:
-	return parent.corporation_id != 0 and abs(int(ceil(parent.corporation_id))) != corporation_id
+	return not parent.is_dead() and parent.corporation_id != 0 and abs(int(ceil(parent.corporation_id))) != corporation_id
 	
 func _has_enemies_in_site() -> bool:
 	if not parent:
@@ -88,38 +91,38 @@ func _has_enemies_in_site() -> bool:
 	
 	has_enemies = has_enemies or _is_parent_enemy()
 	
-	if has_enemies and target_timer.is_stopped():
-		target_timer.start()
+	if has_enemies:
+		if target_timer.is_stopped():
+			target_timer.start()
 	else:
 		target_timer.stop()
+	
 	return has_enemies
 	
 func _get_closest_enemy() -> Entity:
+
+	if not weapon_ready:
+		return target as Entity
 	
-	var enemy: Entity = null
-	var dist_enemy: float = INF
+	var enemy: Entity = target
+	var dist_enemy: float = position.distance_squared_to(enemy.position) if enemy else INF
 	
 	var enemies = []
 	for child in parent.children:
-		if child.entity_type == Enums.entity_types.ship and not child.is_dead() and child != self:
+		if child.entity_type != Enums.entity_types.ship or child.is_dead():
+			continue
+		if child != self and abs(int(ceil(child.corporation_id))) != corporation_id:
 			var _dist_enemy: float = position.distance_squared_to(child.position)
 			if _dist_enemy < dist_enemy:
-				if _dist_enemy / dist_enemy < 0.8:
+				if _dist_enemy / dist_enemy <= 0.8:
 					enemy = child
 					dist_enemy = _dist_enemy
 	
+	print(not enemy)
 	if not enemy and _is_parent_enemy():
 		enemy = parent
 	
 	return enemy
-
-func sort_combat_type(a: Entity, b: Entity) -> bool:
-	return b.ship_type != Enums.ship_types.combat
-	
-func sort_distance(a: Entity, b: Entity) -> bool:
-	var dist_a = self.position.distance_squared_to(a.position)
-	var dist_b = self.position.distance_squared_to(b.position)
-	return dist_a < dist_b
 
 func _update_target():
 	if _has_enemies_in_site():
