@@ -18,12 +18,14 @@ static func generate(planet_system_idx: int) -> Array:
 		var distance = Consts.ASTEROIDS_BASE_DISTANCE_TO_SUN + Random.randf() * (Consts.PLANET_SYSTEM_RADIUS + Consts.ASTEROIDS_EXTRA_DISTANCE)
 		var position = Vector2(distance * cos(angle), distance * sin(angle))
 		
-		if asteroid_idx >= total_asteroids * 0.25 and asteroid_formation != Enums.asteroid_formation_types.none:
+		if asteroid_idx >= total_asteroids * 0.5 and asteroid_formation != Enums.asteroid_formation_types.none:
 			var polygon = []
 			match asteroid_formation:
 				Enums.asteroid_formation_types.belt:
 					distance = Consts.ASTEROIDS_FORMATION_BELT_DISTANCE + Random.randf() * Consts.ASTEROIDS_FORMATION_OFFSET
-					position = Vector2(distance * cos(angle), distance * sin(angle))
+					for i in range(64):
+						var angle_point = deg2rad(i * 360 / 64)
+						polygon.push_back(Vector2(cos(angle_point), sin(angle_point)) * distance)
 				Enums.asteroid_formation_types.hilda:
 					
 					var x = 0
