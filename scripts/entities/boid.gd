@@ -3,6 +3,9 @@ extends Node
 func process(ship: Entity) -> Vector2:
 	var neighbors = []
 	
+	if not ship.parent:
+		return Vector2.ZERO
+	
 	for child in ship.parent.children:
 		if child == ship:
 			continue
@@ -39,7 +42,7 @@ func process_seperation(ship: Entity, neighbors: Array):
 	var vector = Vector2.ZERO
 	var close_neighbors = []
 	for boid in neighbors:
-		if ship.position.distance_to(boid.position) < 250:
+		if ship.position.distance_to(boid.position) < 100:
 			close_neighbors.append(boid)
 	if close_neighbors.empty():
 		return vector
