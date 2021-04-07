@@ -2,37 +2,42 @@ extends Control
 
 var settings = preload('res://prefabs/ui/settings/settings_menu.tscn')
 
+onready var node_world_size: OptionButton = $VBox/CreateGame/VBoxContainer/OptionBtnWorldSize
+onready var node_seed: SpinBox = $VBox/CreateGame/VBoxContainer/SpinBoxSeed
+onready var node_create: Button = $VBox/CreateGame/ButtonCreate
+onready var node_load: Button = $VBox/StoredGame/ButtonLoad
+onready var node_delete: Button = $VBox/StoredGame/ButtonDeleteSave
+
 func _ready():
 	MenuState.push(self)
-
-	for world_size_value in Enums.world_size.values():
-		$VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.add_item(Enums.world_size_label[world_size_value], world_size_value)
 	
-	$VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.selected = WorldGenerator.world_size
-	$VBox/CreateGame/VBoxContainer/SpinBoxSeed.value = Random.get_seed()
-	_on_world_size_changed($VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.selected)
-	_on_seed_changed($VBox/CreateGame/VBoxContainer/SpinBoxSeed.value)
+	for world_size_value in Enums.world_size.values():
+		node_world_size.add_item(Enums.world_size_label[world_size_value], world_size_value)
+
+	node_world_size.selected = WorldGenerator.world_size
+	node_seed.value = Random.get_seed()
+	_on_world_size_changed(node_world_size.selected)
+	_on_seed_changed(node_seed.value)
 	
 	_update_view_state()
 	
-#	var timer = Timer.new()
-#	timer.one_shot = true
-#	timer.wait_time = 0.005
-#	timer.connect("timeout", self, "_on_create")
-#	add_child(timer)
-#	timer.start()
+	var timer = Timer.new()
+	timer.one_shot = true
+	timer.wait_time = 0.005
+	timer.connect("timeout", self, "_on_create")
+	add_child(timer)
+	timer.start()
 	
 func _update_view_state():
-	$VBox/CreateGame/ButtonCreate.disabled = StateManager.has_save()
-	$VBox/StoredGame/ButtonLoad.disabled = not StateManager.has_save()
-	$VBox/StoredGame/ButtonDeleteSave.disabled = not StateManager.has_save()
+	node_create.disabled = StateManager.has_save()
+	node_load.disabled = not StateManager.has_save()
+	node_delete.disabled = not StateManager.has_save()
 
 func _on_create():
 	Scene.goto_game()
 
 func _on_world_size_changed(idx: int):
-	var selected_world_size = $VBox/CreateGame/VBoxContainer/OptionBtnWorldSize.get_item_id(idx)
-	WorldGenerator.world_size = selected_world_size
+	WorldGenerator.world_size = node_world_size.get_item_id(idx)
 
 func _on_seed_changed(seed_value: int):
 	Random.set_seed(seed_value)
