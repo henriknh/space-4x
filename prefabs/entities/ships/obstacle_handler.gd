@@ -2,7 +2,6 @@ extends Node2D
 
 onready var detectors = $Detectors.get_children()
 onready var sensors = $Sensors.get_children()
-onready var node_middle_ray: RayCast2D = $RayCastForward
 onready var parent: Node2D = get_owner()
 
 func add_exception(exception: Object) -> void:
