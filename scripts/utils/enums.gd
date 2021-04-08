@@ -106,7 +106,7 @@ const ship_states = {
 	'deliver': 6105,
 	'combat': 6106,
 	'explore': 6107,
-	'colonize': 6108
+	'colonize': 6108,
 }
 
 # Research 7000 - 7999
