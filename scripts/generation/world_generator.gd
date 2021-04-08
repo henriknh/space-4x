@@ -61,7 +61,6 @@ func generate_world():
 	
 	var all_planets = get_tree().get_nodes_in_group('Planet')
 	var player = Corporations.create(Consts.PLAYER_CORPORATION)
-	print(player.corporation_id)
 	var player_planet = GenUtils.get_start_planet(all_planets, true)
 	player_planet.corporation_id = player.corporation_id
 
