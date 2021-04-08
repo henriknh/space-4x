@@ -50,8 +50,8 @@ func _on_confirm():
 		Enums.ship_types.explorer: [],
 	}
 	
-	var sorted_children = (move_selection.origin_planet as Planet).get_children_sorted_by_distance()
-	for ship in sorted_children:
+	var sorted_ships = (move_selection.origin_planet as Planet).get_ships_sorted_by_distance()
+	for ship in sorted_ships:
 		
 		if ship.ship_type == -1:
 			continue

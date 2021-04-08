@@ -11,7 +11,7 @@ var planet_convex_hull = []
 
 var is_hover = false
 
-var children = []
+var ships = []
 var asteroids = []
 
 onready var node_info = $InfoUI
@@ -88,21 +88,24 @@ func is_dead() -> bool:
 	
 func _on_PlanetArea_body_entered(entity: Entity):
 	if self.planet_system == entity.planet_system:
-		children.append(entity)
 		match entity.entity_type:
 			Enums.entity_types.prop:
 				if entity.prop_type == Enums.prop_types.asteroid:
 					asteroids.append(entity)
-					asteroids.sort_custom(self, "sort_asteroids")
+					asteroids.sort_custom(self, "sort_closest")
 			Enums.entity_types.ship:
+				ships.append(entity)
+				ships.sort_custom(self, "sort_closest")
 				if entity.has_method('set_parent'):
 					entity.set_parent(self)
 		emit_signal("entity_changed")
 
 func _on_PlanetArea_body_exited(entity: Entity):
 	if self.planet_system == entity.planet_system:
-		children.erase(entity)
-		asteroids.erase(entity)
+		if entity.entity_type == Enums.entity_types.ship:
+			ships.erase(entity)
+		if entity.entity_type == Enums.entity_types.prop and entity.prop_type == Enums.prop_types.asteroid:
+			asteroids.erase(entity)
 		emit_signal("entity_changed")
 		
 func _on_PlanetArea_input_event(viewport, event, shape_idx):
@@ -126,24 +129,8 @@ func _on_hover_enter():
 func _on_hover_leave():
 	is_hover = false
 	update()
-
-func get_children_sorted_by_distance() -> Array:
-	children.sort_custom(self, "sort_closest")
-	return children
 	
 func sort_closest(a: Entity, b: Entity) -> bool:
-	var dist_a = self.position.distance_squared_to(a.position)
-	var dist_b = self.position.distance_squared_to(b.position)
-	return dist_a < dist_b
-
-func get_children_by_type(type: int, specific_type: String = 'entity_type') -> Array:
-	var children_by_type = []
-	for child in children:
-		if child[specific_type] == type and (child.corporation_id == corporation_id or child.corporation_id == 0):
-			children_by_type.append(child)
-	return children_by_type
-	
-func sort_asteroids(a: Entity, b: Entity) -> bool:
 	var dist_a = self.position.distance_squared_to(a.position)
 	var dist_b = self.position.distance_squared_to(b.position)
 	return dist_a < dist_b

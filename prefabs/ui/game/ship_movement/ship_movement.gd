@@ -55,8 +55,8 @@ func _get_total_ships():
 	var total_explorer = 0
 	var total_miner = 0
 	
-	for child in GameState.get_selection()['children']:
-		match child.ship_type:
+	for ship in GameState.get_selection().ships:
+		match ship.ship_type:
 			Enums.ship_types.combat:
 				total_combat += 1
 			Enums.ship_types.explorer:

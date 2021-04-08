@@ -81,21 +81,19 @@ func update_distribution_by_selection(selection: Entity):
 	distribution[Enums.ship_types.disabled][color_types.current].value = selection.planet_disabled_ships
 	total_ships = selection.planet_disabled_ships
 	
-	for child in selection.children:
-		if child.entity_type != Enums.entity_types.ship:
-			continue
-		if child.ship_type >= 0 and child.corporation_id == Consts.PLAYER_CORPORATION:
-			if child.state == Enums.ship_states.travel:
+	for ship in selection.ships:
+		if ship.ship_type >= 0 and ship.corporation_id == Consts.PLAYER_CORPORATION:
+			if ship.state == Enums.ship_states.travel:
 				continue
 			
 			total_ships += 1
 			
-			if child.ship_type == Enums.ship_types.disabled or child.state == Enums.ship_states.disable:
+			if ship.ship_type == Enums.ship_types.disabled or ship.state == Enums.ship_states.disable:
 				distribution[Enums.ship_types.disabled][color_types.rebuilding].value += 1
-			elif child.state == Enums.ship_states.rebuild:
-				distribution[child.ship_type][color_types.rebuilding].value += 1
+			elif ship.state == Enums.ship_states.rebuild:
+				distribution[ship.ship_type][color_types.rebuilding].value += 1
 			else:
-				distribution[child.ship_type][color_types.current].value += 1
+				distribution[ship.ship_type][color_types.current].value += 1
 	
 	_update_ui()
 

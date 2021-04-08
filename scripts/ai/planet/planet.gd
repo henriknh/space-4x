@@ -27,7 +27,10 @@ static func produce(entity: Entity, corporation: Corporation):
 	
 	var ship_to_produce = -1
 	if corporation.resources.titanium == Consts.SHIP_COST_TITANIUM:
-		var miner_ships = entity.get_children_by_type(Enums.ship_types.miner, 'ship_type')
+		var miner_ships = []
+		for ship in entity.ships:
+			if ship.ship_type == Enums.ship_types.miner:
+				miner_ships.append(ship)
 		if miner_ships.size() == 0:
 			corporation.resources.titanium -= Consts.SHIP_COST_TITANIUM
 			ship_to_produce = Enums.ship_types.miner

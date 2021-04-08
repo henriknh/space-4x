@@ -39,8 +39,8 @@ func _ship_movement_disabled() -> bool:
 	elif GameState.get_selection().corporation_id == null:
 		return true
 	else:
-		for child in GameState.get_selection().children:
-			if child.entity_type == Enums.entity_types.ship and child.corporation_id == Consts.PLAYER_CORPORATION:
+		for ship in GameState.get_selection().ships:
+			if ship.corporation_id == Consts.PLAYER_CORPORATION:
 				return false
 		return true
 

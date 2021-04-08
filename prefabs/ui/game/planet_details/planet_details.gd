@@ -97,14 +97,7 @@ func _on_production_ship():
 
 func _on_planet_change_distribution_input(event):
 	if event is InputEventMouseButton and event.pressed:
-		var has_ships_to_distribute = selection.planet_disabled_ships > 0
-		if not has_ships_to_distribute:
-			for child in selection.children:
-				if child.entity_type == Enums.entity_types.ship:
-					has_ships_to_distribute = true
-					break
-		
-		if has_ships_to_distribute:
+		if selection.planet_disabled_ships > 0 or selection.ships.size() > 0:
 			get_parent().add_child(planet_change_distribution_prefab.instance())
 
 func _on_ship_movement():

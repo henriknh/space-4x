@@ -55,23 +55,24 @@ func _on_confirm():
 	
 	# Fetch ships to unallocate
 	var unallocated_children = []
-	for child in selection.get_children_sorted_by_distance():
-		if child.entity_type == Enums.entity_types.ship and child.ship_type >= 0:
-			for ship_type in Enums.ship_types.values():
-				if child.ship_type == ship_type:
-					match child.ship_type:
-						Enums.ship_types.combat:
-							if combat_change < 0:
-								unallocated_children.append(child)
-								combat_change += 1
-						Enums.ship_types.explorer:
-							if explorer_change < 0:
-								unallocated_children.append(child)
-								explorer_change += 1
-						Enums.ship_types.miner:
-							if miner_change < 0:
-								unallocated_children.append(child)
-								miner_change += 1
+	for ship in selection.get_ships_sorted_by_distance():
+		if ship.ship_type == Enums.ship_types.disabled:
+			continue
+		for ship_type in Enums.ship_types.values():
+			if ship.ship_type == ship_type:
+				match ship.ship_type:
+					Enums.ship_types.combat:
+						if combat_change < 0:
+							unallocated_children.append(ship)
+							combat_change += 1
+					Enums.ship_types.explorer:
+						if explorer_change < 0:
+							unallocated_children.append(ship)
+							explorer_change += 1
+					Enums.ship_types.miner:
+						if miner_change < 0:
+							unallocated_children.append(ship)
+							miner_change += 1
 
 	var gameScene = get_node('/root/GameScene')
 	
