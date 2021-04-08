@@ -82,7 +82,8 @@ func process(delta: float):
 				collision = move_and_collide(Vector2.ZERO, true, true, true)
 			
 			if collision and collision.collider == self.target:
-				look_at(position - target.position)
+				var target_dir = position.direction_to(target.position)
+				look_at(position - target_dir)
 				deliver_timer.start()
 			else:
 				move(self.target.position)
@@ -125,7 +126,6 @@ func _do_deliver():
 func _get_mining_target() -> void:
 	var target: Asteroid = null
 	var target_dist: float = INF
-	print(parent.asteroids.size())
 	for asteroid in parent.asteroids:
 		if asteroid.is_dead():
 			continue
