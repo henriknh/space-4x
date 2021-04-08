@@ -33,7 +33,7 @@ func _ready():
 func process(delta: float):
 	var has_enemies = _has_enemies_in_site()
 	
-	if state == Enums.ship_states.combat and not target:
+	if state == Enums.ship_states.combat and (not target or target.is_dead()):
 		state = Enums.ship_states.idle
 		
 	if state == Enums.ship_states.combat and target.corporation_id == 0:
@@ -49,18 +49,20 @@ func process(delta: float):
 		target = _get_closest_enemy()
 		
 	elif state == Enums.ship_states.combat and not weapon_ready:
-		var retreat = position - (target.position - position)
-		return move(retreat)
+		move(position - (target.position - position))
 	
-	elif state == Enums.ship_states.combat \
-		and node_raycast.is_colliding() \
-		and node_raycast.get_collider() == target:
+	elif state == Enums.ship_states.combat:
+		move(target.position)
+		if node_raycast.is_colliding() and node_raycast.get_collider() == target:
 			_shot()
-
-	.process(delta)
+	else:
+		.process(delta)
 	
 func _shot():
 	target.hitpoints -= weapon_damage
+	if target.is_dead():
+		self.target = null
+	
 	weapon_ready = false
 	weapon_timer.start()
 	
