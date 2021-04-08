@@ -27,6 +27,9 @@ func _ready():
 	
 	._ready()
 	
+func is_dead() -> bool:
+	return asteroid_rocks <= 0
+	
 func process(delta: float):
 	if asteroid_rocks <= 0:
 		kill()
