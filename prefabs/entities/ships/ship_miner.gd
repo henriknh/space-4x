@@ -10,7 +10,8 @@ var mining_power = 8
 
 var get_target_timer: Timer
 var miner_ready: bool = false
-var miner_timer: Timer
+var miner_ready_timer: Timer
+var mine_timer: Timer
 var deliver_timer: Timer
 
 
@@ -28,11 +29,17 @@ func _ready():
 	get_target_timer.connect("timeout", self, "_get_mining_target")
 	add_child(get_target_timer)
 	
-	miner_timer = Timer.new()
-	miner_timer.wait_time = 3
-	miner_timer.one_shot = true
-	miner_timer.connect("timeout", self, "_on_miner_ready")
-	add_child(miner_timer)
+	miner_ready_timer = Timer.new()
+	miner_ready_timer.wait_time = 3
+	miner_ready_timer.one_shot = true
+	miner_ready_timer.connect("timeout", self, "_on_miner_ready")
+	add_child(miner_ready_timer)
+	
+	mine_timer = Timer.new()
+	mine_timer.wait_time = 1.05
+	mine_timer.one_shot = true
+	mine_timer.connect("timeout", self, "_do_mine")
+	add_child(mine_timer)
 	
 	deliver_timer = Timer.new()
 	deliver_timer.wait_time = 3
@@ -48,9 +55,6 @@ func _ready():
 	animation.track_insert_key(track_index, 1.00, Vector2.ONE * 1.4)
 	animation.track_insert_key(track_index, 1.05, Vector2.ONE * 0.8)
 	animation.track_insert_key(track_index, 1.2, Vector2.ONE * 1.0)
-	track_index = animation.add_track(Animation.TYPE_METHOD)
-	animation.track_set_path(track_index, ".")
-	animation.track_insert_key(track_index, 1.05, {"method": "_do_mine", "args": []})
 	node_animation.add_animation(ANIMATION_CHARGE_MINER, animation)
 	
 	._ready()
@@ -95,8 +99,8 @@ func process(delta: float):
 			rotation_degrees = target.rotation_degrees
 			if miner_ready:
 				_begin_mine()
-			elif miner_timer.is_stopped() and not node_animation.current_animation == ANIMATION_CHARGE_MINER:
-				miner_timer.start()
+			elif miner_ready_timer.is_stopped() and not node_animation.current_animation == ANIMATION_CHARGE_MINER:
+				miner_ready_timer.start()
 	else:
 		.process(delta)
 	
@@ -107,6 +111,7 @@ func _begin_mine():
 	miner_ready = false
 	if node_animation.current_animation != ANIMATION_CHARGE_MINER:
 		node_animation.play(ANIMATION_CHARGE_MINER)
+	mine_timer.start()
 	
 func _do_mine():
 	var can_mine = min(mining_power, asteroid_rocks_max - asteroid_rocks)
@@ -124,6 +129,10 @@ func _do_deliver():
 	parent.emit_signal("entity_changed")
 	
 func _get_mining_target() -> void:
+	
+	if corporation_id != parent.corporation_id:
+		return
+	
 	var target: Asteroid = null
 	var target_dist: float = INF
 	for asteroid in parent.asteroids:
