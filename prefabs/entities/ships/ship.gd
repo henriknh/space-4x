@@ -17,6 +17,7 @@ onready var node_raycast = $RayCast
 onready var node_animation: AnimationPlayer = $AnimationPlayer
 
 var parent: Entity
+var neighbors: Array
 onready var velocity: Vector2 = Vector2(rand_range(-1, 1), rand_range(-1, 1)).normalized() * ship_speed
 onready var acceleration: Vector2 = Vector2.ZERO
 var target: Node2D = null setget set_target
@@ -191,6 +192,14 @@ func set_parent(planet: Entity) -> void:
 	parent = planet
 	node_obstacle_handler.add_exception(parent.node_planet_area)
 
+func _on_ship_entered(ship: Ship):
+	if parent and ship.parent == parent:
+		if not ship in neighbors:
+			neighbors.append(ship)
+
+func _on_ship_exited(ship: Ship):
+	if ship in neighbors:
+		neighbors.erase(ship)
 
 func save():
 	var save = .save()

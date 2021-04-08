@@ -1,55 +1,37 @@
 extends Node
 
+# https://github.com/codatproduction/Boids-simulation/blob/master/src/Boid.gd
+# https://github.com/kyrick/godot-boids/blob/master/src/Actors/Chicken/Chicken.gd
+
 func process(ship: Entity) -> Vector2:
-	var neighbors = []
 	
-	if not ship.parent:
+	if not ship.parent or ship.neighbors.size() == 0:
 		return Vector2.ZERO
 	
-	for child in ship.parent.children:
-		if child == ship:
+	var vector_cohesion = Vector2.ZERO
+	var vector_alignments = Vector2.ZERO
+	var vector_seperation = Vector2.ZERO
+	
+	for neighbor in ship.neighbors:
+		if not neighbor \
+		or neighbor.state != Enums.ship_states.idle \
+		or neighbor == ship \
+		or neighbor.is_dead():
 			continue
 		
-		if child.entity_type == Enums.entity_types.ship and child.state == Enums.ship_states.idle:
-			neighbors.append(child)
+		vector_cohesion += neighbor.position
+		vector_alignments += neighbor.velocity
+		
+		var distance = ship.position.distance_to(neighbor.position)
+		if 0 < distance and distance < Consts.SHIP_BOID_AVOID_DISTANCE:
+			vector_seperation -= (neighbor.position - ship.position).normalized() * (Consts.SHIP_BOID_AVOID_DISTANCE / distance * ship.ship_speed)
+	
+	vector_cohesion /= ship.neighbors.size()
+	vector_alignments /= ship.neighbors.size()
 	
 	var velocity = Vector2.ZERO
-	velocity += process_cohesion(ship, neighbors) * Consts.SHIP_BOID_COHESION_FORCE
-	velocity += process_alignments(ship, neighbors) * Consts.SHIP_BOID_ALIGNMENT_FORCE
-	velocity += process_seperation(ship, neighbors) * Consts.SHIP_BOID_SEPARATION_FORCE
+	velocity += vector_cohesion.normalized() * Consts.SHIP_BOID_COHESION_FORCE
+	velocity += vector_alignments.normalized() * Consts.SHIP_BOID_ALIGNMENT_FORCE
+	velocity += vector_seperation.normalized() * Consts.SHIP_BOID_SEPARATION_FORCE
+	
 	return velocity.normalized()
-
-func process_cohesion(ship: Entity, neighbors: Array):
-	var vector = Vector2.ZERO
-	if neighbors.empty():
-		return vector
-	for boid in neighbors:
-		vector += boid.position
-	vector /= neighbors.size()
-	return ship.steer((vector - ship.position).normalized() * ship.ship_speed)
-
-func process_alignments(ship: Entity, neighbors: Array):
-	var vector = Vector2.ZERO
-	if neighbors.empty():
-		return vector
-
-	for boid in neighbors:
-		vector += boid.velocity
-	vector /= neighbors.size()
-	return ship.steer(vector.normalized() * ship.ship_speed)
-
-func process_seperation(ship: Entity, neighbors: Array):
-	var vector = Vector2.ZERO
-	var close_neighbors = []
-	for boid in neighbors:
-		if ship.position.distance_to(boid.position) < 100:
-			close_neighbors.append(boid)
-	if close_neighbors.empty():
-		return vector
-
-	for boid in close_neighbors:
-		var difference = ship.position - boid.position
-		vector += difference.normalized() / difference.length()
-
-	vector /= close_neighbors.size()
-	return ship.steer(vector.normalized() * ship.ship_speed)
