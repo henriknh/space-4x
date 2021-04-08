@@ -69,7 +69,7 @@ func process(delta: float):
 		if nav_route.size() == 0 and process_target >= 0:
 			nav_route = Nav.get_route(self, process_target)
 		
-		move()
+		#move()
 		#_update_travel_route()
 		
 		if nav_route.size() == 0:
