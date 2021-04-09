@@ -123,7 +123,7 @@ func _do_mine():
 	target.emit_signal("entity_changed")
 
 func _do_deliver():
-	self.get_corporation().resources.asteroid_rocks += asteroid_rocks
+	self.get_corporation().asteroid_rocks += asteroid_rocks
 	asteroid_rocks = 0
 	state = Enums.ship_states.idle
 	self.target = null

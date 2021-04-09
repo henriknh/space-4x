@@ -58,9 +58,9 @@ func _update_ui():
 	var cant_produce_research = true
 
 	if corporation:
-		cant_convert = corporation.resources.asteroid_rocks < Consts.RESOURCE_CONVERTION_COST
-		cant_produce_ship = corporation.resources.titanium < Consts.SHIP_COST_TITANIUM
-		cant_produce_research = corporation.resources.astral_dust < Consts.RESEARCH_COST_ASTRAL_DUST
+		cant_convert = corporation.asteroid_rocks < Consts.RESOURCE_CONVERTION_COST
+		cant_produce_ship = corporation.titanium < Consts.SHIP_COST_TITANIUM
+		cant_produce_research = corporation.astral_dust < Consts.RESEARCH_COST_ASTRAL_DUST
 	
 	node_convert_to_titanium.disabled = busy or cant_convert
 	node_convert_to_astral_dust.disabled = busy or cant_convert
@@ -81,8 +81,8 @@ func _update_ui():
 	$VBoxContainer/DistributionLabel/ShipCount.text = int(0) as String
 	
 func _create_ship(ship_type: int):
-	if corporation.resources.titanium >= Consts.SHIP_COST_TITANIUM:
-		corporation.resources.titanium -= Consts.SHIP_COST_TITANIUM
+	if corporation.titanium >= Consts.SHIP_COST_TITANIUM:
+		corporation.titanium -= Consts.SHIP_COST_TITANIUM
 		selection.set_entity_process(Enums.planet_states.produce, ship_type, Consts.SHIP_PRODUCTION_TIME)
 
 func _on_production_ship():
@@ -104,6 +104,6 @@ func _on_ship_movement():
 	get_parent().add_child(ship_movement_prefab.instance())
 
 func _convert_resource(convertion_resource: int):
-	if corporation.resources.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
-		corporation.resources.asteroid_rocks -= Consts.RESOURCE_CONVERTION_COST
+	if corporation.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
+		corporation.asteroid_rocks -= Consts.RESOURCE_CONVERTION_COST
 		selection.set_entity_process(Enums.planet_states.convertion, convertion_resource, Consts.RESOURCE_CONVERTION_TIME)

@@ -55,9 +55,9 @@ func process(delta: float):
 				var converted_amount = Consts.RESOURCE_CONVERTION_COST * Consts.RESOURCE_CONVERTION_RATIO
 				match process_target:
 					Enums.resource_types.titanium:
-						corporation.resources.titanium += converted_amount
+						corporation.titanium += converted_amount
 					Enums.resource_types.astral_dust:
-						corporation.resources.astral_dust += converted_amount
+						corporation.astral_dust += converted_amount
 			
 			process_time = 0
 			state = Enums.planet_states.idle

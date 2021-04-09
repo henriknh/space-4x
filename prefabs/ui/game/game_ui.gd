@@ -17,15 +17,10 @@ func _ready():
 	MenuState.push(self)
 
 func init():
-	#GameState.connect("state_changed", self, "_update_ui")
+	var player_corporation = Corporations.get_corporation(Consts.PLAYER_CORPORATION)
+	player_corporation.connect("corporation_changed", self, "_update_ui")
 	GameState.connect("selection_changed", self, "_update_ui")
 	Settings.connect("settings_changed", self, "_update_ui")
-	
-	var timer = Timer.new()
-	timer.connect("timeout",self,"_update_ui")
-	add_child(timer)
-	timer.wait_time = 0.1
-	timer.start()
 	
 	node_debug.init()
 	_update_ui()
@@ -51,9 +46,9 @@ func _update_ui():
 	
 	var corporation = Corporations.get_corporation(Consts.PLAYER_CORPORATION)
 	if corporation:
-		node_asteroid_rocks.text = Utils.format_number(corporation.resources.asteroid_rocks)
-		node_titanium.text = Utils.format_number(corporation.resources.titanium)
-		node_astral_dust.text = Utils.format_number(corporation.resources.astral_dust)
+		node_asteroid_rocks.text = Utils.format_number(corporation.asteroid_rocks)
+		node_titanium.text = Utils.format_number(corporation.titanium)
+		node_astral_dust.text = Utils.format_number(corporation.astral_dust)
 	
 	node_ship_distribution.update_distribution_globally()
 
