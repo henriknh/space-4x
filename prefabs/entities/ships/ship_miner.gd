@@ -3,7 +3,7 @@ extends Ship
 class_name ShipMiner
 
 var asteroid_rocks: float = 0
-var asteroid_rocks_max: int = 64
+var asteroid_rocks_max: int = 4
 
 const ANIMATION_CHARGE_MINER = 'charge_miner'
 var mining_power = 8
@@ -81,14 +81,15 @@ func process(delta: float):
 	elif state == Enums.ship_states.deliver:
 		
 		if deliver_timer.is_stopped():
-			var collision
 			if node_raycast.is_colliding() and node_raycast.get_collider() == target:
-				collision = move_and_collide(Vector2.ZERO, true, true, true)
-			
-			if collision and collision.collider == self.target:
-				var target_dir = position.direction_to(target.position)
-				look_at(position - target_dir)
-				deliver_timer.start()
+				var collision = move_and_collide(Vector2.ZERO, true, true, true)
+				
+				if collision and collision.collider == self.target:
+					var target_dir = position.direction_to(target.position)
+					look_at(position - target_dir)
+					deliver_timer.start()
+				else:
+					move(node_raycast.get_collision_point())
 			else:
 				move(self.target.position)
 	elif state == Enums.ship_states.mine and not target:

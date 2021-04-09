@@ -114,11 +114,7 @@ func set_target(_target: Entity):
 		approach_target = not target.entity_type == Enums.entity_types.ship
 		node_obstacle_handler.add_exception(target)
 
-func move(to: Vector2) -> bool:
-	if target and target.entity_type == Enums.entity_types.planet:
-		if node_raycast.is_colliding() and node_raycast.get_collider() == target:
-			to = node_raycast.get_collision_point()
-	
+func move(to: Vector2) -> bool:	
 	var speed = Consts.SHIP_SPEED_IDLE if state == Enums.ship_states.idle else ship_speed
 	var diff: Vector2 = to - position
 	
