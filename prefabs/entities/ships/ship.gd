@@ -93,7 +93,7 @@ func process(delta: float):
 				return kill()
 	
 	elif ship_type != Enums.ship_types.disabled:
-		move()
+		move(Boid.process(self))
 	
 	.process(delta)
 	
@@ -114,68 +114,64 @@ func set_target(_target: Entity):
 		approach_target = not target.entity_type == Enums.entity_types.ship
 		node_obstacle_handler.add_exception(target)
 
-func move(target_pos: Vector2 = Vector2.INF) -> bool:
+func move(to: Vector2) -> bool:
+	if target and target.entity_type == Enums.entity_types.planet:
+		if node_raycast.is_colliding() and node_raycast.get_collider() == target:
+			to = node_raycast.get_collision_point()
 	
-	var target_diff = Vector2.ZERO
-	if target_pos != Vector2.INF:
-		target_diff = target_pos - position
-	elif target:
-		target_diff = target.position - position
+	var speed = Consts.SHIP_SPEED_IDLE if state == Enums.ship_states.idle else ship_speed
+	var diff: Vector2 = to - position
 	
-	if target_diff != Vector2.ZERO:
-		acceleration += steer(target_diff.normalized())
-	else:
-		var boids_target = Boid.process(self)
-		if boids_target != Vector2.ZERO:
-			acceleration += steer(boids_target)
-		
+	acceleration += steer(diff.normalized())
+	
 	if node_obstacle_handler.is_obsticle_ahead():
 		acceleration += steer(node_obstacle_handler.obsticle_avoidance()) * Consts.SHIP_AVOIDANCE_FORCE
 	
+	var dist_to_target = diff.length()
+	var near_target_dist = speed * 2
+	var near_target = dist_to_target <= near_target_dist
+	var target_reached = approach_target and dist_to_target <= 1
 	
-	var dist_to_target = target_diff.length_squared()
-	var near_target = dist_to_target <= pow(ship_speed, 2)
-	
-	if approach_target and dist_to_target <= 1:
+	if target_reached:
 		velocity = Vector2.ZERO
-	elif approach_target and near_target:
-		velocity = target_diff * delta * 25
-		if velocity.length() < 25:
-			velocity = velocity.normalized() * 25
-		pass
+		acceleration = Vector2.ZERO
 	else:
 		velocity += acceleration * delta
-	
-	if state == Enums.ship_states.idle:
-		velocity = velocity.clamped(Consts.SHIP_SPEED_IDLE)
+		
+	if approach_target and near_target:
+		var nearness_factor = dist_to_target / near_target_dist
+		nearness_factor = max(nearness_factor, 0.1)
+		velocity = velocity.clamped(speed * nearness_factor)
 	else:
-		velocity = velocity.clamped(ship_speed)
+		velocity = velocity.clamped(speed)
+		
 	rotation = velocity.angle()
 	translate(velocity * delta)
 	
-	target_reached = near_target and dist_to_target <= 1
+	_update_trail()
 	
-	if visible:
-		if not target_reached and node_trail.is_emitting():
-			node_trail.set_emitting(false)
-		elif not node_trail.is_emitting():
-			node_trail.set_emitting(true)
-			
 	return target_reached
 
 func steer(var target):
-	if state == Enums.ship_states.idle:
-		target *= Consts.SHIP_SPEED_IDLE
-	else:
-		target *= ship_speed
+	var speed = Consts.SHIP_SPEED_IDLE if state == Enums.ship_states.idle else ship_speed
+	target *= ship_speed
 	var steer = target - velocity
-	steer = steer.normalized() * Consts.SHIP_STEER_FORCE
+	steer = steer.normalized() * (speed / 10)
 	return steer
 
 func set_visible(in_data) -> void:
 	.set_visible(in_data)
 	if not visible:
 		node_trail.set_emitting(false)
+		
+func _update_trail() -> void:
+	if not visible:
+		return
+	
+	if not target_reached and node_trail.is_emitting():
+		node_trail.set_emitting(false)
+	elif not node_trail.is_emitting():
+		node_trail.set_emitting(true)
 
 func _rotate_sprite_texture():
 	print('_rotate_disabled_sprite')

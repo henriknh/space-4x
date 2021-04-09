@@ -34,4 +34,4 @@ func process(ship: Entity) -> Vector2:
 	velocity += vector_alignments.normalized() * Consts.SHIP_BOID_ALIGNMENT_FORCE
 	velocity += vector_seperation.normalized() * Consts.SHIP_BOID_SEPARATION_FORCE
 	
-	return velocity.normalized()
+	return ship.position + velocity.normalized()
