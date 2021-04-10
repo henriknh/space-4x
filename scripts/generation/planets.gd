@@ -2,7 +2,7 @@ extends Node
 
 const GenUtils = preload('res://scripts/generation/utils.gd')
 
-static func generate(planet_system_idx: int) -> Array:
+func generate(count: int, planet_system_idx: int, tree: SceneTree) -> Array:
 	
 	var orbits_min = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].min
 	var orbits_max = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].max

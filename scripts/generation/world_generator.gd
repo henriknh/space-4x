@@ -4,6 +4,9 @@ const GenUtils = preload('res://scripts/generation/utils.gd')
 const GenPlanets = preload('res://scripts/generation/planets.gd')
 const GenAsteroids = preload('res://scripts/generation/asteroids.gd')
 
+onready var gen_planets = GenPlanets.new()
+onready var gen_asteroids = GenAsteroids.new()
+
 var world_size: int = Enums.world_size.small
 var unique_id = 0 setget ,get_unique_id
 
@@ -37,25 +40,29 @@ func generate_world():
 	var planet_systems = []
 
 	var galaxies_count: float = Random.randi_range(galaxies_min, galaxies_max)
+	total_entities += galaxies_count
+	
+	var orbits_min = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].min
+	var orbits_max = Consts.PLANET_SYSTEM_ORBITS[WorldGenerator.world_size].max
+	var total_orbits = int(Random.randi_range(orbits_min, orbits_max))
+	total_entities += total_orbits
+	
+	var asteroids_min = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].min
+	var asteroids_max = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].max
+	var total_asteroids = Random.randi_range(asteroids_min, asteroids_max)
+	total_entities += total_asteroids
+	
 	for planet_system_idx in range(galaxies_count):
-		planet_systems.append({
-			'planet_system': Instancer.planet_system(planet_system_idx),
-			'planets': GenPlanets.generate(planet_system_idx),
-			'asteroids': GenAsteroids.generate(planet_system_idx),
-		})
-	
-	for planet_system in planet_systems:
-		total_entities += planet_system.planets.size()
-		total_entities += planet_system.asteroids.size()
+		var planet_system = Instancer.planet_system(planet_system_idx)
+		call("add_node_deffered", planet_system)
 		
-	for planet_system in planet_systems:
-		call("add_node_deffered", planet_system.planet_system)
-		for planet in planet_system.planets:
+		var planets = gen_planets.generate(total_orbits, planet_system_idx, get_tree())
+		for planet in planets:
 			call("add_node_deffered", planet)
-		for asteroid in planet_system.asteroids:
+			
+		var asteroids = gen_asteroids.generate(total_asteroids, planet_system_idx, get_tree())
+		for asteroid in asteroids:
 			call("add_node_deffered", asteroid)
-	
-	#yield(self, "objects_loaded")
 	
 	GameState.set_planet_system(0)
 	
@@ -73,8 +80,7 @@ func generate_world():
 		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx)
 		var start_planet = GenUtils.get_start_planet(all_planets, ai_corporation.corporation_id == (Consts.PLAYER_CORPORATION + 1))
 		start_planet.corporation_id = ai_corporation.corporation_id
-		
-		
+	
 	var debug_timer = Timer.new()
 	debug_timer.one_shot = true
 	debug_timer.wait_time = 0.25

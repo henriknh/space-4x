@@ -1,6 +1,6 @@
 extends Node
 
-static func generate(planet_system_idx: int) -> Array:
+func generate(count: int, planet_system_idx: int, tree: SceneTree) -> Array:
 	
 	var asteroids_min = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].min
 	var asteroids_max = Consts.ASTEROIDS_PER_PLANET_SYSTEM[WorldGenerator.world_size].max
@@ -78,7 +78,13 @@ static func generate(planet_system_idx: int) -> Array:
 					position = position * intersects_circle
 
 			position += position.normalized() * Random.randf() * Consts.ASTEROIDS_FORMATION_OFFSET
+		
+		for planet in tree.get_nodes_in_group('Planet'):
+			if planet.planet_system == planet_system_idx \
+			and planet.position.distance_to(position) < planet.planet_size + Consts.ASTEROIDS_MIN_DISTANCE_TO_PLANET:
+				position = planet.position + planet.position.direction_to(position) * (planet.planet_size + Consts.ASTEROIDS_MIN_DISTANCE_TO_PLANET)
 			
+		
 		asteroids.append(Instancer.prop(Enums.prop_types.asteroid, planet_system_idx, position))
 		
 	return asteroids

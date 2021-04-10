@@ -43,6 +43,6 @@ func _handle_loading_entities(saveFile: String):
 
 func _handle_loading_entities_done():
 	thread.wait_to_finish()
-	get_tree().get_current_scene().init()
 	GameState.loading = false
+	get_tree().get_current_scene().init()
 
