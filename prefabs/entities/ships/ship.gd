@@ -114,14 +114,14 @@ func set_target(_target: Entity):
 		approach_target = not target.entity_type == Enums.entity_types.ship
 		node_obstacle_handler.add_exception(target)
 
-func move(to: Vector2) -> bool:	
+func move(to: Vector2) -> bool:
 	var speed = Consts.SHIP_SPEED_IDLE if state == Enums.ship_states.idle else ship_speed
 	var diff: Vector2 = to - position
 	
 	acceleration += steer(diff.normalized())
 	
 	if node_obstacle_handler.is_obsticle_ahead():
-		acceleration += steer(node_obstacle_handler.obsticle_avoidance()) * Consts.SHIP_AVOIDANCE_FORCE
+		acceleration = steer(node_obstacle_handler.obsticle_avoidance()) * (speed / 4)
 	
 	var dist_to_target = diff.length()
 	var near_target_dist = speed * 2
@@ -135,12 +135,11 @@ func move(to: Vector2) -> bool:
 		velocity += acceleration * delta
 		
 	if approach_target and near_target:
-		var nearness_factor = dist_to_target / near_target_dist
-		nearness_factor = max(nearness_factor, 0.1)
+		var nearness_factor = max(dist_to_target / near_target_dist, 0.1)
 		velocity = velocity.clamped(speed * nearness_factor)
 	else:
 		velocity = velocity.clamped(speed)
-		
+
 	rotation = velocity.angle()
 	translate(velocity * delta)
 	

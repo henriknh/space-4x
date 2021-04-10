@@ -9,7 +9,7 @@
 extents = Vector2( 8, 8 )
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 200.0
+radius = 300.0
 
 [node name="Ship" type="KinematicBody2D" groups=[
 "Persist",
@@ -39,6 +39,7 @@ collision_mask = 26
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="ShipArea" type="Area2D" parent="."]
+z_index = -1
 collision_layer = 0
 collision_mask = 2147483656
 
