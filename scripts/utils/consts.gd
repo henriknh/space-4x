@@ -71,7 +71,6 @@ const PLANET_SYSTEM_ORBITS = {
 }
 
 # Planets
-const PLANET_SIZE_FACTOR = 100
 const PLANET_HITPOINTS = 250
 
 # Asteroids

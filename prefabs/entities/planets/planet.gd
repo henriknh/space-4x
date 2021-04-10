@@ -3,7 +3,7 @@ extends Entity
 class_name Planet
 
 var planet_type: int = -1
-var planet_size: float = 1.0
+var planet_size: float = 100.0
 var planet_disabled_ships = 0
 var planet_explorer_ships = 0
 var hitpoints: int = 0
@@ -21,7 +21,7 @@ onready var node_planet_area_collision = $PlanetArea/PlanetAreaCollision
 
 func create():
 	entity_type = Enums.entity_types.planet
-	planet_size = Random.randf_range(1.0, 2.0)
+	planet_size = Random.randf_range(100, 200)
 	hitpoints = Consts.PLANET_HITPOINTS
 	visible = false
 	.create()
@@ -29,7 +29,7 @@ func create():
 func _ready():
 	node_planet_area_collision.polygon = self.planet_convex_hull
 	node_collision.shape = CircleShape2D.new()
-	node_collision.shape.radius = planet_size * Consts.PLANET_SIZE_FACTOR
+	node_collision.shape.radius = planet_size
 
 	._ready()
 
@@ -69,13 +69,13 @@ func process(delta: float):
 
 func _draw():
 	if corporation_id <= 0:
-		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Color(0.25,0.25,0.25,1))
+		draw_circle(Vector2.ZERO, planet_size, Color(0.25,0.25,0.25,1))
 
 	if corporation_id < 0:
-		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR * get_process_progress(), Enums.corporation_colors[corporation_id])
+		draw_circle(Vector2.ZERO, planet_size * get_process_progress(), Enums.corporation_colors[corporation_id])
 	
 	if corporation_id > 0:
-		draw_circle(Vector2.ZERO, planet_size * Consts.PLANET_SIZE_FACTOR, Enums.corporation_colors[corporation_id])
+		draw_circle(Vector2.ZERO, planet_size, Enums.corporation_colors[corporation_id])
 	
 		
 func kill():
