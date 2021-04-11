@@ -61,6 +61,7 @@ func process(delta: float):
 			
 			process_time = 0
 			state = Enums.planet_states.idle
+			emit_signal("entity_changed")
 		
 		GameState.emit_signal("update_ui")
 
