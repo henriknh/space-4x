@@ -1,7 +1,7 @@
 extends Control
 
 onready var selection: Entity = GameState.get_selection()
-onready var node_ship_distribution = $ShipDistribution
+onready var node_distribution = $Distribution
 onready var node_combat_slider: HSlider = $Inputs/MarginContainer/VBoxContainer/CombatSlider
 onready var node_explorer_slider: HSlider = $Inputs/MarginContainer/VBoxContainer/ExplorerSlider
 onready var node_miner_slider: HSlider = $Inputs/MarginContainer/VBoxContainer/MinerSlider
@@ -10,26 +10,26 @@ onready var node_confirm = $Inputs/Actions/BtnConfirm
 func _ready():
 	MenuState.push(self)
 	
-	node_ship_distribution.update_distribution_by_selection(selection)
-	selection.connect("entity_changed", node_ship_distribution, "update_distribution_by_selection", [selection])
-	node_ship_distribution.connect("distribution_changed", self, "_update_ui")
+	node_distribution.update_distribution_by_selection(selection)
+	selection.connect("entity_changed", node_distribution, "update_distribution_by_selection", [selection])
+	node_distribution.connect("distribution_changed", self, "_update_ui")
 	
 	_update_ui()
 
 func _update_ui():
-	node_ship_distribution.rect_min_size = Vector2(rect_size.x, node_ship_distribution.rect_min_size.y)
+	node_distribution.rect_min_size = Vector2(rect_size.x, node_distribution.rect_min_size.y)
 	
-	node_confirm.disabled = not node_ship_distribution.has_changes()
+	node_confirm.disabled = not node_distribution.has_changes()
 	
-	var combat_current = node_ship_distribution.get_combat_current()
-	var explorer_current = node_ship_distribution.get_explorer_current()
-	var miner_current = node_ship_distribution.get_miner_current()
+	var combat_current = node_distribution.get_combat_current()
+	var explorer_current = node_distribution.get_explorer_current()
+	var miner_current = node_distribution.get_miner_current()
 	
-	var combat_change = node_ship_distribution.get_combat_change()
-	var explorer_change = node_ship_distribution.get_explorer_change()
-	var miner_change = node_ship_distribution.get_miner_change()
+	var combat_change = node_distribution.get_combat_change()
+	var explorer_change = node_distribution.get_explorer_change()
+	var miner_change = node_distribution.get_miner_change()
 	
-	var available_count = node_ship_distribution.get_available_count()
+	var available_count = node_distribution.get_available_count()
 	
 	node_combat_slider.min_value = -combat_current
 	node_explorer_slider.min_value = -explorer_current
@@ -49,9 +49,9 @@ func _on_cancel():
 func _on_confirm():
 	selection.disconnect("entity_changed", self, "_update_ui")
 	
-	var combat_change = node_ship_distribution.get_combat_change()
-	var explorer_change = node_ship_distribution.get_explorer_change()
-	var miner_change = node_ship_distribution.get_miner_change()
+	var combat_change = node_distribution.get_combat_change()
+	var explorer_change = node_distribution.get_explorer_change()
+	var miner_change = node_distribution.get_miner_change()
 	
 	# Fetch ships to unallocate
 	var unallocated_children = []
@@ -119,13 +119,11 @@ func _on_confirm():
 
 	MenuState.pop()
 
-
 func _on_combat_slider_changed(change_value: int):
-	node_ship_distribution.on_change(Enums.ship_types.combat, change_value)
-
+	node_distribution.on_change(Enums.ship_types.combat, change_value)
 
 func _on_explorer_slider_changed(change_value: int):
-	node_ship_distribution.on_change(Enums.ship_types.explorer, change_value)
+	node_distribution.on_change(Enums.ship_types.explorer, change_value)
 
 func _on_miner_slider_changed(change_value: int):
-	node_ship_distribution.on_change(Enums.ship_types.miner, change_value)
+	node_distribution.on_change(Enums.ship_types.miner, change_value)
