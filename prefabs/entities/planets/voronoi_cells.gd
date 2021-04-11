@@ -12,7 +12,7 @@ func _draw():
 		draw_line(segment[0], segment[1], Color(1,0,0,1), 1, true)
 	
 	# Voronoi
-	var curr_vononoi = Voronoi.voronoi_registry.get_by_index(GameState.get_planet_system())
+	var curr_vononoi = VoronoiRegistry.get_by_index(GameState.get_planet_system())
 	if not curr_vononoi:
 		return
 	

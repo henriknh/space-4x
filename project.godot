@@ -19,6 +19,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/utils/corporation.gd"
 }, {
+"base": "Node",
+"class": "Edge",
+"language": "GDScript",
+"path": "res://scripts/voronoi/edge.gd"
+}, {
+"base": "Node",
+"class": "EdgeRegistry",
+"language": "GDScript",
+"path": "res://scripts/voronoi/edge_registry.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Entity",
 "language": "GDScript",
@@ -84,6 +94,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/ship_miner.gd"
 }, {
+"base": "Node",
+"class": "Site",
+"language": "GDScript",
+"path": "res://scripts/voronoi/site.gd"
+}, {
+"base": "Node",
+"class": "SiteRegistry",
+"language": "GDScript",
+"path": "res://scripts/voronoi/site_registry.gd"
+}, {
 "base": "Line2D",
 "class": "Trail2D",
 "language": "GDScript",
@@ -93,10 +113,17 @@ _global_script_classes=[ {
 "class": "Trail2D_backup",
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/effects/trail_line_backup.gd"
+}, {
+"base": "Node",
+"class": "Voronoi",
+"language": "GDScript",
+"path": "res://scripts/voronoi/voronoi.gd"
 } ]
 _global_script_class_icons={
 "Asteroid": "",
 "Corporation": "",
+"Edge": "",
+"EdgeRegistry": "",
 "Entity": "",
 "Game": "",
 "Planet": "",
@@ -110,8 +137,11 @@ _global_script_class_icons={
 "ShipCombat": "",
 "ShipExplorer": "",
 "ShipMiner": "",
+"Site": "",
+"SiteRegistry": "",
 "Trail2D": "",
-"Trail2D_backup": ""
+"Trail2D_backup": "",
+"Voronoi": ""
 }
 
 [application]
@@ -134,7 +164,7 @@ GameState="*res://scripts/utils/game_state.gd"
 StateManager="*res://scripts/utils/state_manager.gd"
 Formatter="*res://scripts/utils/formatter.gd"
 Nav="*res://scripts/utils/navigation.gd"
-Voronoi="*res://scripts/voronoi/voronoi.gd"
+VoronoiRegistry="*res://scripts/voronoi/voronoi_registry.gd"
 Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
 Corporations="*res://scripts/utils/corporations.gd"

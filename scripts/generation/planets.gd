@@ -28,7 +28,7 @@ func generate(count: int, planet_system_idx: int, tree: SceneTree) -> Array:
 			'orbit': orbit
 		})
 	
-	var voronoi = Voronoi.voronoi_registry.register_voronoi(planet_system_idx, planet_system)
+	var voronoi = VoronoiRegistry.register_voronoi(planet_system_idx, planet_system)
 	
 	var planets = []
 	for planet in planet_system:
