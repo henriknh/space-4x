@@ -59,7 +59,7 @@ func generate_world():
 		var planets = gen_planets.generate(total_orbits, planet_system_idx, get_tree())
 		for planet in planets:
 			call("add_node_deffered", planet)
-			
+		
 		var asteroids = gen_asteroids.generate(total_asteroids, planet_system_idx, get_tree())
 		for asteroid in asteroids:
 			call("add_node_deffered", asteroid)

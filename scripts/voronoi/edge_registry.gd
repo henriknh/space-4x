@@ -4,7 +4,7 @@ class_name EdgeRegistry
 
 var edges = []
 
-func register_edge(n: Node2D, p1: Vector2, p2: Vector2) -> Edge:
+func register_edge(n: Dictionary, p1: Vector2, p2: Vector2) -> Edge:
 	for edge in edges:
 		if edge.has_points(p1, p2):
 			edge.add_node(n)

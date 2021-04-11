@@ -9,7 +9,12 @@ func generate(count: int, planet_system_idx: int, tree: SceneTree) -> Array:
 	var asteroid_formations = Enums.asteroid_formation_types.values()
 	asteroid_formations.shuffle()
 	var asteroid_formation = asteroid_formations[0]
-	var asteroid_formation_angle = 2 * PI * Random.randf()	
+	var asteroid_formation_angle = 2 * PI * Random.randf()
+	
+	var edges = []
+	var voronoi = VoronoiRegistry.get_by_index(planet_system_idx)
+	for site in voronoi.site_registry.sites:
+		edges = edges + site.edge_registry.edges
 	
 	var asteroids = []
 	for asteroid_idx in range(total_asteroids):
@@ -83,7 +88,11 @@ func generate(count: int, planet_system_idx: int, tree: SceneTree) -> Array:
 			if planet.planet_system == planet_system_idx \
 			and planet.position.distance_to(position) < planet.planet_size + Consts.ASTEROIDS_MIN_DISTANCE_TO_PLANET:
 				position = planet.position + planet.position.direction_to(position) * (planet.planet_size + Consts.ASTEROIDS_MIN_DISTANCE_TO_PLANET)
-			
+		
+		for edge in edges:
+			var point: Vector2 = Geometry.get_closest_point_to_segment_2d(position, edge.p1, edge.p2)
+			if point.distance_to(position) < Consts.ASTEROIDS_MIN_DISTANCE_TO_SITE_EDGE:
+				position = point + point.direction_to(position) * Consts.ASTEROIDS_MIN_DISTANCE_TO_SITE_EDGE
 		
 		asteroids.append(Instancer.prop(Enums.prop_types.asteroid, planet_system_idx, position))
 		

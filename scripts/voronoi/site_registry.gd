@@ -11,6 +11,7 @@ func register_site(node: Dictionary, local_points: Array) -> Site:
 		self.sites.append(site)
 		return site
 	return null
+
 func add_point(node: Dictionary, point: Vector2) -> void:
 	for site in sites:
 		if site.node.position == node.position:
