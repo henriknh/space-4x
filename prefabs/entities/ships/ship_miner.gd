@@ -71,7 +71,7 @@ func process(delta: float):
 	if state != Enums.ship_states.mine and not get_target_timer.is_stopped():
 		get_target_timer.stop()
 		
-	if state == Enums.ship_states.idle and corporation_id == parent.corporation_id:
+	if state == Enums.ship_states.idle and parent and corporation_id == parent.corporation_id:
 		_get_mining_target()
 	
 	if state == Enums.ship_states.mine and asteroid_rocks >= asteroid_rocks_max:
