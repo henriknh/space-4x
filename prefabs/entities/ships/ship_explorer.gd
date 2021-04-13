@@ -24,7 +24,7 @@ func process(delta: float):
 		state = Enums.ship_states.idle
 		self.target = null
 	
-	if state == Enums.ship_states.colonize and self.target.state == Enums.planet_states.colonize and process_target != corporation_id:
+	if state == Enums.ship_states.colonize and self.target.state == Enums.planet_states.colonize and self.target.process_target != corporation_id:
 		state = Enums.ship_states.idle
 		self.target = null
 		
@@ -41,7 +41,6 @@ func process(delta: float):
 				look_at(position - target_dir)
 				
 				self.target.planet_explorer_ships += 1
-				self.target = null
 				state = Enums.ship_states.colonizing
 				
 			else:
@@ -51,6 +50,11 @@ func process(delta: float):
 	
 	elif state == Enums.ship_states.colonizing:
 		if parent.state != Enums.planet_states.colonize:
-			state = Enums.ship_states.idle
+			kill()
 	else:
 		.process(delta)
+
+func queue_free():
+	if self.target.planet_explorer_ships > 0:
+		self.target.planet_explorer_ships -= 1
+	.queue_free()
