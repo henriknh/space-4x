@@ -64,6 +64,10 @@ func process(delta: float):
 func kill():
 	queued_to_free = true
 	queue_free()
+	
+func queue_free():
+	queued_to_free = true
+	.queue_free()
 
 func is_dead() -> bool:
 	return false
