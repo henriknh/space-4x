@@ -94,12 +94,13 @@ func _draw():
 			
 			draw_arc(Vector2.ZERO, planet_size + Consts.PLANET_PROCESS_INDICATION_SIZE / 2, 0, 2 * PI * get_process_progress(), 64, color, Consts.PLANET_PROCESS_INDICATION_SIZE, true)
 
-func kill():
+func queue_free():
 	self.corporation_id = 0
 	self.hitpoints = Consts.PLANET_HITPOINTS
 	self.planet_disabled_ships = 0
 	self.planet_explorer_ships = 0
 	update()
+	.queue_free()
 
 func is_dead() -> bool:
 	return hitpoints <= 0

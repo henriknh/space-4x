@@ -42,7 +42,7 @@ func _physics_process(_delta):
 		return
 	else:
 		if is_dead():
-			kill()
+			queue_free()
 		else:
 			var corporation = get_corporation()
 			if corporation and corporation.is_computer:
@@ -60,10 +60,6 @@ func _ready():
 
 func process(delta: float):
 	pass
-
-func kill():
-	queued_to_free = true
-	queue_free()
 	
 func queue_free():
 	queued_to_free = true

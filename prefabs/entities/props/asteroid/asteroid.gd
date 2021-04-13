@@ -32,7 +32,7 @@ func is_dead() -> bool:
 	
 func process(delta: float):
 	if asteroid_rocks <= 0:
-		kill()
+		queue_free()
 	
 	.process(delta)
 

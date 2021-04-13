@@ -50,7 +50,7 @@ func process(delta: float):
 	
 	elif state == Enums.ship_states.colonizing:
 		if parent.state != Enums.planet_states.colonize:
-			kill()
+			queue_free()
 	else:
 		.process(delta)
 

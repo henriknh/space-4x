@@ -14,9 +14,6 @@ func _ready():
 func process(delta: float):
 	.process(delta)
 
-func kill():
-	.kill()
-
 func save():
 	var save = .save()
 	save["prop_type"] = prop_type

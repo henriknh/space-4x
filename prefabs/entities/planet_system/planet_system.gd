@@ -11,9 +11,6 @@ func create():
 func _ready():
 	# Make node clickable with mouse
 	input_pickable = true
-	
-func kill():
-	pass
 
 func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:

@@ -43,7 +43,7 @@ func load_game() -> bool:
 	# For our example, we will accomplish this by deleting saveable objects.
 	var save_nodes = get_tree().get_nodes_in_group("Persist")
 	for i in save_nodes:
-		i.kill()
+		i.queue_free()
 
 	# Load the file line by line and process that dictionary to restore
 	# the object it represents.
