@@ -16,18 +16,41 @@ func _ready():
 	._ready()
 
 func process(delta: float):
-	
-	if parent.corporation_id == 0:
+	if state == Enums.ship_states.idle and parent and parent.corporation_id == 0:
+		self.target = parent
 		state = Enums.ship_states.colonize
 	
-	if state == Enums.ship_states.colonize:
-		if parent.corporation_id != 0:
-			state = Enums.ship_states.idle
-		elif move(parent.position):
-			pass
-		else:
-			parent.corporation_id = corporation_id
-			parent.update()
-			kill()
+	if state == Enums.ship_states.colonize and self.target.corporation_id != 0:
+		state = Enums.ship_states.idle
+		self.target = null
 	
-	.process(delta)
+	if state == Enums.ship_states.colonize and self.target.state == Enums.planet_states.colonize and process_target != corporation_id:
+		state = Enums.ship_states.idle
+		self.target = null
+		
+	if state == Enums.ship_states.colonize:
+		
+		if node_raycast.is_colliding() and node_raycast.get_collider() == self.target:
+			var collision = move_and_collide(Vector2.ZERO, true, true, true)
+			
+			if collision and collision.collider == self.target:
+				if self.target.state != Enums.planet_states.colonize:
+					self.target.set_entity_process(Enums.planet_states.colonize, corporation_id, 1, Consts.PLANET_COLONIZE_INITIAL_PROGRESS)
+				
+				var target_dir = position.direction_to(self.target.position)
+				look_at(position - target_dir)
+				
+				self.target.planet_explorer_ships += 1
+				self.target = null
+				state = Enums.ship_states.colonizing
+				
+			else:
+				move(node_raycast.get_collision_point())
+		else:
+			move(self.target.position)
+	
+	elif state == Enums.ship_states.colonizing:
+		if parent.state != Enums.planet_states.colonize:
+			state = Enums.ship_states.idle
+	else:
+		.process(delta)

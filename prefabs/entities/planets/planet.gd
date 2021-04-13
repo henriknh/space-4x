@@ -30,18 +30,23 @@ func _ready():
 	node_planet_area_collision.polygon = self.planet_convex_hull
 	node_collision.shape = CircleShape2D.new()
 	node_collision.shape.radius = planet_size
+	
+	connect("entity_changed", self, "update")
 
 	._ready()
 
 func process(delta: float):
 	
-	if state != Enums.planet_states.colonize:
-		process_time += delta * planet_explorer_ships
+	if state == Enums.planet_states.colonize:
+		process_time += delta * planet_explorer_ships * Consts.PLANET_COLONIZE_PROGRESS_PER_TICK
 		
 		if get_process_progress() > 1:
+			self.corporation_id = process_target
 			
 			process_time = 0
 			state = Enums.planet_states.idle
+		
+		emit_signal("entity_changed")
 		
 	if state == Enums.planet_states.produce or state == Enums.planet_states.convertion:
 		process_time += delta
@@ -61,8 +66,8 @@ func process(delta: float):
 			
 			process_time = 0
 			state = Enums.planet_states.idle
-			emit_signal("entity_changed")
 		
+		emit_signal("entity_changed")
 		GameState.emit_signal("update_ui")
 
 	else:
@@ -72,8 +77,8 @@ func _draw():
 	if corporation_id <= 0:
 		draw_circle(Vector2.ZERO, planet_size, Color(0.25,0.25,0.25,1))
 
-	if corporation_id < 0:
-		draw_circle(Vector2.ZERO, planet_size * get_process_progress(), Enums.corporation_colors[corporation_id])
+	if state == Enums.planet_states.colonize:
+		draw_circle(Vector2.ZERO, planet_size * get_process_progress(), Enums.corporation_colors[process_target])
 	
 	if corporation_id > 0:
 		
@@ -92,6 +97,8 @@ func _draw():
 func kill():
 	self.corporation_id = 0
 	self.hitpoints = Consts.PLANET_HITPOINTS
+	self.planet_disabled_ships = 0
+	self.planet_explorer_ships = 0
 	update()
 
 func is_dead() -> bool:
