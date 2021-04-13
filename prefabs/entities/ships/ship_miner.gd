@@ -81,23 +81,23 @@ func process(delta: float):
 	elif state == Enums.ship_states.deliver:
 		
 		if deliver_timer.is_stopped():
-			if node_raycast.is_colliding() and node_raycast.get_collider() == target:
+			if node_raycast.is_colliding() and node_raycast.get_collider() == self.target:
 				var collision = move_and_collide(Vector2.ZERO, true, true, true)
 				
 				if collision and collision.collider == self.target:
-					var target_dir = position.direction_to(target.position)
+					var target_dir = position.direction_to(self.target.position)
 					look_at(position - target_dir)
 					deliver_timer.start()
 				else:
 					move(node_raycast.get_collision_point())
 			else:
 				move(self.target.position)
-	elif state == Enums.ship_states.mine and not target:
+	elif state == Enums.ship_states.mine and not self.target:
 		_get_mining_target()
 	
 	elif state == Enums.ship_states.mine:
 		if move(self.target.position):
-			rotation_degrees = target.rotation_degrees
+			rotation_degrees = self.target.rotation_degrees
 			if miner_ready:
 				_begin_mine()
 			elif miner_ready_timer.is_stopped() and not node_animation.current_animation == ANIMATION_CHARGE_MINER:
