@@ -76,9 +76,19 @@ func _draw():
 		draw_circle(Vector2.ZERO, planet_size * get_process_progress(), Enums.corporation_colors[corporation_id])
 	
 	if corporation_id > 0:
-		draw_circle(Vector2.ZERO, planet_size, Enums.corporation_colors[corporation_id])
-	
 		
+		draw_circle(Vector2.ZERO, planet_size, Enums.corporation_colors[corporation_id])
+		
+		if state != Enums.planet_states.idle and corporation_id == Consts.PLAYER_CORPORATION:
+
+			var color
+			if state == Enums.planet_states.produce:
+				color = Enums.ship_colors[process_target]
+			if state == Enums.planet_states.convertion:
+				color = Enums.resource_colors[process_target]
+			
+			draw_arc(Vector2.ZERO, planet_size + Consts.PLANET_PROCESS_INDICATION_SIZE / 2, 0, 2 * PI * get_process_progress(), 64, color, Consts.PLANET_PROCESS_INDICATION_SIZE, true)
+
 func kill():
 	self.corporation_id = 0
 	self.hitpoints = Consts.PLANET_HITPOINTS

@@ -22,6 +22,12 @@ const resource_types = {
 	'astral_dust': 2,
 }
 
+const resource_colors = {
+	resource_types.asteroid_rock: Color(0.352, 0.301, 0.254, 1),
+	resource_types.titanium: Color(0.752, 0.752, 0.752, 1),
+	resource_types.astral_dust: Color(0.560, 0.819, 1, 1),
+}
+
 # World 1000 - 1999
 const world_size = {
 	'small': 1000,
