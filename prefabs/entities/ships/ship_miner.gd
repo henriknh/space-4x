@@ -89,7 +89,7 @@ func process(delta: float):
 					look_at(position - target_dir)
 					deliver_timer.start()
 				else:
-					move(node_raycast.get_collision_point())
+					move(self.target.position)
 			else:
 				move(self.target.position)
 	elif state == Enums.ship_states.mine and not self.target:

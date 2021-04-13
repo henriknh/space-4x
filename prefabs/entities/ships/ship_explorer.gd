@@ -44,7 +44,7 @@ func process(delta: float):
 				state = Enums.ship_states.colonizing
 				
 			else:
-				move(node_raycast.get_collision_point())
+				move(self.target.position)
 		else:
 			move(self.target.position)
 	
