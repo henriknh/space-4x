@@ -118,5 +118,5 @@ const ship_states = {
 
 # Research 7000 - 7999
 const research_types = {
-	'dummy': 6000
+	'dummy': 7000
 }
