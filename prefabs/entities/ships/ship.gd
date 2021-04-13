@@ -8,7 +8,7 @@ class_name Ship
 
 var ship_type: int = -1
 var ship_speed: int = 100
-var hitpoints: int = 0
+var hitpoints: int = 10
 
 onready var node_sprite: Sprite = $Sprite
 onready var node_trail: Node2D = $Trail
@@ -40,7 +40,6 @@ func _ready():
 		node_sprite.self_modulate = Enums.corporation_colors[corporation_id]
 		node_trail.set_color(Enums.corporation_colors[corporation_id])
 	
-	
 	match ship_type:
 		Enums.ship_types.combat:
 			node_sprite.texture = ship_texture_combat
@@ -60,10 +59,10 @@ func _ready():
 	._ready()
 	
 func process(delta: float):
-
-	if state == Enums.ship_states.disable and target_reached:
-		parent.planet_disabled_ships += 1
-		return queue_free()
+	if state == Enums.ship_states.disable:
+		if move(parent.position):
+			parent.planet_disabled_ships += 1
+			return queue_free()
 	
 	elif state == Enums.ship_states.travel:
 		if nav_route.size() == 0 and process_target >= 0:
@@ -75,13 +74,14 @@ func process(delta: float):
 		if nav_route.size() == 0:
 			process_target = -1
 			state = Enums.ship_states.idle
-			
-	elif state == Enums.ship_states.rebuild and target_reached:
+	
+	elif state == Enums.ship_states.rebuild and ((self.target and target_reached) or true):
 			
 			# Replace old ship instance with disabled
 			if ship_type != Enums.ship_types.disabled:
 				get_node('/root/GameScene').add_child(Instancer.ship(Enums.ship_types.disabled, self))
 				return queue_free()
+			
 			process_time += delta
 			
 			if get_process_progress() > 1:

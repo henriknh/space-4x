@@ -113,10 +113,11 @@ func _on_PlanetArea_body_entered(entity: Entity):
 					asteroids.append(entity)
 					asteroids.sort_custom(self, "sort_closest")
 			Enums.entity_types.ship:
-				ships.append(entity)
-				ships.sort_custom(self, "sort_closest")
-				if entity.has_method('set_parent'):
-					entity.set_parent(self)
+				if entity.corporation_id == corporation_id:
+					ships.append(entity)
+					ships.sort_custom(self, "sort_closest")
+					if entity.has_method('set_parent'):
+						entity.set_parent(self)
 		emit_signal("entity_changed")
 
 func _on_PlanetArea_body_exited(entity: Entity):

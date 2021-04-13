@@ -82,5 +82,4 @@ func _on_convert():
 	menu.popup()
 
 func _on_swap():
-	print('swap')
 	get_node('/root/GameScene/CanvasLayer').add_child(distribution_swap_prefab.instance())

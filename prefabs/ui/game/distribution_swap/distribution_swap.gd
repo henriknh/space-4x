@@ -55,7 +55,7 @@ func _on_confirm():
 	
 	# Fetch ships to unallocate
 	var unallocated_children = []
-	for ship in selection.get_ships_sorted_by_distance():
+	for ship in selection.ships:
 		if ship.ship_type == Enums.ship_types.disabled:
 			continue
 		for ship_type in Enums.ship_types.values():
@@ -115,6 +115,7 @@ func _on_confirm():
 			unallocated_child.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.miner, Consts.SHIP_REBUILD_TIME)
 			miner_change -= 1
 		else:
+			unallocated_child.target = unallocated_child.parent
 			unallocated_child.state = Enums.ship_states.disable
 
 	MenuState.pop()
