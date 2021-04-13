@@ -80,20 +80,12 @@ func generate_world():
 		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx)
 		var start_planet = GenUtils.get_start_planet(all_planets, ai_corporation.corporation_id == (Consts.PLAYER_CORPORATION + 1))
 		start_planet.corporation_id = ai_corporation.corporation_id
-	
-	var debug_timer = Timer.new()
-	debug_timer.one_shot = true
-	debug_timer.wait_time = 0.25
-	debug_timer.connect("timeout", self, "_after_generation_debug")
-	gameScene.add_child(debug_timer)
-	debug_timer.start()
 
-func _after_generation_debug():
+
+
+
+
 	
-	var player_planet: Entity = null
-	for planet in get_tree().get_nodes_in_group('Planet'):
-		if planet.corporation_id == Consts.PLAYER_CORPORATION:
-			player_planet = planet
 	
 	var ship_types = []
 	for i in range(50):
