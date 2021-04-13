@@ -184,7 +184,7 @@ func set_parent(planet: Entity) -> void:
 	node_obstacle_handler.add_exception(parent.node_planet_area)
 
 func _on_ship_entered(ship: Ship):
-	if parent and ship.parent == parent and ship.corporation_id == corporation_id:
+	if ship != self and parent and ship.parent == parent and ship.corporation_id == corporation_id:
 		if not ship in neighbors:
 			neighbors.append(ship)
 
