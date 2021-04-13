@@ -105,11 +105,11 @@ func state_progressed() -> bool:
 
 
 
-func set_entity_process(state: int, target: int, total_time: int = 0) -> void:
+func set_entity_process(state: int, target: int, total_time: float = 0, _process_time: float = 0) -> void:
 	self.state = state
 	process_target = target
-	process_time = 0
 	_process_time_total = total_time
+	process_time = _process_time
 	
 func get_process_progress() -> float:
 	if _process_time_total <= 0:
