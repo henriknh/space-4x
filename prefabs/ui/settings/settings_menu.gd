@@ -1,16 +1,27 @@
 extends Container
 
+onready var node_orbit_circles: CheckButton = $VBoxContainer/CheckButtonOrbitCircles
+onready var node_planet_area: CheckButton = $VBoxContainer/CheckButtonPlanetArea
+onready var node_fps: CheckButton = $VBoxContainer/CheckButtonFPS
+onready var node_vsync: CheckButton = $VBoxContainer/CheckButtonVSync
+onready var node_debug: CheckButton = $VBoxContainer/CheckButtonDebug
+
 func _ready():
 	MenuState.push(self)
+
+	if not OS.is_debug_build():
+		node_debug.queue_free()
+		
 	Settings.connect("settings_changed", self, "update_ui")
 	self.update_ui()
 
 func update_ui() -> void:
-	$VBoxContainer/CheckButtonOrbitCircles.pressed = Settings.get_show_orbit_circles()
-	$VBoxContainer/CheckButtonPlanetArea.pressed = Settings.get_show_planet_area()
-	$VBoxContainer/CheckButtonFPS.pressed = Settings.get_show_fps()
-	$VBoxContainer/CheckButtonVSync.pressed = Settings.get_vsync()
-	$VBoxContainer/CheckButtonDebug.pressed = Settings.is_debug()
+	node_orbit_circles.pressed = Settings.get_show_orbit_circles()
+	node_planet_area.pressed = Settings.get_show_planet_area()
+	node_fps.pressed = Settings.get_show_fps()
+	node_vsync.pressed = Settings.get_vsync()
+	if node_debug:
+		node_debug.pressed = Settings.is_debug()
 
 func _on_show_orbit_circles(show_orbit_circles: bool) -> void:
 	Settings.set_show_orbit_circles(show_orbit_circles)

@@ -56,6 +56,8 @@ func set_debug(debug: bool) -> void:
 	_after_change()
 	
 func is_debug() -> bool:
+	if not OS.is_debug_build():
+		return false
 	return settings['debug']
 
 func _load() -> bool:

@@ -22,7 +22,9 @@ func init():
 	GameState.connect("selection_changed", self, "_selection_changed")
 	Settings.connect("settings_changed", self, "_update_ui")
 	
-	node_debug.init()
+	if node_debug:
+		node_debug.init()
+	
 	_update_ui()
 	
 func _selection_changed():

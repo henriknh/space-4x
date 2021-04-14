@@ -14,6 +14,10 @@ var setting_target = false
 var spawner_target: Node2D
 
 func _ready():
+	
+	if not OS.is_debug_build():
+		queue_free()
+	
 	_update_ui()
 	
 func init():
