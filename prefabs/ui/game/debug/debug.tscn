@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://prefabs/ui/game/debug/debug.gd" type="Script" id=1]
+[ext_resource path="res://assets/icons/godot_icon.png" type="Texture" id=2]
 
 [node name="Debug" type="VBoxContainer"]
 margin_top = 42.0
@@ -53,5 +54,12 @@ margin_bottom = 92.0
 focus_mode = 0
 enabled_focus_mode = 0
 text = "Spawn"
+
+[node name="TextureButton" type="TextureButton" parent="."]
+margin_top = 114.0
+margin_right = 96.0
+margin_bottom = 138.0
+texture_normal = ExtResource( 2 )
 [connection signal="pressed" from="Spawner/SetSpawnTarget" to="." method="_on_set_spawn_target"]
 [connection signal="pressed" from="Spawner/Spawn" to="." method="_on_spawn_ship"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_show_debug_overview"]

@@ -1,5 +1,7 @@
 extends VBoxContainer
 
+const debug_overview_prefab = preload('res://prefabs/ui/game/debug/debug_overview/debug_overview.tscn')
+
 var spawner_target_texture = preload('res://assets/icons/target.png')
 
 onready var node_mouse_pos = $MousePos as Label
@@ -65,3 +67,8 @@ func _on_spawn_ship():
 	}
 	var ship = Instancer.ship(node_spawner_ship_type.get_selected_id(), null, null, override)
 	get_node('/root/GameScene').add_child(ship)
+
+
+func _on_show_debug_overview():
+	get_node('/root/GameScene/CanvasLayer').add_child(debug_overview_prefab.instance())
+

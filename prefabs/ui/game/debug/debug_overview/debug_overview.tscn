@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://prefabs/ui/game/debug/debug_overview/debug_overview.gd" type="Script" id=1]
+[ext_resource path="res://assets/icons/close.png" type="Texture" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="DebugOverview" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 940.0
+margin_bottom = 520.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 920.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 892.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Debug overview"
+
+[node name="Button" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 896.0
+margin_right = 920.0
+margin_bottom = 24.0
+texture_normal = ExtResource( 2 )
+
+[node name="ItemList" type="ItemList" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 920.0
+margin_bottom = 500.0
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 1 )
+same_column_width = true
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_close"]
