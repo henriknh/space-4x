@@ -11,7 +11,7 @@ func _ready():
 
 	if not OS.is_debug_build():
 		node_debug.queue_free()
-		
+	
 	Settings.connect("settings_changed", self, "update_ui")
 	self.update_ui()
 
