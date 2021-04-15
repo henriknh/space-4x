@@ -64,7 +64,6 @@ func process(delta: float):
 					Enums.resource_types.astral_dust:
 						corporation.astral_dust += converted_amount
 			
-			process_time = 0
 			state = Enums.planet_states.idle
 		
 		emit_signal("entity_changed")
