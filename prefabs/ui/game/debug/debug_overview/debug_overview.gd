@@ -1,5 +1,8 @@
 extends Control
 
+const texture_ai_difficulty = preload("res://assets/icons/chart-bar.png")
+const texture_ai_friendliness = preload("res://assets/icons/robot-happy.png")
+const texture_ai_explorer = preload("res://assets/icons/compass.png")
 const texture_rocks = preload("res://assets/icons/image-filter-hdr.png")
 const texture_titanium = preload("res://assets/icons/cube.png")
 const texture_astral_dust = preload("res://assets/icons/cloud.png")
@@ -21,11 +24,15 @@ func _ready():
 	
 func _update_ui():
 	node_list.clear()
-	node_list.max_columns = 8
+	node_list.max_columns = 11
 	node_list.fixed_icon_size = Vector2(24, 24)
 	
 	# Icon
 	node_list.add_item("", null, false)
+	# AI properties
+	node_list.add_icon_item(texture_ai_difficulty, false)
+	node_list.add_icon_item(texture_ai_friendliness, false)
+	node_list.add_icon_item(texture_ai_explorer, false)
 	# Resources
 	node_list.add_icon_item(texture_rocks, false)
 	node_list.add_icon_item(texture_titanium, false)
@@ -53,6 +60,18 @@ func _update_ui():
 
 		node_list.add_icon_item(icon_text, false)
 		
+		# AI properties
+		
+		if corporation.is_computer:
+			node_list.add_item(corporation.difficulty as String, null, false)
+			node_list.add_item(corporation.friendliness as String, null, false)
+			node_list.add_item(corporation.explorer as String, null, false)
+			
+		else:
+			node_list.add_item("", null, false)
+			node_list.add_item("", null, false)
+			node_list.add_item("", null, false)
+			
 		# Resources
 		
 		node_list.add_item(corporation.asteroid_rocks as String, null, false)

@@ -46,5 +46,5 @@ margin_right = 920.0
 margin_bottom = 500.0
 size_flags_vertical = 3
 custom_styles/bg = SubResource( 1 )
-same_column_width = true
+fixed_column_width = 50
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_close"]
