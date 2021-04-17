@@ -44,7 +44,7 @@ func get_selection() -> Entity:
 
 func _update_visible():
 	get_tree().call_group('Persist', 'set_visible', state['curr_planet_system'])
-	get_tree().call_group('StarSystem', 'set_visible', state['curr_planet_system'] == -1)
+	get_tree().call_group('PlanetSystem', 'set_visible', state['curr_planet_system'] == -1)
 	(get_node('/root/GameScene') as Game).redraw()
 	
 func set_camera_setting(camera_state: Dictionary) -> void:
