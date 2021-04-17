@@ -115,6 +115,10 @@ func _begin_mine():
 	mine_timer.start()
 	
 func _do_mine():
+	if not target or target.is_dead():
+		self.target = null
+		return
+	
 	var can_mine = min(mining_power, asteroid_rocks_max - asteroid_rocks)
 	var mine_amount = min(target.asteroid_rocks, can_mine)
 	asteroid_rocks += mine_amount
