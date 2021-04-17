@@ -108,7 +108,20 @@ func planet(planet_type: int, position: Vector2, convex_hull: Array, planet_syst
 
 func planet_system(planet_system_idx: int) -> Entity:
 	var instance: Entity = prefab_planet_system.instance()
-	instance.position = Vector2(planet_system_idx * 250, 0)
+	
+	var position = Vector2(Consts.PLANET_SYSTEM_RADIUS * Random.randf(), Consts.PLANET_SYSTEM_RADIUS * Random.randf())
+	var planet_systems = get_tree().get_nodes_in_group('PlanetSystem')
+	while true and planet_systems.size() > 0:
+		var too_close = false
+		for planet_system in planet_systems:
+			if position.distance_to(planet_system.position) < 1500:
+				too_close = true
+				position = Vector2(Consts.PLANET_SYSTEM_RADIUS * Random.randf(), Consts.PLANET_SYSTEM_RADIUS * Random.randf())
+				
+		if not too_close:
+			break
+	
+	instance.position = position
 	instance.planet_system = planet_system_idx
 	
 	instance.create()
