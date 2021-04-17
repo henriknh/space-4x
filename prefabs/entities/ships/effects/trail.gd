@@ -3,11 +3,14 @@ extends Node2D
 onready var node_line: Line2D = $Line2D
 onready var node_particles: Particles2D = $Particles2D
 
+func _ready():
+	node_particles.emitting = false
+
 func set_emitting(is_emitting: bool) -> void:
-	node_line.set_emitting(false)#is_emitting)
+	node_particles.emitting = is_emitting
 	
 func is_emitting() -> bool:
-	return node_line.is_emitting
+	return node_particles.emitting
 
 func set_color(color: Color) -> void:
 	var color1 = color
@@ -20,3 +23,9 @@ func set_color(color: Color) -> void:
 
 func set_texture(texture: Texture) -> void:
 	node_particles.texture = texture
+
+func set_speed(speed: float) -> void:
+	if is_emitting():
+		var new_amount = int(round(speed) / 25)
+		if new_amount != node_particles.amount:
+			node_particles.amount = new_amount

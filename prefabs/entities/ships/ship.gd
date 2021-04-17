@@ -123,7 +123,7 @@ func move(to: Vector2) -> bool:
 	var dist_to_target = diff.length()
 	var near_target_dist = speed * 2
 	var near_target = dist_to_target <= near_target_dist
-	var target_reached = approach_target and dist_to_target <= 1
+	target_reached = state != Enums.ship_states.idle and approach_target and dist_to_target <= 1
 	
 	if target_reached:
 		velocity = Vector2.ZERO
@@ -144,12 +144,11 @@ func move(to: Vector2) -> bool:
 	
 	return target_reached
 
-func steer(var target):
+func steer(var target: Vector2) -> Vector2:
 	var speed = Consts.SHIP_SPEED_IDLE if state == Enums.ship_states.idle else ship_speed
 	target *= ship_speed
 	var steer = target - velocity
-	steer = steer.normalized() * (speed / 10)
-	return steer
+	return steer.normalized() * (speed / 10)
 
 func set_visible(in_data) -> void:
 	.set_visible(in_data)
@@ -158,12 +157,15 @@ func set_visible(in_data) -> void:
 		
 func _update_trail() -> void:
 	if not visible:
+		if node_trail.is_emitting():
+			node_trail.set_emitting(false)
 		return
 	
-	if not target_reached and node_trail.is_emitting():
+	if target_reached and node_trail.is_emitting():
 		node_trail.set_emitting(false)
 	elif not node_trail.is_emitting():
 		node_trail.set_emitting(true)
+		node_trail.set_speed(ship_speed)
 
 func _rotate_sprite_texture():
 	print('_rotate_disabled_sprite')
