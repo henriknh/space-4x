@@ -2,8 +2,6 @@ extends Entity
 
 class_name PlanetSystem
 
-onready var node_info = $InfoUI
-
 func create():
 	visible = false
 	.create()
