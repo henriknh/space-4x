@@ -47,7 +47,7 @@ func process(delta: float):
 			state = Enums.planet_states.idle
 		
 		emit_signal("entity_changed")
-		
+	
 	if state == Enums.planet_states.produce or state == Enums.planet_states.convertion:
 		process_time += delta
 		

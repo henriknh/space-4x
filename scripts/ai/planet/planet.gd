@@ -1,6 +1,6 @@
 extends Node
 
-static func process(entity: Entity, delta: float):
+static func process(entity: Planet, delta: float):
 	var corporation = entity.get_corporation()
 	
 	if entity.state == Enums.ai_states.delay:
@@ -20,11 +20,11 @@ static func process(entity: Entity, delta: float):
 		var delay_time = (Consts.AI_DIFFICULTY_LEVELS - corporation.difficulty) * Consts.AI_DELAY_TIME
 		entity.set_entity_process(Enums.ai_states.delay, -1, delay_time)
 
-static func produce(entity: Entity, corporation: Corporation):
+static func produce(entity: Planet, corporation: Corporation):
 	if corporation.titanium < Consts.SHIP_COST_TITANIUM:
 		return
 	
-	var ship_to_produce = -1
+	var ship_to_produce
 	if corporation.titanium == Consts.SHIP_COST_TITANIUM:
 		var has_miner_ships = false
 		for ship in entity.ships:
@@ -34,7 +34,7 @@ static func produce(entity: Entity, corporation: Corporation):
 		if not has_miner_ships:
 			ship_to_produce = Enums.ship_types.miner
 	
-	elif corporation.titanium >= Consts.SHIP_COST_TITANIUM:
+	if not ship_to_produce:
 		
 		var potential_ships = [
 			Enums.ship_types.combat,
@@ -58,18 +58,18 @@ static func produce(entity: Entity, corporation: Corporation):
 		potential_ships.shuffle()
 		ship_to_produce = potential_ships[0]
 	
-	corporation.titanium -= Consts.SHIP_COST_TITANIUM
-	return entity.set_entity_process(Enums.planet_states.produce, ship_to_produce, Consts.SHIP_PRODUCTION_TIME)
+	if ship_to_produce:
+		corporation.titanium -= Consts.SHIP_COST_TITANIUM
+		entity.set_entity_process(Enums.planet_states.produce, ship_to_produce, Consts.SHIP_PRODUCTION_TIME)
 
-static func convertion(entity: Entity, corporation: Corporation):
+static func convertion(entity: Planet, corporation: Corporation):
 	corporation.asteroid_rocks -= Consts.RESOURCE_CONVERTION_COST
 	if corporation.titanium == 0:
 		entity.set_entity_process(Enums.planet_states.convertion, Enums.resource_types.titanium, Consts.RESOURCE_CONVERTION_TIME)
 	elif corporation.astral_dust == 0:
 		entity.set_entity_process(Enums.planet_states.convertion, Enums.resource_types.astral_dust, Consts.RESOURCE_CONVERTION_TIME)
 	else:
-		var r = Random.randi() % 2
-		if r == 0:
+		if Random.randi() % 2 == 0:
 			entity.set_entity_process(Enums.planet_states.convertion, Enums.resource_types.titanium, Consts.RESOURCE_CONVERTION_TIME)
 		else:
 			entity.set_entity_process(Enums.planet_states.convertion, Enums.resource_types.titanium, Consts.RESOURCE_CONVERTION_TIME)
