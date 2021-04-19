@@ -51,7 +51,7 @@ func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, over
 		instance.parent = inherit
 		if inherit.entity_type == Enums.entity_types.planet:
 			var angle = Random.randf() * 2 * PI
-			instance.position = inherit.position + Vector2(cos(angle), sin(angle)) * inherit.planet_size + Vector2.ONE * 50
+			instance.position = inherit.position + Vector2(cos(angle), sin(angle)) * (inherit.planet_size + 50)
 		else:
 			instance.position = inherit.position
 	
