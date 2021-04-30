@@ -79,9 +79,6 @@ func _update_ui():
 func _on_game_menu():
 	get_parent().add_child(game_menu_prefab.instance())
 
-func _on_go_to_galaxy():
-	GameState.set_planet_system(-1)
-
 func _on_ship_movement():
 	get_parent().add_child(ship_movement_prefab.instance())
 

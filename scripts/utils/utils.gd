@@ -2,9 +2,9 @@ extends Node
 
 onready var is_mobile = OS.get_name() in ['Android']
 
-func equals(a, b, elipse = 100) -> bool:
-	if typeof(a) == TYPE_VECTOR2:
-		if (a as Vector2).distance_squared_to(b) < pow(elipse, 2):
+func equals(a, b, elipse = 0.1) -> bool:
+	if typeof(a) == TYPE_VECTOR2 or typeof(a) == TYPE_VECTOR3:
+		if a.distance_squared_to(b) < pow(elipse, 2):
 			return true
 	
 	return false

@@ -16,8 +16,8 @@ func goto_game(saveFile: String = '') -> void:
 	
 	_load_scene(game_scene)
 	
-	thread.start(self, "_handle_loading_entities", saveFile)
-	#_handle_loading_entities(saveFile)
+	#thread.start(self, "_handle_loading_entities", saveFile)
+	_handle_loading_entities(saveFile)
 	
 func goto_main_menu() -> void:
 	MenuState.reset()
@@ -44,5 +44,4 @@ func _handle_loading_entities(saveFile: String):
 func _handle_loading_entities_done():
 	thread.wait_to_finish()
 	GameState.loading = false
-	get_tree().get_current_scene().init()
 

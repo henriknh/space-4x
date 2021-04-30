@@ -39,69 +39,66 @@ const AI_DELAY_TIME = 1
 # Galaxy
 const GALAXY_SIZE = {
 	Enums.world_size.small: {
-		'min': 1, 
-		'max': 1, 
+		'min': 4,
+		'max': 8
 	},
 	Enums.world_size.medium: {
+		'min': 8,
+		'max': 12
+	},
+	Enums.world_size.large: {
+		'min': 12,
+		'max': 16
+	}
+}
+const GALAXY_GAP_PLANET_SYSTEMS = {
+	Enums.world_size.small: 150,
+	Enums.world_size.medium: 200,
+	Enums.world_size.large: 250
+}
+
+# Tile layer
+const PLANET_SYSTEM_RADIUS = {
+	Enums.world_size.small: {
 		'min': 6, 
+		'max': 8
+	},
+	Enums.world_size.medium: {
+		'min': 10, 
 		'max': 12, 
 	},
 	Enums.world_size.large: {
-		'min': 8, 
-		'max': 18, 
+		'min': 14, 
+		'max': 16, 
 	}
 }
-
-# Planet system
-const PLANET_SYSTEM_BASE_DISTANCE_TO_SUN = 1000
-const PLANET_SYSTEM_RADIUS = 4000
-const PLANET_SYSTEM_ORBITS = {
+const PLANET_SYSTEM_PLANETS = {
 	Enums.world_size.small: {
-		'min': 6, 
-		'max': 10, 
+		'min': 4, 
+		'max': 8, 
 	},
 	Enums.world_size.medium: {
 		'min': 8, 
-		'max': 15, 
+		'max': 12, 
 	},
 	Enums.world_size.large: {
-		'min': 10, 
-		'max': 30, 
+		'min': 12, 
+		'max': 16, 
 	}
 }
+
+# Tile
+const TILE_SIZE = 5
+const TILE_DIR_ALL = [
+	Vector2(+2,  0), Vector2(+1, -1), Vector2(-1, -1), 
+	Vector2(-2,  0), Vector2(-1, +1), Vector2(+1, +1), 
+]
 
 # Planets
 const PLANET_HITPOINTS = 250
 const PLANET_PROCESS_INDICATION_SIZE = 20
 const PLANET_COLONIZE_INITIAL_PROGRESS = 0.1
 const PLANET_COLONIZE_PROGRESS_PER_TICK = 0.01
-
-# Asteroids
-const ASTEROIDS_BASE_DISTANCE_TO_SUN = PLANET_SYSTEM_BASE_DISTANCE_TO_SUN
-const ASTEROIDS_EXTRA_DISTANCE = PLANET_SYSTEM_BASE_DISTANCE_TO_SUN / 2
-const ASTEROIDS_MIN_DISTANCE_TO_PLANET = 100
-const ASTEROIDS_MIN_DISTANCE_TO_SITE_EDGE = 50
-const ASTEROIDS_PER_PLANET_SYSTEM = {
-	Enums.world_size.small: {
-		'min': 200, 
-		'max': 400, 
-	},
-	Enums.world_size.medium: {
-		'min': 500, 
-		'max': 800, 
-	},
-	Enums.world_size.large: {
-		'min': 900, 
-		'max': 1300, 
-	}
-}
-
-const ASTEROIDS_FORMATION_OFFSET = PLANET_SYSTEM_RADIUS * 0.15
-const ASTEROIDS_FORMATION_BELT_DISTANCE = PLANET_SYSTEM_RADIUS * 0.66
-const ASTEROIDS_FORMATION_HILDA_SIZE = PLANET_SYSTEM_RADIUS * 0.9
-const ASTEROIDS_FORMATION_HILDA_BREAK_POINT = PLANET_SYSTEM_RADIUS * 0.8
-const ASTEROIDS_FORMATION_DUAL_LARGEST = PLANET_SYSTEM_RADIUS * 0.8
-const ASTEROIDS_FORMATION_DUAL_SMALLEST = PLANET_SYSTEM_RADIUS * 0.4
 
 # Ships
 const SHIP_PRODUCTION_TIME = 10

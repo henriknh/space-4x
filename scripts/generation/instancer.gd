@@ -1,149 +1,64 @@
-extends Node
+extends Spatial
 
 var script_entity = preload('res://prefabs/entities/entity.gd')
 
-# Planet system
+var prefab_galaxy = preload("res://prefabs/entities/galaxy/galaxy.tscn")
 var prefab_planet_system = preload('res://prefabs/entities/planet_system/planet_system.tscn')
-
-# Planet 
+var prefab_tile = preload('res://prefabs/entities/tile/tile.tscn')
 var prefab_planet = preload('res://prefabs/entities/planets/planet.tscn')
-var script_earth = preload('res://prefabs/entities/planets/planet_earth.gd')
-var script_ice = preload('res://prefabs/entities/planets/planet_ice.gd')
-var script_iron = preload('res://prefabs/entities/planets/planet_iron.gd')
-var script_lava = preload('res://prefabs/entities/planets/planet_lava.gd')
-
-# Object
-var prefab_asteroid = preload('res://prefabs/entities/props/asteroid/asteroid.tscn')
-
-# Ship
 var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
-var script_ship = preload('res://prefabs/entities/ships/ship.gd')
-var script_combat = preload('res://prefabs/entities/ships/ship_combat.gd')
-var script_explorer = preload('res://prefabs/entities/ships/ship_explorer.gd')
-var script_miner = preload('res://prefabs/entities/ships/ship_miner.gd')
 
-# Effect
-var prefab_laser = preload('res://prefabs/entities/ships/effects/laser.tscn')
-var prefab_asteroid_dust = preload('res://prefabs/entities/props/asteroid/effects/asteroid_dust.tscn')
-
-func ship(ship_type: int, copy_from: Entity = null, inherit: Entity = null, override: Dictionary = {}) -> Entity:
+func galaxy() -> Galaxy:
+	var instance: Galaxy = prefab_galaxy.instance()
 	
-	var instance: Entity = prefab_ship.instance()
-	
-	match ship_type:
-		Enums.ship_types.combat:
-			instance.set_script(script_combat)
-		Enums.ship_types.explorer:
-			instance.set_script(script_explorer)
-		Enums.ship_types.miner:
-			instance.set_script(script_miner)
-
-	if copy_from:
-		for propery in script_ship.get_script_property_list():
-			instance.set(propery.name, copy_from.get(propery.name))
-		
-		instance.position = copy_from.position
-		instance.rotation_degrees = copy_from.rotation_degrees
-	
-	if inherit:
-		instance.planet_system = inherit.planet_system
-		instance.corporation_id = inherit.corporation_id
-		instance.parent = inherit
-		if inherit.entity_type == Enums.entity_types.planet:
-			var angle = Random.randf() * 2 * PI
-			instance.position = inherit.position + Vector2(cos(angle), sin(angle)) * (inherit.planet_size + 50)
-		else:
-			instance.position = inherit.position
-	
-	for key in override:
-		instance.set(key, override[key])
-		
-	instance.ship_type = ship_type
-	
-	if copy_from == null:
-		instance.create()
+	instance._generate_planet_systems()
 	
 	return instance
+
+func planet_system(position: Vector3 = Vector3.ZERO) -> PlanetSystem:
+	var instance: PlanetSystem = prefab_planet_system.instance()
 	
-func prop(prop_type: int, planet_system_idx: int, position: Vector2 = Vector2.INF) -> Entity:
-	var instance: Entity
+	instance.translation = position
+	
+	instance._generate_tiles()
+	instance._generate_sites()
+	
+	return instance
 
-	match prop_type:
-		Enums.prop_types.asteroid:
-			instance = prefab_asteroid.instance()
+func tile(position: Vector3) -> Tile:
+	var instance: Tile = prefab_tile.instance()
+	
+	instance.translation = position
+	
+	instance.create()
+	
+	return instance
 
-	if position == Vector2.INF:
-		var angle = Random.randf() * 2 * PI
-		var distance = Consts.ASTEROIDS_BASE_DISTANCE_TO_SUN + Random.randf() * (Consts.PLANET_SYSTEM_RADIUS + Consts.ASTEROIDS_EXTRA_DISTANCE)
-		instance.position = Vector2(distance * cos(angle), distance * sin(angle))
+func planet(tile: Tile) -> Planet:
+	var instance: Planet = prefab_planet.instance()
+	
+	instance.translation = tile.translation
+	
+	return instance
+
+func ship(ship_type: int, corporation_id: int, tile: Tile = null) -> Ship:
+	
+	var position: Vector3 = Vector3.ZERO
+	if tile:
+		position = tile.translation
+		position += Vector3((Random.randi() % 5) - 2.5,0,(Random.randi() % 5) - 2.5)
 	else:
-		instance.position = position
+		var camera: Camera = get_node('/root/GameScene/CameraRoot/Camera')
+		var space_state = get_world().direct_space_state
+		var mpos = get_viewport().get_mouse_position()
+		var from = camera.project_ray_origin(mpos)
+		var to = from + camera.project_ray_normal(mpos) * 1000
+		var result = space_state.intersect_ray(from, to, [], 4, true, true)
+		if result:
+			position = result.collider.get_parent().translation
 	
-	instance.planet_system = planet_system_idx
+	var instance: Ship = prefab_ship.instance()
 	
-	instance.create()
-	
-	return instance
-	
-func planet(planet_type: int, position: Vector2, convex_hull: Array, planet_system_idx: int) -> Entity:
-	var instance: Entity = prefab_planet.instance()
-
-	match planet_type:
-		Enums.planet_types.earth:
-			instance.set_script(script_earth)
-		Enums.planet_types.ice:
-			instance.set_script(script_ice)
-		Enums.planet_types.iron:
-			instance.set_script(script_iron)
-		Enums.planet_types.lava:
-			instance.set_script(script_lava)
-
-	instance.position = position
-	instance.planet_system = planet_system_idx
-	instance.planet_convex_hull = convex_hull
-	
-	instance.create()
+	instance.translation = position
 	
 	return instance
-
-func planet_system(planet_system_idx: int) -> Entity:
-	var instance: Entity = prefab_planet_system.instance()
-	
-	var position = Vector2(Consts.PLANET_SYSTEM_RADIUS * Random.randf(), Consts.PLANET_SYSTEM_RADIUS * Random.randf())
-	var planet_systems = get_tree().get_nodes_in_group('PlanetSystem')
-	while true and planet_systems.size() > 0:
-		var too_close = false
-		for planet_system in planet_systems:
-			if position.distance_to(planet_system.position) < 1500:
-				too_close = true
-				position = Vector2(Consts.PLANET_SYSTEM_RADIUS * Random.randf(), Consts.PLANET_SYSTEM_RADIUS * Random.randf())
-				
-		if not too_close:
-			break
-	
-	instance.position = position
-	instance.planet_system = planet_system_idx
-	
-	instance.create()
-	
-	return instance
-
-func laser(from: Vector2, to: Vector2, color: Color) -> Entity:
-	var laser = prefab_laser.instance()
-	laser.from = from
-	laser.to = to
-	laser.color = color
-	get_node('/root/GameScene').add_child(laser)
-	return null
-
-func asteroid_dust(parent: Node2D, is_large: bool) -> Entity:
-	var asteroid_dust = prefab_asteroid_dust.instance()
-	
-	asteroid_dust.position = parent.position
-	asteroid_dust.rotation_degrees = parent.rotation_degrees
-	asteroid_dust.is_large = is_large
-	if parent.get('node_sprite') and parent.get('node_sprite').get('self_modulate'):
-		asteroid_dust.color = parent.node_sprite.self_modulate
-	
-	get_node('/root/GameScene').add_child(asteroid_dust)
-	return null

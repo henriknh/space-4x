@@ -21,7 +21,7 @@ text = "(12345, 67890)"
 [node name="Spawner" type="VBoxContainer" parent="."]
 margin_top = 18.0
 margin_right = 96.0
-margin_bottom = 110.0
+margin_bottom = 86.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -39,27 +39,19 @@ margin_bottom = 44.0
 focus_mode = 0
 enabled_focus_mode = 0
 
-[node name="SetSpawnTarget" type="Button" parent="Spawner"]
+[node name="Spawning" type="Button" parent="Spawner"]
 margin_top = 48.0
 margin_right = 96.0
 margin_bottom = 68.0
 focus_mode = 0
+toggle_mode = true
 enabled_focus_mode = 0
-text = "Set target"
-
-[node name="Spawn" type="Button" parent="Spawner"]
-margin_top = 72.0
-margin_right = 96.0
-margin_bottom = 92.0
-focus_mode = 0
-enabled_focus_mode = 0
-text = "Spawn"
+text = "Spawning"
 
 [node name="TextureButton" type="TextureButton" parent="."]
-margin_top = 114.0
+margin_top = 90.0
 margin_right = 96.0
-margin_bottom = 138.0
+margin_bottom = 114.0
 texture_normal = ExtResource( 2 )
-[connection signal="pressed" from="Spawner/SetSpawnTarget" to="." method="_on_set_spawn_target"]
-[connection signal="pressed" from="Spawner/Spawn" to="." method="_on_spawn_ship"]
+
 [connection signal="pressed" from="TextureButton" to="." method="_on_show_debug_overview"]

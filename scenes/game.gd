@@ -1,12 +1,8 @@
-extends Node2D
+extends Spatial
 
 class_name Game
 
 var game_menu_prefab = preload('res://prefabs/ui/game_menu/game_menu.tscn')
-
-func init():
-	Nav.create_network()
-	redraw()
 	
 func _input(event):
 	if event is InputEventKey and event.is_pressed() and event.scancode == KEY_ESCAPE:
@@ -14,12 +10,3 @@ func _input(event):
 			$CanvasLayer.add_child(game_menu_prefab.instance())
 		else:
 			MenuState.pop()
-	
-func redraw():
-	for planet in get_tree().get_nodes_in_group('Planet'):
-		planet.update()
-		if planet.planet_system == GameState.get_planet_system():
-			planet.update()
-	
-	self.update()
-	$VoronoiSites.update()

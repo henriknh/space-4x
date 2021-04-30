@@ -96,6 +96,7 @@ margin_top = 154.0
 margin_right = 300.0
 margin_bottom = 174.0
 text = "Exit"
+
 [connection signal="item_selected" from="VBox/CreateGame/VBoxContainer/OptionBtnWorldSize" to="." method="_on_world_size_changed"]
 [connection signal="value_changed" from="VBox/CreateGame/VBoxContainer/SpinBoxSeed" to="." method="_on_seed_changed"]
 [connection signal="pressed" from="VBox/CreateGame/ButtonCreate" to="." method="_on_create"]

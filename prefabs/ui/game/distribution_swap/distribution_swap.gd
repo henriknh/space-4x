@@ -80,25 +80,25 @@ func _on_confirm():
 	while combat_change > 0:
 		if selection.planet_disabled_ships == 0:
 			break
-		var ship = Instancer.ship(Enums.ship_types.disabled, null, selection)
-		ship.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.combat, Consts.SHIP_REBUILD_TIME)
-		gameScene.add_child(ship)
+#		var ship = Instancer.ship(Enums.ship_types.disabled, null, selection)
+#		ship.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.combat, Consts.SHIP_REBUILD_TIME)
+#		gameScene.add_child(ship)
 		selection.planet_disabled_ships -= 1
 		combat_change -= 1
 	while explorer_change > 0:
 		if selection.planet_disabled_ships == 0:
 			break
-		var ship = Instancer.ship(Enums.ship_types.disabled, null, selection)
-		ship.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.explorer, Consts.SHIP_REBUILD_TIME)
-		gameScene.add_child(ship)
+#		var ship = Instancer.ship(Enums.ship_types.disabled, null, selection)
+#		ship.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.explorer, Consts.SHIP_REBUILD_TIME)
+#		gameScene.add_child(ship)
 		selection.planet_disabled_ships -= 1
 		explorer_change -= 1
 	while miner_change > 0:
 		if selection.planet_disabled_ships == 0:
 			break
-		var ship = Instancer.ship(Enums.ship_types.disabled, null, selection)
-		ship.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.miner, Consts.SHIP_REBUILD_TIME)
-		gameScene.add_child(ship)
+#		var ship = Instancer.ship(Enums.ship_types.disabled, null, selection)
+#		ship.set_entity_process(Enums.ship_states.rebuild, Enums.ship_types.miner, Consts.SHIP_REBUILD_TIME)
+#		gameScene.add_child(ship)
 		selection.planet_disabled_ships -= 1
 		miner_change -= 1
 	

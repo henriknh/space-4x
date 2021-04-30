@@ -9,32 +9,22 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Prop",
-"class": "Asteroid",
-"language": "GDScript",
-"path": "res://prefabs/entities/props/asteroid/asteroid.gd"
-}, {
 "base": "Node",
 "class": "Corporation",
 "language": "GDScript",
 "path": "res://scripts/utils/corporation.gd"
 }, {
-"base": "Node",
-"class": "Edge",
-"language": "GDScript",
-"path": "res://scripts/voronoi/edge.gd"
-}, {
-"base": "Node",
-"class": "EdgeRegistry",
-"language": "GDScript",
-"path": "res://scripts/voronoi/edge_registry.gd"
-}, {
-"base": "KinematicBody2D",
+"base": "Spatial",
 "class": "Entity",
 "language": "GDScript",
 "path": "res://prefabs/entities/entity.gd"
 }, {
-"base": "Node2D",
+"base": "Entity",
+"class": "Galaxy",
+"language": "GDScript",
+"path": "res://prefabs/entities/galaxy/galaxy.gd"
+}, {
+"base": "Spatial",
 "class": "Game",
 "language": "GDScript",
 "path": "res://scenes/game.gd"
@@ -44,104 +34,30 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://prefabs/entities/planets/planet.gd"
 }, {
-"base": "Planet",
-"class": "PlanetEarth",
-"language": "GDScript",
-"path": "res://prefabs/entities/planets/planet_earth.gd"
-}, {
-"base": "Planet",
-"class": "PlanetIce",
-"language": "GDScript",
-"path": "res://prefabs/entities/planets/planet_ice.gd"
-}, {
-"base": "Planet",
-"class": "PlanetIron",
-"language": "GDScript",
-"path": "res://prefabs/entities/planets/planet_iron.gd"
-}, {
-"base": "Planet",
-"class": "PlanetLava",
-"language": "GDScript",
-"path": "res://prefabs/entities/planets/planet_lava.gd"
-}, {
 "base": "Entity",
 "class": "PlanetSystem",
 "language": "GDScript",
 "path": "res://prefabs/entities/planet_system/planet_system.gd"
 }, {
 "base": "Entity",
-"class": "Prop",
-"language": "GDScript",
-"path": "res://prefabs/entities/props/prop.gd"
-}, {
-"base": "Entity",
 "class": "Ship",
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/ship.gd"
 }, {
-"base": "Ship",
-"class": "ShipCombat",
+"base": "Entity",
+"class": "Tile",
 "language": "GDScript",
-"path": "res://prefabs/entities/ships/ship_combat.gd"
-}, {
-"base": "Ship",
-"class": "ShipExplorer",
-"language": "GDScript",
-"path": "res://prefabs/entities/ships/ship_explorer.gd"
-}, {
-"base": "Ship",
-"class": "ShipMiner",
-"language": "GDScript",
-"path": "res://prefabs/entities/ships/ship_miner.gd"
-}, {
-"base": "Node",
-"class": "Site",
-"language": "GDScript",
-"path": "res://scripts/voronoi/site.gd"
-}, {
-"base": "Node",
-"class": "SiteRegistry",
-"language": "GDScript",
-"path": "res://scripts/voronoi/site_registry.gd"
-}, {
-"base": "Line2D",
-"class": "Trail2D",
-"language": "GDScript",
-"path": "res://prefabs/entities/ships/effects/trail_line.gd"
-}, {
-"base": "Line2D",
-"class": "Trail2D_backup",
-"language": "GDScript",
-"path": "res://prefabs/entities/ships/effects/trail_line_backup.gd"
-}, {
-"base": "Node",
-"class": "Voronoi",
-"language": "GDScript",
-"path": "res://scripts/voronoi/voronoi.gd"
+"path": "res://prefabs/entities/tile/tile.gd"
 } ]
 _global_script_class_icons={
-"Asteroid": "",
 "Corporation": "",
-"Edge": "",
-"EdgeRegistry": "",
 "Entity": "",
+"Galaxy": "",
 "Game": "",
 "Planet": "",
-"PlanetEarth": "",
-"PlanetIce": "",
-"PlanetIron": "",
-"PlanetLava": "",
 "PlanetSystem": "",
-"Prop": "",
 "Ship": "",
-"ShipCombat": "",
-"ShipExplorer": "",
-"ShipMiner": "",
-"Site": "",
-"SiteRegistry": "",
-"Trail2D": "",
-"Trail2D_backup": "",
-"Voronoi": ""
+"Tile": ""
 }
 
 [application]
@@ -156,7 +72,6 @@ Random="*res://scripts/utils/random.gd"
 Enums="*res://scripts/utils/enums.gd"
 Consts="*res://scripts/utils/consts.gd"
 Utils="*res://scripts/utils/utils.gd"
-NameGenerator="*res://scripts/utils/name_generator.gd"
 Scene="*res://scripts/utils/scene.gd"
 Instancer="*res://scripts/generation/instancer.gd"
 WorldGenerator="*res://scripts/generation/world_generator.gd"
@@ -164,20 +79,18 @@ GameState="*res://scripts/utils/game_state.gd"
 StateManager="*res://scripts/utils/state_manager.gd"
 Formatter="*res://scripts/utils/formatter.gd"
 Nav="*res://scripts/utils/navigation.gd"
-VoronoiRegistry="*res://scripts/voronoi/voronoi_registry.gd"
 Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
 Corporations="*res://scripts/utils/corporations.gd"
 AI="*res://scripts/ai/ai.gd"
 Boid="*res://scripts/entities/boid.gd"
+EventQueue="*res://scripts/utils/event_queue.gd"
 
 [display]
 
 window/size/width=960
 window/size/height=540
 window/vsync/use_vsync=false
-window/stretch/mode="2d"
-window/stretch/aspect="expand"
 
 [gdnative]
 
@@ -239,11 +152,10 @@ ui_down={
 
 [layer_names]
 
-2d_physics/layer_2="Planet"
-2d_physics/layer_3="PlanetArea"
-2d_physics/layer_4="Ship"
-2d_physics/layer_5="Asteroid"
-2d_physics/layer_6="PlanetSystemBounds"
+3d_physics/layer_2="TileLayer"
+3d_physics/layer_3="Tile"
+3d_physics/layer_4="Planet"
+3d_physics/layer_5="Ship"
 
 [physics]
 
@@ -252,5 +164,6 @@ common/physics_fps=30
 [rendering]
 
 threads/thread_model=2
+quality/shadows/filter_mode=0
 environment/default_clear_color=Color( 0.0862745, 0.0862745, 0.2, 1 )
 environment/default_environment="res://default_env.tres"

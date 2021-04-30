@@ -87,7 +87,7 @@ func load_game() -> bool:
 		load_progress += 1
 		GameState.loading_progress = load_progress / total_entities
 		
-	GameState.set_planet_system(GameState.get_planet_system())
+	GameState.set_planet_system(GameState.curr_planet_system)
 	
 	return true
 

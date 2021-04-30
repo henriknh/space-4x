@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/godot_icon.png-54a025a732e7e03fe2fcc947c6cf3847.stex"
+path="res://.import/planet_48.png-32e2e07b3bb566c9c9f742dfcef3fa51.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/godot_icon.png"
-dest_files=[ "res://.import/godot_icon.png-54a025a732e7e03fe2fcc947c6cf3847.stex" ]
+source_file="res://assets/icons/planet_48.png"
+dest_files=[ "res://.import/planet_48.png-32e2e07b3bb566c9c9f742dfcef3fa51.stex" ]
 
 [params]
 

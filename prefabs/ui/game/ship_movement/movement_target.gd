@@ -31,14 +31,10 @@ func _is_confirm_disabled() -> bool:
 		return false
 
 func _update_ui():
-	$Actions/BtnToGalaxy.visible = GameState.get_planet_system() > -1
 	$Actions/BtnConfirm.disabled = _is_confirm_disabled()
 
 func _state_changed():
 	_update_ui()
-
-func _on_to_galaxy():
-	GameState.set_planet_system(-1)
 	
 func _on_cancel():
 	MenuState.pop()

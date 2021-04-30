@@ -17,9 +17,9 @@ var asteroid_rocks: int = Consts.RESOURCE_START_ASTEROID_ROCKS setget set_astero
 var titanium: int = Consts.RESOURCE_START_TITANIUM setget set_titanium
 var astral_dust: int = Consts.RESOURCE_START_ASTRAL_DUST setget set_astral_dust
 
-func _init(corporation_id: int) -> void:
+func _init(_corporation_id: int) -> void:
+	self.corporation_id = _corporation_id
 	self.is_computer = corporation_id > Consts.PLAYER_CORPORATION
-	self.corporation_id = corporation_id
 	self.color = Enums.corporation_colors[corporation_id]
 	emit_signal("corporation_changed")
 

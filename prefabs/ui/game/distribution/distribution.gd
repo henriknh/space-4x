@@ -102,7 +102,7 @@ func _update_ui():
 	if total_ships == 0:
 		return
 		
-	total_ui_width = rect_size[0]
+	total_ui_width = int(rect_size[0])
 	
 	for key in distribution.keys():
 		

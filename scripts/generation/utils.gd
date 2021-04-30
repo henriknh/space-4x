@@ -37,9 +37,6 @@ static func calc_planet_type(orbit: int, total_orbits: int) -> int:
 		else:
 			return Enums.planet_types.ice
 
-
-	return -1
-
 static func get_least_dense_quadrant(quadrants: Dictionary) -> int:
 	var smallest_quadrant = 0
 	var smallest_value = quadrants[smallest_quadrant]
