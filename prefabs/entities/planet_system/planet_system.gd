@@ -1,18 +1,5 @@
 extends Entity
 
-# https://www.redblobgames.com/grids/hexagons/
-# https://github.com/romlok/godot-gdhexgrid
-
-class HexAStar:
-	extends AStar2D
-
-	func _compute_cost(u, v):
-		return abs(u - v)
-
-	func _estimate_cost(u, v):
-		return min(0, abs(u - v) - 1)
-
-
 class_name PlanetSystem
 
 var neighbors = []
@@ -20,15 +7,13 @@ var tiles = []
 var sites = {}
 var bounds: Array = []
 
-var astar = HexAStar.new()
-
 func _ready():
 	add_to_group('Persist')
 	add_to_group('PlanetSystem')
 
 func get_coords() -> Vector2:
-	var x = translation.x / (200 * sqrt(3)) * 2
-	var z = translation.z / 200 / 1.5
+	var x = translation.x / (Consts.GALAXY_GAP_PLANET_SYSTEMS[WorldGenerator.world_size] * sqrt(3))
+	var z = translation.z / Consts.GALAXY_GAP_PLANET_SYSTEMS[WorldGenerator.world_size] / 1.5 * sqrt(3)
 	return Vector2(int(round(x)), int(round(z)))
 	
 func _generate_tiles():
@@ -37,7 +22,7 @@ func _generate_tiles():
 	var radius = Random.randi_range(radius_min, radius_max)
 		
 	var width = Consts.TILE_SIZE * sqrt(3)
-	var height = Consts.TILE_SIZE * 2
+	var _height = Consts.TILE_SIZE * 2
 	
 	for i in range(3, radius + 3):
 		for j in range(6):
@@ -45,39 +30,39 @@ func _generate_tiles():
 			var angle_rad = PI / 180 * angle_deg
 			var position = Vector3(cos(angle_rad), 0, sin(angle_rad)) * width * i
 			
-			tiles.append(Instancer.tile(position))
+			tiles.append(Instancer.tile(position, i == radius + 2))
 
 			for k in range(1, i):
 				var angle_deg_child = angle_deg + 120
 				var angle_rad_child = PI / 180 * angle_deg_child
 				var position_child = position + Vector3(width * k * cos(angle_rad_child), 0, width * k * sin(angle_rad_child))
 				
-				tiles.append(Instancer.tile(position_child))
+				tiles.append(Instancer.tile(position_child, i == radius + 2))
 	
 	var tile_dict = {}
 	for tile in tiles:
 		tile_dict[tile.get_coords()] = tile
 	
 	for tile in tiles:
-		var neighbors = []
+		var _neighbors = []
 		for coord in Consts.TILE_DIR_ALL:
 			coord += tile.get_coords()
 			if tile_dict.has(coord):
-				neighbors.append(tile_dict[coord])
-		tile.neighbors = neighbors
+				_neighbors.append(tile_dict[coord])
+		tile.neighbors = _neighbors
 		
 	var tiles_positions = []
 	for tile in tiles:
 		tiles_positions.append(Vector2(tile.translation.x, tile.translation.z))
 	bounds = Geometry.convex_hull_2d(tiles_positions)
 	
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
-	for point in bounds:
-		st.add_vertex(Vector3(point.x, 0, point.y))
-	var mesh = MeshInstance.new()
-	mesh.mesh = st.commit()
-	add_child(mesh)
+#	var st = SurfaceTool.new()
+#	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
+#	for point in bounds:
+#		st.add_vertex(Vector3(point.x, 0, point.y))
+#	var mesh = MeshInstance.new()
+#	mesh.mesh = st.commit()
+#	add_child(mesh)
 
 func _generate_sites():
 	var planets_min = Consts.PLANET_SYSTEM_PLANETS[WorldGenerator.world_size].min
@@ -109,14 +94,8 @@ func _generate_sites():
 		
 		curr_site = (curr_site + 1) % planet_count
 
-
-
-
-
-
-
-
-
-
-
-
+func get_neighbor_in_dir(coords: Vector2) -> PlanetSystem:
+	for neighbor in neighbors:
+		if (neighbor.get_coords() - get_coords()) == coords:
+			return neighbor
+	return null

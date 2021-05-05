@@ -5,10 +5,12 @@ var pending: Array = []
 var queue: Array = []
 
 var tick: float = 0
+var handled_last_tick: int = 0
+
+signal event_queue_changed
 
 func _process(delta):
 	now += delta
-	
 	tick += delta
 	
 	if tick < 0.05:
@@ -22,19 +24,18 @@ func _process(delta):
 		else:
 			for i in range(queue.size(), 0, -1):
 				var curr_time = queue[i-1].time
-				if curr_time < item.time:
+				if curr_time <= item.time:
 					queue.insert(i, item)
 					break
 	
-	var i = 0
+	handled_last_tick = 0
 	while queue.size() > 0 and queue[0].time <= now:
 		var item = queue.pop_front()
-		i += 1
+		handled_last_tick += 1
 		if item.parent:
 			item.parent.callv("call_deferred", [item.method] + item.args)
-			
-#	print("Pending: %d" % pending.size())
-#	print("Queue items handled: %d Size: %d" % [i, queue.size()])
+	
+	emit_signal("event_queue_changed")
 	
 func add_event(time: float, parent: Spatial, method: String, args: Array = []):
 	var item = {

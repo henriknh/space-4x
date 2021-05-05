@@ -29,3 +29,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
 cast_shadow = 0
 
 [connection signal="body_entered" from="Area" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="Area" to="." method="_on_body_exited"]
+[connection signal="input_event" from="Area" to="." method="_on_input_event"]

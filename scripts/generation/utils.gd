@@ -10,7 +10,6 @@ static func get_start_planet(planets: Array, is_human: bool) -> Entity:
 	
 static func calc_planet_type(orbit: int, total_orbits: int) -> int:
 	var r = Random.randf()
-	var odds_sum = 0
 
 	if float(orbit) / total_orbits < 0.25:
 		if r < 0.8:

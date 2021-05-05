@@ -2,10 +2,7 @@
 
 [ext_resource path="res://prefabs/entities/galaxy/galaxy.gd" type="Script" id=3]
 
-[node name="Galaxy" type="Spatial" groups=[
-"Persist",
-"PlanetSystem",
-]]
+[node name="Galaxy" type="Spatial"]
 script = ExtResource( 3 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]

@@ -1,84 +1,75 @@
 extends Node
 
-var maps = {}
-var planet_ids_map = {}
+class HexAStar:
+	extends AStar
 
-var debug = []
+	func _compute_cost(u, v):
+		return abs(u - v)
 
-#func create_network():
-#	maps = {}
-#
-#	var planet_systems = {}
-#	for planet in get_tree().get_nodes_in_group("Planet"):
-#		if not planet_systems.has(planet.planet_system):
-#			planet_systems[planet.planet_system] = []
-#		planet_systems[planet.planet_system].append(planet)
-#		planet_ids_map[planet.id] = planet
-#
-#	for planet_system_idx in planet_systems.keys():
-#		var segments = []
-#
-#		for planet in planet_systems[planet_system_idx]:
-#
-#			var prev_global_point = planet.planet_convex_hull[0] + planet.position
-#
-#			for curr_point in planet.planet_convex_hull.slice(1, -1):
-#
-#				var curr_global_point = curr_point + planet.position
-#
-#				var found_segment = null
-#				for segment in segments:
-#					if Utils.array_has([prev_global_point, curr_global_point], segment['segment']):
-#						found_segment = segment
-#				if found_segment:
-#					found_segment['nodes'].append(planet)
-#				else:
-#					segments.append({
-#						"nodes": [planet],
-#						"segment": [prev_global_point, curr_global_point]
-#					})
-#
-#				prev_global_point = curr_global_point
-#
-#		var map = AStar2D.new()
-#		for segment in segments:
-#			if segment['nodes'].size() == 2:
-#				if planet_system_idx == 1:
-#					debug.append(segment['segment'])
-#
-#				var point_id_1 = segment['nodes'][0].id
-#				var point_id_2 = segment['nodes'][1].id
-#				map.add_point(point_id_1, segment['nodes'][0].position)
-#				map.add_point(point_id_2, segment['nodes'][1].position)
-#				map.connect_points(point_id_1, point_id_2)
-#
-#		maps[planet_system_idx as int] = map
+	func _estimate_cost(u, v):
+		return min(0, abs(u - v) - 1)
 
-func get_route(caller: Entity, target_id: int):
-	var route = []
-	if true:
-		var map = maps[caller.planet_system as int] as AStar2D
-		var closest_id = map.get_closest_point(caller.position)
-		var path = map.get_id_path(closest_id, target_id)
-		for part_idx in range(0, path.size()):
-			route.append({
-				"id": path[part_idx],
-				"position": map.get_point_position(path[part_idx])
-			})
-	else:
-		print('TODO: Handle get_route for multiple planet systems')
+var astar = AStar.new()
+
+func create_network():
+	for planet_system in get_tree().get_nodes_in_group('PlanetSystem'):
+		for tile in planet_system.tiles:
+			if not astar.has_point(tile.id):
+				astar.add_point(tile.id, (tile as Spatial).global_transform.origin, 1 if not tile.entity else 1000)
+				
+			for neighbor in tile.neighbors:
+				if not astar.has_point(neighbor.id):
+					astar.add_point(neighbor.id, (neighbor as Spatial).global_transform.origin, 1 if not tile.entity else 1000)
+				
+				if not astar.are_points_connected(tile.id, neighbor.id):
+					astar.connect_points(tile.id, neighbor.id)
+					
+#					var st = SurfaceTool.new()
+#					st.begin(Mesh.PRIMITIVE_LINE_STRIP)
+#					st.add_vertex((tile as Spatial).global_transform.origin)
+#					st.add_vertex((neighbor as Spatial).global_transform.origin)
+#					var mesh = MeshInstance.new()
+#					mesh.mesh = st.commit()
+#					get_node("/root/GameScene").add_child(mesh)
 	
-	return route
+	for planet_system in get_tree().get_nodes_in_group('PlanetSystem'):
+		
+		for planet_system_dir in Consts.PLANET_SYSTEM_DIR_ALL:
+			var neighbor = planet_system.get_neighbor_in_dir(planet_system_dir)
+			if neighbor:
+				var planet_system_dir_idx = Consts.PLANET_SYSTEM_DIR_ALL.find(planet_system_dir)
+				var tile_dir_1 = Consts.TILE_DIR_ALL[(planet_system_dir_idx - 1 + Consts.PLANET_SYSTEM_DIR_ALL.size()) % Consts.PLANET_SYSTEM_DIR_ALL.size()]
+				var tile_dir_2 = Consts.TILE_DIR_ALL[(planet_system_dir_idx - 0 + Consts.PLANET_SYSTEM_DIR_ALL.size()) % Consts.PLANET_SYSTEM_DIR_ALL.size()]
+				
+				var origin_edge_tiles = []
+				for tile in planet_system.tiles:
+					if not tile.is_edge:
+						continue
+					if not tile.has_neighbors_in_dir(tile_dir_1) and not tile.has_neighbors_in_dir(tile_dir_2):
+						origin_edge_tiles.append(tile)
+				
+				var opposite_edge_tiles = []
+				for tile in neighbor.tiles:
+					if not tile.is_edge:
+						continue
+					if not tile.has_neighbors_in_dir(-tile_dir_1) and not tile.has_neighbors_in_dir(-tile_dir_2):
+						opposite_edge_tiles.append(tile)
+			
+				for origin_edge_tile in origin_edge_tiles:
+					for opposite_edge_tile in opposite_edge_tiles:
+						if not astar.are_points_connected(origin_edge_tile.id, opposite_edge_tile.id):
+							astar.connect_points(origin_edge_tile.id, opposite_edge_tile.id)
+							
+#							var st = SurfaceTool.new()
+#							st.begin(Mesh.PRIMITIVE_LINE_STRIP)
+#							st.add_vertex((origin_edge_tile as Spatial).global_transform.origin)
+#							st.add_vertex((opposite_edge_tile as Spatial).global_transform.origin)
+#							var mesh = MeshInstance.new()
+#							mesh.mesh = st.commit()
+#							get_node("/root/GameScene").add_child(mesh)
 
-func get_map(caller: Entity) -> AStar2D:
-	return maps[caller.planet_system]
+func get_nav_path(from: int, to: int) -> PoolVector3Array:
+	return astar.get_point_path(from, to)
 
-func get_adjacent_sites(entity: Entity) -> Array:
-	var sites = []
-	for planet_id in maps[entity.planet_system].get_point_connections(entity.id):
-		sites.append(planet_ids_map[planet_id])
-	return sites
-
-
-func get_adjacent_site_ids(entity: Entity) -> Array:
-	return maps[entity.planet_system].get_point_connections(entity.id)
+func update_weight(id: int, weight: float):
+	astar.set_point_weight_scale(id, weight)

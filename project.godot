@@ -29,6 +29,26 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/game.gd"
 }, {
+"base": "Spatial",
+"class": "Module",
+"language": "GDScript",
+"path": "res://scripts/modules/module.gd"
+}, {
+"base": "Module",
+"class": "ModuleShipCorporation",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/modules/ship_corporation.gd"
+}, {
+"base": "Module",
+"class": "ModuleShipLineOfSight",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/modules/ship_line_of_sight.gd"
+}, {
+"base": "Module",
+"class": "ModuleShipMovement",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/modules/ship_movement.gd"
+}, {
 "base": "Entity",
 "class": "Planet",
 "language": "GDScript",
@@ -54,6 +74,10 @@ _global_script_class_icons={
 "Entity": "",
 "Galaxy": "",
 "Game": "",
+"Module": "",
+"ModuleShipCorporation": "",
+"ModuleShipLineOfSight": "",
+"ModuleShipMovement": "",
 "Planet": "",
 "PlanetSystem": "",
 "Ship": "",
@@ -85,6 +109,7 @@ Corporations="*res://scripts/utils/corporations.gd"
 AI="*res://scripts/ai/ai.gd"
 Boid="*res://scripts/entities/boid.gd"
 EventQueue="*res://scripts/utils/event_queue.gd"
+FogOfWar="*res://scripts/fog_of_war.gd"
 
 [display]
 

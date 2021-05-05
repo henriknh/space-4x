@@ -88,7 +88,6 @@ func _input(event):
 					_set_zoom_by_step()
 				else:
 					if not GameState.curr_planet_system:
-						var curr_position = Vector2(translation.x, translation.z)
 						var closest_planet_system = null
 						var closest_dist = INF
 						
@@ -117,9 +116,6 @@ func _process(delta):
 	
 func is_overview() -> bool:
 	return zoom_step > max_zoom
-	
-func is_pivot() -> bool:
-	return is_pivot
 
 func _set_zoom_by_step():
 	zoom = pow(zoom_step, 2) as int + 2

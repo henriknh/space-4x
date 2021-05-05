@@ -29,16 +29,9 @@ func generate_world():
 	
 	load_progress = 0
 	total_entities = 0
-	var nodes = {
-		gameScene: []
-	}
 	
 	# Calculate planet systems
 	GameState.loading_label = 'Loading...'
-	
-	var galaxies_min = Consts.GALAXY_SIZE[world_size].min
-	var galaxies_max = Consts.GALAXY_SIZE[world_size].max
-	var galaxies_count: float = Random.randi_range(galaxies_min, galaxies_max)
 	
 	var galaxy: Galaxy = Instancer.galaxy()
 	gameScene.add_child(galaxy)
@@ -53,6 +46,8 @@ func generate_world():
 			var tile = site_tiles[Random.randi() % site_tiles.size()]
 			var planet: Planet = Instancer.planet(tile)
 			planet_system.add_child(planet)
+			
+	Nav.create_network()
 	
 	emit_signal("objects_loaded")
 	

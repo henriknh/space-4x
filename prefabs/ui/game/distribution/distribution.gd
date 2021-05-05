@@ -73,6 +73,7 @@ func update_distribution_globally():
 	_update_ui()
 
 func update_distribution_by_selection(selection: Entity):
+	return
 	for key in distribution.keys():
 		distribution[key][color_types.current].value = 0
 		distribution[key][color_types.rebuilding].value = 0

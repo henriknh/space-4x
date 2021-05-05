@@ -17,7 +17,7 @@ func create():
 	variant = Random.randi()
 	
 func _ready():
-	pass
+	set_process(false)
 
 func _set_corporation(_corporation_id):
 	corporation_id = _corporation_id

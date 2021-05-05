@@ -25,10 +25,11 @@ func planet_system(position: Vector3 = Vector3.ZERO) -> PlanetSystem:
 	
 	return instance
 
-func tile(position: Vector3) -> Tile:
+func tile(position: Vector3, is_edge: bool) -> Tile:
 	var instance: Tile = prefab_tile.instance()
 	
 	instance.translation = position
+	instance.is_edge = is_edge
 	
 	instance.create()
 	
@@ -39,13 +40,15 @@ func planet(tile: Tile) -> Planet:
 	
 	instance.translation = tile.translation
 	
+	tile.entity = instance
+	
 	return instance
 
 func ship(ship_type: int, corporation_id: int, tile: Tile = null) -> Ship:
 	
 	var position: Vector3 = Vector3.ZERO
 	if tile:
-		position = tile.translation
+		position = tile.global_transform.origin
 		position += Vector3((Random.randi() % 5) - 2.5,0,(Random.randi() % 5) - 2.5)
 	else:
 		var camera: Camera = get_node('/root/GameScene/CameraRoot/Camera')
@@ -55,10 +58,12 @@ func ship(ship_type: int, corporation_id: int, tile: Tile = null) -> Ship:
 		var to = from + camera.project_ray_normal(mpos) * 1000
 		var result = space_state.intersect_ray(from, to, [], 4, true, true)
 		if result:
-			position = result.collider.get_parent().translation
+			position = (result.collider.get_parent() as Spatial).global_transform.origin
 	
 	var instance: Ship = prefab_ship.instance()
 	
 	instance.translation = position
+	
+	instance.corporation_id = corporation_id
 	
 	return instance

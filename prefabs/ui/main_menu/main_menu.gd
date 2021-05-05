@@ -26,7 +26,7 @@ func _ready():
 	timer.wait_time = 0.005
 	timer.connect("timeout", self, "_on_create")
 	add_child(timer)
-	#timer.start()
+	timer.start()
 	
 func _update_view_state():
 	node_create.disabled = StateManager.has_save()

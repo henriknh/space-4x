@@ -1,5 +1,8 @@
 extends Node
 
+# https://www.redblobgames.com/grids/hexagons/
+# https://github.com/romlok/godot-gdhexgrid
+
 # Camera
 const CAMERA_ZOOM_MIN = 2
 const CAMERA_LERPTIME_POS = 50
@@ -39,7 +42,7 @@ const AI_DELAY_TIME = 1
 # Galaxy
 const GALAXY_SIZE = {
 	Enums.world_size.small: {
-		'min': 4,
+		'min': 6,
 		'max': 8
 	},
 	Enums.world_size.medium: {
@@ -57,10 +60,10 @@ const GALAXY_GAP_PLANET_SYSTEMS = {
 	Enums.world_size.large: 250
 }
 
-# Tile layer
+# Planet system
 const PLANET_SYSTEM_RADIUS = {
 	Enums.world_size.small: {
-		'min': 6, 
+		'min': 6,
 		'max': 8
 	},
 	Enums.world_size.medium: {
@@ -86,6 +89,10 @@ const PLANET_SYSTEM_PLANETS = {
 		'max': 16, 
 	}
 }
+const PLANET_SYSTEM_DIR_ALL = [
+	Vector2(+1, +1), Vector2(+1, -1), Vector2(0, -2),
+	Vector2(-1, -1), Vector2(-1, +1), Vector2(0, +2),
+]
 
 # Tile
 const TILE_SIZE = 5
@@ -93,6 +100,7 @@ const TILE_DIR_ALL = [
 	Vector2(+2,  0), Vector2(+1, -1), Vector2(-1, -1), 
 	Vector2(-2,  0), Vector2(-1, +1), Vector2(+1, +1), 
 ]
+
 
 # Planets
 const PLANET_HITPOINTS = 250

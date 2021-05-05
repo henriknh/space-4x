@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/camera/camera_controller.gd" type="Script" id=1]
 [ext_resource path="res://prefabs/ui/game/game_ui.tscn" type="PackedScene" id=4]
@@ -6,6 +6,15 @@
 [ext_resource path="res://scenes/game.gd" type="Script" id=6]
 [ext_resource path="res://prefabs/ui/game/loading/loading.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scripts/camera/camera_input.gd" type="Script" id=10]
+
+[sub_resource type="Environment" id=1]
+background_mode = 1
+background_color = Color( 0.0862745, 0.0666667, 0.203922, 1 )
+ambient_light_color = Color( 0.0705882, 0.054902, 0.156863, 1 )
+dof_blur_near_distance = 19.35
+glow_enabled = true
+glow_bloom = 0.5
+adjustment_enabled = true
 
 [node name="GameScene" type="Spatial"]
 script = ExtResource( 6 )
@@ -22,6 +31,7 @@ script = ExtResource( 10 )
 
 [node name="Camera" type="Camera" parent="CameraRoot"]
 transform = Transform( 1, 0, 0, 0, -2.98023e-08, 1, 0, -1, -2.98023e-08, 0, 10, -4.76837e-07 )
+environment = SubResource( 1 )
 far = 8192.0
 script = ExtResource( 1 )
 
