@@ -11,6 +11,8 @@ signal entity_changed
 var id: int = -1
 var variant: int = -1
 var corporation_id: int = 0 setget _set_corporation
+var modules = []
+var state: int = Enums.ship_states.idle setget set_state
 
 func create():
 	id = WorldGenerator.unique_id
@@ -27,6 +29,10 @@ func get_corporation() -> Corporation:
 	if corporation_id > 0 and _corporation == null:
 		_corporation = Corporations.get_corporation(corporation_id)
 	return _corporation
+
+func set_state(_state):
+	state = _state
+	set_process(!!state)
 	
 func save():
 	var data = {
