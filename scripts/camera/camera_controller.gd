@@ -14,7 +14,7 @@ var zoom_speed: int = 5
 
 func _ready():
 #	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
-	GameState.connect("state_changed", self, "_update_bounds")
+	GameState.connect("planet_system_changed", self, "_update_bounds")
 
 func _process(delta):
 	
