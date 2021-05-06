@@ -6,20 +6,19 @@ class_name ModuleShipLineOfSight
 func init(_entity: Entity) -> Spatial:
 	.init(_entity)
 	
-#	if self.entity.corporation_id != Consts.PLAYER_CORPORATION:
-#		self.entity.visible = show_ai_ship()
-#	else:
-#		self.entity.visible = true
+
 	
 	GameState.connect("planet_system_changed", self, "update_visibility")
 	self.entity.connect("parent_changed", self, "update_visibility")
 	return self
 	
 func update_visibility():
-	if self.entity.parent and self.entity.parent.get_parent() == GameState.curr_planet_system:
-		self.entity.visible = true
-	else:
+	if self.entity.parent and self.entity.parent.get_parent() != GameState.curr_planet_system:
 		self.entity.visible = false
+#	elif self.entity.corporation_id != Consts.PLAYER_CORPORATION:
+#		self.entity.visible = show_ai_ship()
+	else:
+		self.entity.visible = true
 
 func show_ai_ship() -> bool:
 	if not self.entity.parent:
