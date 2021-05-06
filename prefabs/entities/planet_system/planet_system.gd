@@ -10,6 +10,8 @@ var bounds: Array = []
 func _ready():
 	add_to_group('Persist')
 	add_to_group('PlanetSystem')
+	
+	modules.append({'class': PlanetSystemShipLineOfSight.new().init(self), 'state': null})
 
 func get_coords() -> Vector2:
 	var x = translation.x / (Consts.GALAXY_GAP_PLANET_SYSTEMS[WorldGenerator.world_size] * sqrt(3))
@@ -56,13 +58,13 @@ func _generate_tiles():
 		tiles_positions.append(Vector2(tile.translation.x, tile.translation.z))
 	bounds = Geometry.convex_hull_2d(tiles_positions)
 	
-#	var st = SurfaceTool.new()
-#	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
-#	for point in bounds:
-#		st.add_vertex(Vector3(point.x, 0, point.y))
-#	var mesh = MeshInstance.new()
-#	mesh.mesh = st.commit()
-#	add_child(mesh)
+	var st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
+	for point in bounds:
+		st.add_vertex(Vector3(point.x, 0, point.y))
+	var mesh = MeshInstance.new()
+	mesh.mesh = st.commit()
+	add_child(mesh)
 
 func _generate_sites():
 	var planets_min = Consts.PLANET_SYSTEM_PLANETS[WorldGenerator.world_size].min
