@@ -32,14 +32,18 @@ func _generate_tiles():
 			var angle_rad = PI / 180 * angle_deg
 			var position = Vector3(cos(angle_rad), 0, sin(angle_rad)) * width * i
 			
-			tiles.append(Instancer.tile(position, i == radius + 2))
+			var tile = Instancer.tile(position, i == radius + 2)
+			tile.generate_polygon()
+			tiles.append(tile)
 
 			for k in range(1, i):
 				var angle_deg_child = angle_deg + 120
 				var angle_rad_child = PI / 180 * angle_deg_child
 				var position_child = position + Vector3(width * k * cos(angle_rad_child), 0, width * k * sin(angle_rad_child))
 				
-				tiles.append(Instancer.tile(position_child, i == radius + 2))
+				var tile_child = Instancer.tile(position_child, i == radius + 2)
+				tile_child.generate_polygon()
+				tiles.append(tile_child)
 	
 	var tile_dict = {}
 	for tile in tiles:

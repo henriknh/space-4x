@@ -17,10 +17,6 @@ func _ready():
 	add_to_group('Persist')
 	add_to_group('Tile')
 	
-	for i in range(6):
-		polygon.append(pointy_hex_corner(Consts.TILE_SIZE, i))
-	polygon.append(polygon[0])
-	
 	node_collision.polygon = polygon
 	node_mesh.scale.x = Consts.TILE_SIZE
 	node_mesh.scale.z = Consts.TILE_SIZE
@@ -31,6 +27,11 @@ func _ready():
 	timer.wait_time = 0.5
 	add_child(timer)
 	timer.start()
+
+func generate_polygon():
+	for i in range(6):
+		polygon.append(pointy_hex_corner(Consts.TILE_SIZE, i))
+	polygon.append(polygon[0])
 	
 func spawn():
 	for _i in range(Random.randi() % 2):
