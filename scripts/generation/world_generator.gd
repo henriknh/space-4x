@@ -39,11 +39,18 @@ func generate_world():
 	for planet_system in galaxy.planet_systems:
 		galaxy.add_child(planet_system)
 		
+		var planet_sites = []
+		for site in planet_system.sites.values():
+			var planet_site = Instancer.planet_site(site)
+			planet_system.add_child(planet_site)
+			planet_sites.append(planet_site)
+		planet_system.planet_sites = planet_sites
+			
 		for tile in planet_system.tiles:
 			planet_system.add_child(tile)
 		
-		for site_tiles in planet_system.sites.values():
-			var tile = site_tiles[Random.randi() % site_tiles.size()]
+		for site in planet_system.sites.values():
+			var tile = site.tiles[Random.randi() % site.tiles.size()]
 			var planet: Planet = Instancer.planet(tile)
 			planet_system.add_child(planet)
 			

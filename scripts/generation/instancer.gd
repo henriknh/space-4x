@@ -4,6 +4,7 @@ var script_entity = preload('res://prefabs/entities/entity.gd')
 
 var prefab_galaxy = preload("res://prefabs/entities/galaxy/galaxy.tscn")
 var prefab_planet_system = preload('res://prefabs/entities/planet_system/planet_system.tscn')
+var prefab_planet_site = preload('res://prefabs/entities/planet_site/planet_site.tscn')
 var prefab_tile = preload('res://prefabs/entities/tile/tile.tscn')
 var prefab_planet = preload('res://prefabs/entities/planets/planet.tscn')
 var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
@@ -22,6 +23,13 @@ func planet_system(position: Vector3 = Vector3.ZERO) -> PlanetSystem:
 	
 	instance._generate_tiles()
 	instance._generate_sites()
+	
+	return instance
+
+func planet_site(site) -> PlanetSite:
+	var instance: PlanetSite = prefab_planet_site.instance()
+	
+	instance.polygon = site.polygon
 	
 	return instance
 

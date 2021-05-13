@@ -33,10 +33,16 @@ func generate_polygon():
 		polygon.append(pointy_hex_corner(Consts.TILE_SIZE, i))
 	polygon.append(polygon[0])
 	
+func get_global_polygon():
+	var _polygon = []
+	for p in polygon:
+		_polygon.append(Vector2(p.x + translation.x, p.y + translation.z))
+	return _polygon
+	
 func spawn():
 	for _i in range(Random.randi() % 2):
 		pass
-		for _j in range(4):
+		for _j in range(0):
 			var s = Instancer.ship(0,Random.randi() % 5,self)
 			#EventQueue.add_event(Random.randf(), get_node('/root/GameScene'), "call_deferred", ["add_child", s])
 			get_node('/root/GameScene').call_deferred("add_child", s)

@@ -55,6 +55,11 @@ _global_script_classes=[ {
 "path": "res://prefabs/entities/planets/planet.gd"
 }, {
 "base": "Entity",
+"class": "PlanetSite",
+"language": "GDScript",
+"path": "res://prefabs/entities/planet_site/planet_site.gd"
+}, {
+"base": "Entity",
 "class": "PlanetSystem",
 "language": "GDScript",
 "path": "res://prefabs/entities/planet_system/planet_system.gd"
@@ -84,6 +89,7 @@ _global_script_class_icons={
 "ModuleShipLineOfSight": "",
 "ModuleShipMovement": "",
 "Planet": "",
+"PlanetSite": "",
 "PlanetSystem": "",
 "PlanetSystemShipLineOfSight": "",
 "Ship": "",

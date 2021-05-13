@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/models/PlanetMesh.tscn" type="PackedScene" id=1]
+[ext_resource path="res://prefabs/entities/planet_site/planet_site.gd" type="Script" id=2]
+
+[node name="PlanetSite" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="Area" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+
+[node name="CollisionPolygon" type="CollisionPolygon" parent="Area"]
+polygon = PoolVector2Array( 0, 0 )
+
+[node name="Mesh" parent="." instance=ExtResource( 1 )]
+transform = Transform( 6, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0 )
+mesh = null
