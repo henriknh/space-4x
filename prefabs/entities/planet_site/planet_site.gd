@@ -3,7 +3,8 @@ extends Entity
 class_name PlanetSite
 
 onready var node_collision: CollisionPolygon = $Area/CollisionPolygon
-onready var node_mesh: MeshInstance = $Mesh
+onready var node_csg_polygon: CSGPolygon = $Border/CSGPolygon
+onready var node_csg_polygon_deflated: CSGPolygon = $Border/CSGPolygonDeflated
 
 var polygon = []
 
@@ -13,11 +14,9 @@ func _ready():
 	
 	node_collision.polygon = polygon
 	
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_POINTS)
-	for point in polygon:
-		st.add_vertex(Vector3(point.x, 0, point.y))
-	node_mesh.mesh = st.commit()
+	var polygon_deflated = Geometry.offset_polygon_2d(polygon, -1)[0]
+	node_csg_polygon.polygon = polygon
+	node_csg_polygon_deflated.polygon = polygon_deflated
 
 func generate_site():
 	pass
