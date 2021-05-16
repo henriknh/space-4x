@@ -1,8 +1,8 @@
 extends Node
 
 const corporation_colors = {
-	0: Color(0.5, 0.5, 0.5),
-	1: Color(0.9, 0.9, 0.9), # white
+	0: Color(0.15, 0.15, 0.15),
+	1: Color(1, 1, 1), # white
 	2: Color(0.321, 0.517, 1), # blue
 	3: Color(0.556, 1, 0.360), # green
 	4: Color(1, 0.247, 0.219), # red
