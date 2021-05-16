@@ -17,9 +17,10 @@ signal loading_changed
 signal overview_changed
 
 func set_planet_system(planet_system: PlanetSystem) -> void:
-	curr_planet_system = planet_system
-	set_selection(null)
-	emit_signal("planet_system_changed")
+	if curr_planet_system != planet_system:
+		curr_planet_system = planet_system
+		set_selection(null)
+		emit_signal("planet_system_changed")
 
 func set_selection(new_selection: Tile):
 	_selection = new_selection
