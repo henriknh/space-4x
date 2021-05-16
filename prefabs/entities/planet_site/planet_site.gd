@@ -14,7 +14,7 @@ func _ready():
 	
 	node_collision.polygon = polygon
 	
-	var polygon_deflated = Geometry.offset_polygon_2d(polygon, -1)[0]
+	var polygon_deflated = Geometry.offset_polygon_2d(polygon, -0.5)[0]
 	node_csg_polygon.polygon = polygon
 	node_csg_polygon_deflated.polygon = polygon_deflated
 
