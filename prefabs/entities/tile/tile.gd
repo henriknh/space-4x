@@ -4,6 +4,9 @@ class_name Tile
 
 onready var node_collision: CollisionPolygon = $Area/CollisionPolygon
 onready var node_mesh: MeshInstance = $Mesh
+onready var node_border: CSGCombiner = $Border
+onready var node_polygon: CSGPolygon = $Border/CSGPolygon
+onready var node_polygon_deflated: CSGPolygon = $Border/CSGPolygonDeflated
 
 var neighbors: Array = []
 var is_edge: bool = false
@@ -18,8 +21,29 @@ func _ready():
 	add_to_group('Tile')
 	
 	node_collision.polygon = polygon
-	node_mesh.scale.x = Consts.TILE_SIZE
-	node_mesh.scale.z = Consts.TILE_SIZE
+	
+	var material_mesh = SpatialMaterial.new()
+	material_mesh.flags_transparent = true
+	material_mesh.flags_unshaded = true
+	material_mesh.flags_do_not_receive_shadows = true
+	material_mesh.flags_disable_ambient_light = true
+	material_mesh.albedo_color = Color(1,1,1,0)
+	
+	node_mesh.material_override = material_mesh
+	node_mesh.scale.x = Consts.TILE_SIZE * 0.96
+	node_mesh.scale.z = Consts.TILE_SIZE * 0.96
+	
+	
+	var material_border = SpatialMaterial.new()
+	material_border.flags_transparent = true
+	material_border.flags_unshaded = true
+	material_border.flags_do_not_receive_shadows = true
+	material_border.flags_disable_ambient_light = true
+	material_border.albedo_color = Color(1,1,1,0)
+	
+	node_border.material_override = material_border
+	node_polygon.polygon = polygon
+	node_polygon_deflated.polygon = Geometry.offset_polygon_2d(polygon, -0.2)[0]
 	
 	var timer: Timer = Timer.new()
 	timer.one_shot = true
@@ -58,17 +82,10 @@ func get_coords() -> Vector2:
 	return Vector2(int(round(x)), int(round(z)))
 
 func _on_mouse_entered():
-	print('hover tile')
-	print(self)
-	print(get_coords())
-	print(neighbors)
+	$AnimationPlayer.play("Hover")
 	
-	node_mesh.scale = Vector3.ONE * Consts.TILE_SIZE * 0.8
-
 func _on_mouse_exited():
-	pass # Replace with function body.
-	
-	node_mesh.scale = Vector3.ONE * Consts.TILE_SIZE
+	$AnimationPlayer.play_backwards("Hover")
 	
 func are_neighbors(to_check: Tile) -> bool:
 	return to_check in neighbors
@@ -78,16 +95,6 @@ func has_neighbors_in_dir(coords: Vector2) -> bool:
 		if (neighbor.get_coords() - get_coords()) == coords:
 			return true
 	return false
-
-func _on_area_entered(area):
-	var node = area.get_parent()
-	if node is Ship and not node in ships:
-		ships.append(node)
-		print(ships.size())
-
-func _on_area_exited(area):
-	var node = area.get_parent()
-
 
 func _on_body_entered(body):
 	if body is Ship and not body in ships:
