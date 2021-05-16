@@ -1,7 +1,5 @@
 extends Node
 
-const GenUtils = preload('res://scripts/generation/utils.gd')
-
 var world_size: int = Enums.world_size.large
 var unique_id = 0 setget ,get_unique_id
 
@@ -53,37 +51,25 @@ func generate_world():
 			var tile = site.tiles[Random.randi() % site.tiles.size()]
 			var planet: Planet = Instancer.planet(tile)
 			planet_system.add_child(planet)
-			
-	Nav.create_network()
 	
-	emit_signal("objects_loaded")
 	
-#	for node_array in nodes.values():
-#		total_entities += node_array.size()
-#		print(total_entities)
-#
-#	for key in nodes.keys():
-#		for node in nodes[key]:
-#			call_deferred("add_node_deffered", key, node)
-			
-	GameState.set_planet_system(galaxy.planet_systems[0])
-	
-#	var all_planets = get_tree().get_nodes_in_group('Planet')
-	var player = Corporations.create(Consts.PLAYER_CORPORATION)
-#	var player_planet = GenUtils.get_start_planet(all_planets, true)
-#	player_planet.corporation_id = player.corporation_id
-#
-#	var camera = get_node('/root/GameScene/Camera') as Camera2D
-#	camera.position = player_planet.position
-#
+	var player = Corporations.create(Consts.PLAYER_CORPORATION, false)
+	var player_planet = get_start_planet()
+	player_planet.corporation_id = player.corporation_id
+	player_planet.emit_signal("entity_changed")
+
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
 	for idx in range(Random.randi_range(computers_min, computers_max)):
-		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx)
-#		var start_planet = GenUtils.get_start_planet(all_planets, ai_corporation.corporation_id == (Consts.PLAYER_CORPORATION + 1))
-#		start_planet.corporation_id = ai_corporation.corporation_id
-#
-#
+		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx, true)
+		var start_planet = get_start_planet()
+		start_planet.corporation_id = ai_corporation.corporation_id
+		start_planet.emit_signal("entity_changed")
+	
+	Nav.create_network()
+	
+	emit_signal("objects_loaded")
+	GameState.set_planet_system(galaxy.planet_systems[0])
 #
 #
 #
@@ -113,3 +99,11 @@ func add_node_deffered(parent: Node, node: Object):
 	
 	if load_progress == total_entities:
 		emit_signal("objects_loaded")
+
+func get_start_planet() -> Entity:
+	var possible_planets = []
+	for planet in get_tree().get_nodes_in_group('Planet'):
+		if planet.corporation_id == 0:
+			possible_planets.append(planet)
+	
+	return possible_planets[Random.randi() % possible_planets.size()]
