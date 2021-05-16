@@ -23,6 +23,7 @@ func planet_system(position: Vector3 = Vector3.ZERO) -> PlanetSystem:
 	
 	instance._generate_tiles()
 	instance._generate_sites()
+	instance._generate_grid()
 	
 	return instance
 
