@@ -7,7 +7,7 @@ signal parent_changed
 
 func _ready():
 	modules.append({'class': ModuleShipMovement.new().init(self), 'state': Enums.ship_states.moving})
-	modules.append({'class': ModuleShipCorporation.new().init(self), 'state': null})
+	modules.append({'class': ModuleShipCorporation.new().init(self, {'radius': 8 }), 'state': null})
 	modules.append({'class': ModuleShipLineOfSight.new().init(self), 'state': null})
 
 func _process(delta):
