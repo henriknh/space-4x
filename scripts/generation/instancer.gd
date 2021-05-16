@@ -30,6 +30,7 @@ func planet_system(position: Vector3 = Vector3.ZERO) -> PlanetSystem:
 func planet_site(site) -> PlanetSite:
 	var instance: PlanetSite = prefab_planet_site.instance()
 	
+	instance.tiles = site.tiles
 	instance.polygon = site.polygon
 	
 	return instance

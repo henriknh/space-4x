@@ -7,6 +7,7 @@ onready var node_csg_polygon: CSGPolygon = $Border/CSGPolygon
 onready var node_csg_polygon_deflated: CSGPolygon = $Border/CSGPolygonDeflated
 
 var polygon = []
+var tiles = [] 
 
 func _ready():
 	add_to_group('Persist')
