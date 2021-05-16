@@ -35,9 +35,14 @@ _global_script_classes=[ {
 "path": "res://scripts/modules/module.gd"
 }, {
 "base": "Module",
-"class": "ModuleShipCorporation",
+"class": "ModuleCorporationBorder",
 "language": "GDScript",
-"path": "res://prefabs/entities/ships/modules/ship_corporation.gd"
+"path": "res://scripts/modules/corporation_border.gd"
+}, {
+"base": "Module",
+"class": "ModuleCorporationColor",
+"language": "GDScript",
+"path": "res://scripts/modules/corporation_color.gd"
 }, {
 "base": "Module",
 "class": "ModuleShipLineOfSight",
@@ -85,7 +90,8 @@ _global_script_class_icons={
 "Galaxy": "",
 "Game": "",
 "Module": "",
-"ModuleShipCorporation": "",
+"ModuleCorporationBorder": "",
+"ModuleCorporationColor": "",
 "ModuleShipLineOfSight": "",
 "ModuleShipMovement": "",
 "Planet": "",
