@@ -48,6 +48,7 @@ func _create_color_node(ship_type, color_type):
 		}
 
 func update_distribution_globally():
+	return
 	total_ships = 0
 	for key in distribution.keys():
 		distribution[key][color_types.current].value = 0
