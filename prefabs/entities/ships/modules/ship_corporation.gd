@@ -4,6 +4,9 @@ class_name ModuleShipCorporation
 
 var node_mesh_material: SpatialMaterial
 
+func init(_entity: Entity, params: Dictionary = {}) -> Spatial:
+	.init(_entity, params)
+
 func init(_entity: Entity) -> Spatial:
 	.init(_entity)
 	

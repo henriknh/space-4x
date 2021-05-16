@@ -3,8 +3,8 @@ extends Module
 class_name PlanetSystemShipLineOfSight
 
 
-func init(_entity: Entity) -> Spatial:
-	.init(_entity)
+func init(_entity: Entity, params: Dictionary = {}) -> Spatial:
+	.init(_entity, params)
 	GameState.connect("planet_system_changed", self, "update_visibility")
 	return self
 	

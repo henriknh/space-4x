@@ -7,8 +7,8 @@ var move_to_id: int = -1
 var move_to_path: PoolVector3Array = []
 var move_to: Vector3 = Vector3.INF
 
-func init(_entity: Entity) -> Spatial:
-	return .init(_entity)
+func init(_entity: Entity, params: Dictionary = {}) -> Spatial:
+	return .init(_entity, params)
 	
 func process(delta):
 	if self.entity.state == Enums.ship_states.moving:
