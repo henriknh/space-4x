@@ -27,3 +27,5 @@ omni_shadow_mode = 0
 [node name="PlanetMesh" parent="." instance=ExtResource( 1 )]
 transform = Transform( 6, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0 )
 material/0 = SubResource( 1 )
+
+[node name="Grid" type="CSGCombiner" parent="."]

@@ -232,8 +232,35 @@ func _generate_sites():
 		print(123)
 		print(p)
 		sites[site].polygon = p
-		
+
+func _generate_grid():
 	
+	var material = SpatialMaterial.new()
+	material.flags_transparent = true
+	material.flags_unshaded = true
+	material.flags_do_not_receive_shadows = true
+	material.flags_disable_ambient_light = true
+	material.albedo_color = Color(1,1,1,0.02)
+	
+	$Grid.material_override = material
+	
+	for tile in tiles:
+		var p = CSGPolygon.new()
+		p.polygon = tile.get_global_polygon()
+		p.depth = 0.2
+		p.rotation_degrees = Vector3(-90, 0, 0)
+		p.cast_shadow = false
+		p.operation = CSGShape.OPERATION_UNION
+		$Grid.add_child(p)
+		
+	for tile in tiles:
+		var p = CSGPolygon.new()
+		p.polygon = Geometry.offset_polygon_2d(tile.get_global_polygon(), -0.2)[0]
+		p.translation = Vector3(0, 0.5, 0)
+		p.rotation_degrees = Vector3(-90, 0, 0)
+		p.cast_shadow = false
+		p.operation = CSGShape.OPERATION_SUBTRACTION
+		$Grid.add_child(p)
 
 func get_neighbor_in_dir(coords: Vector2) -> PlanetSystem:
 	for neighbor in neighbors:
