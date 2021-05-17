@@ -60,7 +60,7 @@ func generate_polygon():
 func get_global_polygon():
 	var _polygon = []
 	for p in polygon:
-		_polygon.append(Vector2(p.x + translation.x, p.y + translation.z))
+		_polygon.append(Vector2(p.x + translation.x, -(p.y + translation.z)))
 	return _polygon
 	
 func spawn():
@@ -85,6 +85,7 @@ func _on_mouse_entered():
 	$AnimationPlayer.play("Hover")
 	
 func _on_mouse_exited():
+	pass
 	$AnimationPlayer.play_backwards("Hover")
 	
 func are_neighbors(to_check: Tile) -> bool:
