@@ -71,13 +71,13 @@ func _generate_tiles():
 		tiles_positions.append(Vector2(tile.translation.x, tile.translation.z))
 	bounds = Geometry.convex_hull_2d(tiles_positions)
 	
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
-	for point in bounds:
-		st.add_vertex(Vector3(point.x, 0, point.y))
-	var mesh = MeshInstance.new()
-	mesh.mesh = st.commit()
-	add_child(mesh)
+#	var st = SurfaceTool.new()
+#	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
+#	for point in bounds:
+#		st.add_vertex(Vector3(point.x, 0, point.y))
+#	var mesh = MeshInstance.new()
+#	mesh.mesh = st.commit()
+#	add_child(mesh)
 
 func _generate_sites():
 	var planets_min = Consts.PLANET_SYSTEM_PLANETS[WorldGenerator.world_size].min
@@ -100,9 +100,6 @@ func _generate_sites():
 			var tile = unclaimed[i]
 			unclaimed.erase(tile)
 			sites[curr_site].tiles.append(tile)
-			var polygon = tile.get_global_polygon()
-			polygon.remove(0)
-			sites[curr_site].polygon = polygon
 		else:
 			var found = false
 			for site_tile in sites[curr_site].tiles:
@@ -110,128 +107,67 @@ func _generate_sites():
 					if not found and neighbor in unclaimed:
 						sites[curr_site].tiles.append(neighbor)
 						
-						var p = sites[curr_site].polygon
-						var t = neighbor.get_global_polygon()
-						t.remove(0)
-						t.invert()
-						
-						var pi
-						for _p in p:
-							
-							if not Utils.array_has(_p, t):
-								pi = Utils.array_idx(_p, p)
-								break
-						
-						var inserted = false
-						for i in range(p.size()):
-							var pii = (pi + i + p.size()) % p.size()
-							
-							if Utils.array_has(p[pii], t) and not inserted:
-								inserted = true
-								
-#								print(p)
-#								print(t)
-#								print('start')
-								var start = p[pii]
-#								print(start)
-								var ti = (Utils.array_idx(start, t) - 1 + t.size()) % t.size()
-								
-								
-								# find end
-								var end 
-								for _te in range(ti, -6, -1):
-									var te = (_te + t.size()) % t.size()
-									if not end and Utils.array_has(t[te], p):
-										end = t[te]
-#								print('end')
-#								print(end)
-								
-								# Remove inbetween start and end
-								var rp = (pii + 1 + p.size()) % p.size()
-								while not Utils.equals(p[rp], end):
-									#print(Utils.equals(p[rp], end))
-									#print(p[rp])
-									p.remove(rp)
-								
-								# Insert inbetween start and end from t to p
-								var start_i = Utils.array_idx(start, p)
-								var j = 0
-								while t[ti] != end:
-									# print(t[ti])
-									var insert_i = (start_i + 1 + j)# % p.size()
-									# print(insert_i)
-									p.insert(insert_i, t[ti])
-									ti = (ti - 1 + t.size()) % t.size()
-									j += 1
-								
-							if inserted:
-								break
-						
-						sites[curr_site].polygon = p
-						
 						unclaimed.erase(neighbor)
 						found = true
 						break
 		
 		curr_site = (curr_site + 1) % planet_count
+	
+	for site in sites.values():
+		for tile in site.tiles:
+			if site.polygon.size() == 0:
+				
+				var polygon = tile.get_global_polygon()
+				polygon.remove(0)
+				site.polygon = polygon
+			else:
+				var p = site.polygon
+				var t = tile.get_global_polygon()
+				t.remove(0)
+				t.invert()
 
-	return
-	for site in sites:
-		
-		var p = sites[site].polygon
-		
-		print('find dups')
-		print(p)
-		var has_two = []
-		var has_three = []
-		for p1 in p:
-			var i = 0
-			for p2 in p:
-				if Utils.equals(p1, p2):
-					i += 1
-			if i == 2 and not Utils.array_has(p1, has_two):
-				has_two.append(p1)
-			if i == 3 and not Utils.array_has(p1, has_three):
-				has_three.append(p1)
+				var pi
+				for _p in p:
+					if not Utils.array_has(_p, t):
+						pi = Utils.array_idx(_p, p)
+						break
 
-		print('has_three')
-		print(has_three)
-		for three in has_three:
-			var i = 0
-			while i < p.size():
-				if Utils.equals(three, p[i]):
-					p.remove(i)
-				else:
-					i += 1
+				var inserted = false
+				for i in range(p.size()):
+					var pii = (pi + i + p.size()) % p.size()
 
-		print('has_two')
-		print(has_two)
-		for two in has_two:
-			var i = 0
-			var first = false
-			while i < p.size():
-
-				if not first and Utils.equals(two, p[i]):
-					first = true
-					i += 1
-				elif first and Utils.equals(two, p[i]):
-					p.remove(i)
-				else:
-					i += 1
+					if Utils.array_has(p[pii], t) and not inserted:
+						inserted = true
+						
+						var start = p[pii]
+						var ti = (Utils.array_idx(start, t) - 1 + t.size()) % t.size()
 
 
+						# find end
+						var end 
+						for _te in range(ti, -6, -1):
+							var te = (_te + t.size()) % t.size()
+							if not end and Utils.array_has(t[te], p):
+								end = t[te]
 
-		for p1 in p:
-			var i = 0
-			for p2 in p:
-				if Utils.equals(p1, p2):
-					i += 1
-			if i > 1:
-				print(i)
+						# Remove inbetween start and end
+						var rp = (pii + 1 + p.size()) % p.size()
+						while not Utils.equals(p[rp], end):
+							p.remove(rp)
 
-		print(123)
-		print(p)
-		sites[site].polygon = p
+						# Insert inbetween start and end from t to p
+						var start_i = Utils.array_idx(start, p)
+						var j = 0
+						while t[ti] != end:
+							var insert_i = (start_i + 1 + j)
+							p.insert(insert_i, t[ti])
+							ti = (ti - 1 + t.size()) % t.size()
+							j += 1
+
+					if inserted:
+						break
+
+				site.polygon = p
 
 func _generate_grid():
 	

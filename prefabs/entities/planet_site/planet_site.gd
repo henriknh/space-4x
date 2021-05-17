@@ -30,14 +30,11 @@ func _ready():
 	node_csg_polygon_deflated.polygon = polygon_deflated
 	
 	planet.connect("entity_changed", self, "update_border_color")
+	GameState.connect("planet_system_changed", self, "update_overview")
 	update_border_color()
 
-func generate_site():
-	pass
-
 func update_border_color():
-	if self.planet.corporation_id > 0:
-		node_border_material.albedo_color = Enums.corporation_colors[self.planet.corporation_id]
-		node_border.visible = true
-	else:
-		node_border.visible = false
+	node_border_material.albedo_color = Enums.corporation_colors[self.planet.corporation_id]
+	
+func update_overview():
+	node_csg_polygon_deflated.visible = GameState.curr_planet_system != null
