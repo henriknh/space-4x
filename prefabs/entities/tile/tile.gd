@@ -44,13 +44,6 @@ func _ready():
 	node_border.material_override = material_border
 	node_polygon.polygon = polygon
 	node_polygon_deflated.polygon = Geometry.offset_polygon_2d(polygon, -0.2)[0]
-	
-	var timer: Timer = Timer.new()
-	timer.one_shot = true
-	timer.connect("timeout", self, "spawn")
-	timer.wait_time = 0.5
-	add_child(timer)
-	timer.start()
 
 func generate_polygon():
 	for i in range(6):
@@ -62,14 +55,6 @@ func get_global_polygon():
 	for p in polygon:
 		_polygon.append(Vector2(p.x + translation.x, -(p.y + translation.z)))
 	return _polygon
-	
-func spawn():
-	for _i in range(Random.randi() % 2):
-		pass
-		for _j in range(0):
-			var s = Instancer.ship(0,Random.randi() % 5,self)
-			#EventQueue.add_event(Random.randf(), get_node('/root/GameScene'), "call_deferred", ["add_child", s])
-			get_node('/root/GameScene').call_deferred("add_child", s)
 	
 func pointy_hex_corner(size, i) -> Vector2:
 	var angle_deg = 60 * i - 30
