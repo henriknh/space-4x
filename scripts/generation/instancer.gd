@@ -52,7 +52,7 @@ func planet(tile: Tile) -> Planet:
 	
 	return instance
 
-func ship(ship_type: int, corporation_id: int, tile: Tile = null) -> Ship:
+func ship(ship_type: int, inherit: Entity, tile: Tile = null) -> Ship:
 	
 	var position: Vector3 = Vector3.ZERO
 	if tile:
@@ -72,6 +72,6 @@ func ship(ship_type: int, corporation_id: int, tile: Tile = null) -> Ship:
 	
 	instance.translation = position
 	
-	instance.corporation_id = corporation_id
+	instance.corporation_id = inherit.corporation_id
 	
 	return instance
