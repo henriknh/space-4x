@@ -45,28 +45,8 @@ func tile(position: Vector3, is_edge: bool) -> Tile:
 	
 	return instance
 
-func planet(_tiles: Array) -> Planet:
+func planet(tile: Tile) -> Planet:
 	var instance: Planet = prefab_planet.instance()
-	
-	var tiles = _tiles.duplicate()
-	tiles.shuffle()
-	
-	var tile: Tile
-	var largest_neighbor_count = -1
-	
-	for _tile in tiles:
-		var neighbors_in_site = 0
-		var ns = []
-		for neighbor in _tile.neighbors:
-			if neighbor in tiles:
-				neighbors_in_site += 1
-				ns.append(neighbor)
-		
-		if neighbors_in_site > largest_neighbor_count:
-			tile = _tile
-			largest_neighbor_count = neighbors_in_site
-	
-	instance.translation = tile.translation
 	
 	tile.entity = instance
 	
