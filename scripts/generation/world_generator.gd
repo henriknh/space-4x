@@ -35,7 +35,7 @@ func generate_world():
 	gameScene.add_child(galaxy)
 	
 	for planet_system in galaxy.planet_systems:
-			
+		
 		planet_system.planet_sites = []
 		for site in planet_system.sites.values():
 			

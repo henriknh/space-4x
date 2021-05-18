@@ -44,6 +44,7 @@ func _input(event: InputEvent) -> void:
 		if ship:
 			get_node('/root/GameScene').add_child(ship)
 		node_spawner_spawning.pressed = false
+
 func _update_ui():
 	node_event_queue_handled.text = "Handled: %d" % EventQueue.handled_last_tick
 	node_event_queue_queued.text = "Queued: %d" % EventQueue.queue.size()
