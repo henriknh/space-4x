@@ -74,26 +74,27 @@ func generate_world():
 	
 	emit_signal("objects_loaded")
 	GameState.set_planet_system(galaxy.planet_systems[0])
-#
-#
-#
-#
-#
-#	var ship_types = []
-#	for i in range(50):
-#		ship_types.append(Enums.ship_types.combat)
-#	for i in range(0):
-#		ship_types.append(Enums.ship_types.explorer)
-#	for i in range(0):
-#		ship_types.append(Enums.ship_types.miner)
+	
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+	var ship_types = []
+	for i in range(1):
+		ship_types.append(Enums.ship_types.combat)
+	for i in range(0):
+		ship_types.append(Enums.ship_types.explorer)
+	for i in range(0):
+		ship_types.append(Enums.ship_types.miner)
 #	player_planet.planet_disabled_ships = 3
-#
-#	var i = 0
-#	for ship_type in ship_types:
-#		var ship = Instancer.ship(ship_type, null, player_planet)
-#		ship.corporation_id = i % 2 + 1
-#		i += 1
-#		get_node('/root/GameScene').add_child(ship)
+
+	var i = 0
+	for ship_type in ship_types:
+		var planet = get_tree().get_nodes_in_group('Planet')[i]
+		planet = player_planet
+		var planet_tile = planet.get_parent()
+		var tile = planet_tile.neighbors[Random.randi() % planet_tile.neighbors.size()]
+		var ship = Instancer.ship(ship_type, planet, tile)
+		i += 1
+		gameScene.add_child(ship)
 	
 func add_node_deffered(parent: Node, node: Object):
 	parent.add_child(node)
