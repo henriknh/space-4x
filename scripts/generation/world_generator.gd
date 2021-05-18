@@ -36,16 +36,21 @@ func generate_world():
 	
 	for planet_system in galaxy.planet_systems:
 			
-		for tile in planet_system.tiles:
-			planet_system.add_child(tile)
-		
 		planet_system.planet_sites = []
 		for site in planet_system.sites.values():
+			
+			var shuffled_tiles = site.tiles.duplicate()
+			shuffled_tiles.shuffle()
+			
 			var planet_site = Instancer.planet_site(site)
 			
-			var planet: Planet = Instancer.planet(site.tiles)
+			for tile in planet_system.tiles:
+				planet_site.add_child(tile)
+			
+			var planet_tile = calculate_planet_tile(shuffled_tiles)
+			var planet: Planet = Instancer.planet(planet_tile)
 			planet_site.planet = planet
-			planet_system.add_child(planet)
+			planet_tile.add_child(planet)
 			
 			planet_system.planet_sites.append(planet_site)
 			planet_system.add_child(planet_site)
@@ -106,3 +111,21 @@ func get_start_planet() -> Entity:
 			possible_planets.append(planet)
 	
 	return possible_planets[Random.randi() % possible_planets.size()]
+
+func calculate_planet_tile(shuffled_tiles: Array) -> Tile:
+	var planet_tile: Tile
+	var largest_neighbor_count = -1
+	
+	for _tile in shuffled_tiles:
+		var neighbors_in_site = 0
+		var ns = []
+		for neighbor in _tile.neighbors:
+			if neighbor in shuffled_tiles:
+				neighbors_in_site += 1
+				ns.append(neighbor)
+		
+		if neighbors_in_site > largest_neighbor_count:
+			planet_tile = _tile
+			largest_neighbor_count = neighbors_in_site
+	
+	return planet_tile
