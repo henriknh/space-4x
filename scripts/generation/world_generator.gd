@@ -55,12 +55,27 @@ func generate_world():
 			planet_system.planet_sites.append(planet_site)
 			planet_system.add_child(planet_site)
 			
+		var empty_tiles = []
+		for tile in planet_system.tiles:
+			if not tile.entity:
+				empty_tiles.append(tile)
+		empty_tiles.shuffle()
+		for i in range(2):
+			var tile = empty_tiles[i]
+			var asteroid: Asteroid = Instancer.asteroid(tile)
+			tile.add_child(asteroid)
+			
+			
 		galaxy.add_child(planet_system)
 	
 	var player = Corporations.create(Consts.PLAYER_CORPORATION, false)
 	var player_planet = get_start_planet()
+	
 	player_planet.corporation_id = player.corporation_id
 	player_planet.emit_signal("entity_changed")
+	
+	var camera: Spatial = get_node('/root/GameScene/CameraRoot')
+	camera.translation = player_planet.tile.translation
 
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
@@ -78,8 +93,10 @@ func generate_world():
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 	var ship_types = []
-	for i in range(1):
-		ship_types.append(Enums.ship_types.combat)
+	for i in range(2):
+		ship_types.append(Enums.ship_types.fighter)
+	for i in range(2):
+		ship_types.append(Enums.ship_types.carrier)
 	for i in range(0):
 		ship_types.append(Enums.ship_types.explorer)
 	for i in range(0):
@@ -105,7 +122,7 @@ func add_node_deffered(parent: Node, node: Object):
 	if load_progress == total_entities:
 		emit_signal("objects_loaded")
 
-func get_start_planet() -> Entity:
+func get_start_planet() -> Planet:
 	var possible_planets = []
 	for planet in get_tree().get_nodes_in_group('Planet'):
 		if planet.corporation_id == 0:

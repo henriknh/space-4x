@@ -30,8 +30,8 @@ func init():
 	
 	for ship_type in Enums.ship_types:
 		node_spawner_ship_type.add_item(ship_type, Enums.ship_types[ship_type])
-	var combat_idx = node_spawner_ship_type.get_item_index(Enums.ship_types.combat)
-	node_spawner_ship_type.select(combat_idx)
+	var fighter_idx = node_spawner_ship_type.get_item_index(Enums.ship_types.fighter)
+	node_spawner_ship_type.select(fighter_idx)
 
 func _process(delta):
 	var mouse_pos = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
@@ -40,7 +40,9 @@ func _process(delta):
 func _input(event: InputEvent) -> void:
 	if node_spawner_spawning.pressed and event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
 		get_tree().set_input_as_handled()
-		var ship = Instancer.ship(node_spawner_ship_type.get_selected_id(), node_spawner_corporation.get_selected_id())
+		var ship = Instancer.ship(node_spawner_ship_type.get_selected_id(), null, null, {
+			'corporation_id': node_spawner_corporation.get_selected_id()
+		})
 		if ship:
 			get_node('/root/GameScene').add_child(ship)
 		node_spawner_spawning.pressed = false

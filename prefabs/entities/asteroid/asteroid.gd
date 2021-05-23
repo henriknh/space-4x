@@ -1,17 +1,16 @@
 extends Entity
 
-class_name Planet
+class_name Asteroid
 
-var tile: Entity
+var tile: Tile
 
 func create():
 	.create()
 	
 func _ready():
 	add_to_group('Persist')
-	add_to_group('Planet')
+	add_to_group('Asteroid')
 	
-	modules.append({'class': ModuleCorporationColor.new().init(self), 'state': null})
 	._ready()
 
 func save():

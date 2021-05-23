@@ -7,7 +7,13 @@ var prefab_planet_system = preload('res://prefabs/entities/planet_system/planet_
 var prefab_planet_site = preload('res://prefabs/entities/planet_site/planet_site.tscn')
 var prefab_tile = preload('res://prefabs/entities/tile/tile.tscn')
 var prefab_planet = preload('res://prefabs/entities/planets/planet.tscn')
+var prefab_asteroid = preload('res://prefabs/entities/asteroid/asteroid.tscn')
 var prefab_ship = preload('res://prefabs/entities/ships/ship.tscn')
+
+const script_fighter = preload('res://prefabs/entities/ships/fighter.gd')
+const script_carrier = preload('res://prefabs/entities/ships/carrier.gd')
+const script_explorer = preload('res://prefabs/entities/ships/ship.gd')
+const script_miner = preload('res://prefabs/entities/ships/ship.gd')
 
 func galaxy() -> Galaxy:
 	var instance: Galaxy = prefab_galaxy.instance()
@@ -48,11 +54,32 @@ func tile(position: Vector3, is_edge: bool) -> Tile:
 func planet(tile: Tile) -> Planet:
 	var instance: Planet = prefab_planet.instance()
 	
+	instance.tile = tile
 	tile.entity = instance
 	
 	return instance
 
-func ship(ship_type: int, inherit: Entity, tile: Tile = null) -> Ship:
+func asteroid(tile: Tile) -> Asteroid:
+	var instance: Asteroid = prefab_asteroid.instance()
+	
+	instance.tile = tile
+	tile.entity = instance
+	
+	return instance
+
+func ship(ship_type: int, inherit: Entity, tile: Tile = null, override = {}) -> Ship:
+	
+	var script
+	match ship_type:
+		Enums.ship_types.fighter:
+			script = script_fighter
+		Enums.ship_types.carrier:
+			script = script_carrier
+		Enums.ship_types.explorer:
+			script = script_explorer
+		Enums.ship_types.miner:
+			script = script_miner
+			
 	
 	var position: Vector3 = Vector3.ZERO
 	if tile:
@@ -70,8 +97,15 @@ func ship(ship_type: int, inherit: Entity, tile: Tile = null) -> Ship:
 	
 	var instance: Ship = prefab_ship.instance()
 	
+	print(script)
+	instance.set_script(script)
+	
 	instance.translation = position
 	
-	instance.corporation_id = inherit.corporation_id
+	if inherit:
+		instance.corporation_id = inherit.corporation_id
+		
+	for key in override.keys():
+		instance[key] = override[key]
 	
 	return instance

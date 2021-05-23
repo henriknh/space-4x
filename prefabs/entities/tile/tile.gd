@@ -86,6 +86,10 @@ func _on_body_entered(body):
 	if body is Ship and not body in ships:
 		ships.append(body)
 		body.set_parent(self)
+		
+	if body is Planet:
+		Nav.update_weight(id, 10000)
+	
 
 func _on_body_exited(body):
 	if body is Ship and body in ships:

@@ -18,10 +18,7 @@ surfaces/0 = {
 "vertex_count": 240
 }
 
-[node name="Planet" type="KinematicBody" groups=[
-"Persist",
-"Planet",
-]]
+[node name="Planet" type="KinematicBody"]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
 input_ray_pickable = false
 collision_layer = 8

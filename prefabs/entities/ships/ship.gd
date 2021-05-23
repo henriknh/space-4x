@@ -5,10 +5,17 @@ class_name Ship
 var parent: Entity
 signal parent_changed
 
+var ship_count: int = 1
+
+onready var node_mesh: MeshInstance = $Mesh
+
 func _ready():
+	print('ship')
+	add_to_group('Persist')
+	add_to_group('Ship')
+	
 	modules.append({'class': ModuleShipMovement.new().init(self), 'state': Enums.ship_states.moving})
 	modules.append({'class': ModuleCorporationColor.new().init(self), 'state': null})
-	modules.append({'class': ModuleCorporationBorder.new().init(self, {'radius': 8 }), 'state': null})
 	modules.append({'class': ModuleShipLineOfSight.new().init(self), 'state': null})
 
 func _process(delta):

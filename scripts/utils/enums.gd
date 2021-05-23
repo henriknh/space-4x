@@ -91,14 +91,16 @@ const planet_scripts = {
 # Ships 6000 - 6999
 const ship_types = {
 	'disabled': 6000,
-	'combat': 6001,
-	'explorer': 6002,
-	'miner': 6003,
+	'fighter': 6001,
+	'carrier': 6002,
+	'explorer': 6003,
+	'miner': 6004,
 }
 
 const ship_colors = {
 	ship_types.disabled: Color(0, 0, 0, 1),
-	ship_types.combat: Color(1, 0, 0.4, 1),
+	ship_types.fighter: Color(1, 0, 0.4, 1),
+	ship_types.carrier: Color(1, 0, 0.4, 1),
 	ship_types.explorer: Color(1, 1, 1, 1),
 	ship_types.miner: Color(1, 0.8, 0.4, 1),
 }
