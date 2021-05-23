@@ -37,4 +37,5 @@ func update_border_color():
 	node_border_material.albedo_color = Enums.corporation_colors[self.planet.corporation_id]
 	
 func update_overview():
+	node_csg_polygon.visible = not (GameState.curr_planet_system == null and self.planet.corporation_id == 0)
 	node_csg_polygon_deflated.visible = GameState.curr_planet_system != null
