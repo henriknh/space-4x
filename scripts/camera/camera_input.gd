@@ -91,8 +91,8 @@ func _input(event):
 						var closest_planet_system = null
 						var closest_dist = INF
 						
-						for planet_system in get_node("/root/GameScene/Galaxy").planet_systems:
-							var dist = translation.distance_to(planet_system.translation)
+						for planet_system in get_tree().get_nodes_in_group('PlanetSystem'):
+							var dist = translation.distance_squared_to(planet_system.translation)
 							if dist < closest_dist:
 								closest_dist = dist
 								closest_planet_system = planet_system
