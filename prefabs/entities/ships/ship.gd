@@ -10,7 +10,6 @@ var ship_count: int = 1
 onready var node_mesh: MeshInstance = $Mesh
 
 func _ready():
-	print('ship')
 	add_to_group('Persist')
 	add_to_group('Ship')
 	

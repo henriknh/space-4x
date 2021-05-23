@@ -97,7 +97,6 @@ func ship(ship_type: int, inherit: Entity, tile: Tile = null, override = {}) -> 
 	
 	var instance: Ship = prefab_ship.instance()
 	
-	print(script)
 	instance.set_script(script)
 	
 	instance.translation = position
