@@ -67,10 +67,13 @@ func get_coords() -> Vector2:
 	return Vector2(int(round(x)), int(round(z)))
 
 func _on_mouse_entered():
+	if get_parent().get_parent() != GameState.curr_planet_system:
+		return
 	$AnimationPlayer.play("Hover")
 	
 func _on_mouse_exited():
-	pass
+	if get_parent().get_parent() != GameState.curr_planet_system:
+		return
 	$AnimationPlayer.play_backwards("Hover")
 	
 func are_neighbors(to_check: Tile) -> bool:
@@ -98,6 +101,9 @@ func _on_body_exited(body):
 		ships.erase(body)
 
 func _on_input_event(camera, event, click_position, click_normal, shape_idx):
+	if get_parent().get_parent() != GameState.curr_planet_system:
+		return
+	
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == BUTTON_LEFT:
 			GameState.set_selection(self)
