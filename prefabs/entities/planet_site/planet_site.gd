@@ -30,7 +30,7 @@ func _ready():
 	node_csg_polygon_deflated.polygon = polygon_deflated
 	
 	planet.connect("entity_changed", self, "update_border_color")
-	GameState.connect("planet_system_changed", self, "update_overview")
+	# GameState.connect("planet_system_changed", self, "update_overview")
 	update_border_color()
 
 func update_border_color():
