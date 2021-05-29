@@ -7,6 +7,7 @@ var settings = {
 	'show_planet_area': true,
 	'show_fps': false,
 	'vsync': false,
+	'fps': 0,
 	'debug': false
 }
 
@@ -20,6 +21,10 @@ func _after_change():
 	_save()
 	
 	OS.set_use_vsync(settings['vsync'])
+	if settings['fps'] == 0:
+		Engine.set_target_fps(9001)
+	else:
+		Engine.set_target_fps(settings['fps'])
 	
 	emit_signal("settings_changed")
 
@@ -50,6 +55,13 @@ func set_vsync(vsync: bool) -> void:
 	
 func get_vsync() -> bool:
 	return settings['vsync']
+
+func set_fps(fps: int) -> void:
+	settings['fps'] = fps
+	_after_change()
+	
+func get_fps() -> int:
+	return settings['fps']
 
 func set_debug(debug: bool) -> void:
 	settings['debug'] = debug
