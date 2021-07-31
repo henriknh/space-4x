@@ -57,12 +57,6 @@ func _generate_tiles():
 			var neighbor = tiles.get(coord)
 			if neighbor:
 				tile.neighbors.append(neighbor)
-		
-	var tiles_positions = []
-	for tile in tiles.values():
-		tiles_positions.append(Vector2(translation.x + tile.translation.x, translation.z + tile.translation.z))
-	bounds = Geometry.convex_hull_2d(tiles_positions)
-	bounds = Geometry.offset_polygon_2d(bounds, 100)[0]
 	
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
@@ -107,6 +101,12 @@ func _generate_sites(tiles):
 		add_child(planet_site)
 		for tile in planet_site.tiles:
 			planet_site.add_child(tile)
+		
+	var tiles_positions = []
+	for tile in tiles.values():
+		tiles_positions.append(Vector2(tile.global_transform.origin.x, tile.global_transform.origin.z))
+	bounds = Geometry.convex_hull_2d(tiles_positions)
+	bounds = Geometry.offset_polygon_2d(bounds, 25)[0]
 
 func get_neighbor_in_dir(coords: Vector2) -> PlanetSystem:
 	for neighbor in neighbors:

@@ -28,6 +28,7 @@ func _process(_delta):
 		velocity = move_dir
 		emit_signal("camera_changed")
 	
+	
 	if contraints.size() == 0:
 		pass
 	elif not Geometry.is_point_in_polygon(Vector2(node_parent.translation.x, node_parent.translation.z), contraints):
@@ -42,7 +43,6 @@ func _process(_delta):
 			node_parent.translation = next
 		else:
 			node_parent.translation = lerp(node_parent.translation, intersects_contraints(), get_process_delta_time() * movement_speed)
-			
 	
 	var zoom = node_parent.get_zoom()
 	if not is_equal_approx(zoom, translation.y):
@@ -55,10 +55,7 @@ func _process(_delta):
 func _update_bounds():
 	curr_focus = get_node("/root/GameScene/Galaxy") if not GameState.planet_system else GameState.planet_system
 	if curr_focus:
-		var _contraints = []
-		for point in curr_focus.bounds:
-			_contraints.append(Vector2(curr_focus.translation.x, curr_focus.translation.z) + point)
-		contraints = _contraints
+		contraints = curr_focus.bounds
 
 func intersects_contraints() -> Vector3:
 	var check_from = Vector2(node_parent.translation.x, node_parent.translation.z)

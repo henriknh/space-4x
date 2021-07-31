@@ -60,7 +60,7 @@ func _generate_planet_systems():
 	for planet_system in planet_systems.values():
 		tiles_positions.append_array(planet_system.bounds)
 	bounds = Geometry.convex_hull_2d(tiles_positions)
-	bounds = Geometry.offset_polygon_2d(bounds, 200)[0]
+	bounds = Geometry.offset_polygon_2d(bounds, 50)[0]
 	
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
