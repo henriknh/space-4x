@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "Action",
+"language": "GDScript",
+"path": "res://scripts/entities/action.gd"
+}, {
 "base": "Entity",
 "class": "Asteroid",
 "language": "GDScript",
@@ -30,6 +35,11 @@ _global_script_classes=[ {
 "path": "res://prefabs/entities/entity.gd"
 }, {
 "base": "Ship",
+"class": "Explorer",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/explorer.gd"
+}, {
+"base": "Ship",
 "class": "Fighter",
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/fighter.gd"
@@ -42,37 +52,17 @@ _global_script_classes=[ {
 "base": "Spatial",
 "class": "Game",
 "language": "GDScript",
-"path": "res://scenes/game.gd"
+"path": "res://scenes/game/game.gd"
 }, {
-"base": "Spatial",
-"class": "Module",
+"base": "Ship",
+"class": "Miner",
 "language": "GDScript",
-"path": "res://scripts/module.gd"
+"path": "res://prefabs/entities/ships/miner.gd"
 }, {
-"base": "Module",
-"class": "ModuleCombat",
+"base": "Entity",
+"class": "Nebula",
 "language": "GDScript",
-"path": "res://prefabs/entities/modules/combat.gd"
-}, {
-"base": "Module",
-"class": "ModuleCorporationBorder",
-"language": "GDScript",
-"path": "res://prefabs/entities/modules/corporation_border.gd"
-}, {
-"base": "Module",
-"class": "ModuleCorporationColor",
-"language": "GDScript",
-"path": "res://prefabs/entities/modules/corporation_color.gd"
-}, {
-"base": "Module",
-"class": "ModuleShipLineOfSight",
-"language": "GDScript",
-"path": "res://prefabs/entities/ships/modules/ship_line_of_sight.gd"
-}, {
-"base": "Module",
-"class": "ModuleShipMovement",
-"language": "GDScript",
-"path": "res://prefabs/entities/ships/modules/ship_movement.gd"
+"path": "res://prefabs/entities/nebula/nebula.gd"
 }, {
 "base": "Entity",
 "class": "Planet",
@@ -89,47 +79,69 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://prefabs/entities/planet_system/planet_system.gd"
 }, {
-"base": "Module",
-"class": "PlanetSystemShipLineOfSight",
+"base": "Spatial",
+"class": "Projectile",
 "language": "GDScript",
-"path": "res://prefabs/entities/planet_system/modules/planet_system_line_of_sight.gd"
+"path": "res://prefabs/weapon/projectiles/projectile.gd"
+}, {
+"base": "State",
+"class": "ScanForEnemiesState",
+"language": "GDScript",
+"path": "res://prefabs/states/scan_for_enemies.gd"
 }, {
 "base": "Entity",
 "class": "Ship",
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/ship.gd"
 }, {
+"base": "Node",
+"class": "State",
+"language": "GDScript",
+"path": "res://prefabs/states/state.gd"
+}, {
 "base": "Entity",
 "class": "Tile",
 "language": "GDScript",
 "path": "res://prefabs/entities/tile/tile.gd"
+}, {
+"base": "Entity",
+"class": "Turret",
+"language": "GDScript",
+"path": "res://prefabs/entities/planets/turret/turret.gd"
+}, {
+"base": "Spatial",
+"class": "Weapon",
+"language": "GDScript",
+"path": "res://prefabs/weapon/weapon.gd"
 } ]
 _global_script_class_icons={
+"Action": "",
 "Asteroid": "",
 "Carrier": "",
 "Corporation": "",
 "Entity": "",
+"Explorer": "",
 "Fighter": "",
 "Galaxy": "",
 "Game": "",
-"Module": "",
-"ModuleCombat": "",
-"ModuleCorporationBorder": "",
-"ModuleCorporationColor": "",
-"ModuleShipLineOfSight": "",
-"ModuleShipMovement": "",
+"Miner": "",
+"Nebula": "",
 "Planet": "",
 "PlanetSite": "",
 "PlanetSystem": "",
-"PlanetSystemShipLineOfSight": "",
+"Projectile": "",
+"ScanForEnemiesState": "",
 "Ship": "",
-"Tile": ""
+"State": "",
+"Tile": "",
+"Turret": "",
+"Weapon": ""
 }
 
 [application]
 
 config/name="space-4x"
-run/main_scene="res://scenes/main_menu.tscn"
+run/main_scene="res://scenes/splash_screen/splash_scene.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -152,6 +164,7 @@ AI="*res://scripts/ai/ai.gd"
 Boid="*res://scripts/entities/boid.gd"
 EventQueue="*res://scripts/utils/event_queue.gd"
 FogOfWar="*res://scripts/fog_of_war.gd"
+MaterialLibrary="*res://scripts/utils/material_library.gd"
 
 [display]
 
@@ -227,6 +240,8 @@ ui_down={
 3d_physics/layer_3="Tile"
 3d_physics/layer_4="Planet"
 3d_physics/layer_5="Ship"
+3d_physics/layer_6="Nebula"
+3d_physics/layer_7="Asteroid"
 
 [physics]
 

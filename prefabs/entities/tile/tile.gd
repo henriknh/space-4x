@@ -2,17 +2,15 @@ extends Entity
 
 class_name Tile
 
+onready var prefab_tile_overlay = preload("res://prefabs/entities/tile/tile_overlay/TileOverlay.tscn")
 onready var node_collision: CollisionPolygon = $Area/CollisionPolygon
-onready var node_mesh: MeshInstance = $Mesh
-onready var node_border: CSGCombiner = $Border
-onready var node_polygon: CSGPolygon = $Border/CSGPolygon
-onready var node_polygon_deflated: CSGPolygon = $Border/CSGPolygonDeflated
 
 var neighbors: Array = []
 var is_edge: bool = false
-var polygon = []
+var polygon = generate_polygon()
 var ships = []
-var entity: Entity
+signal ship_changed
+var entity: Entity setget set_entity
 
 const VERTEX_COLOR = Color(0, 0, 1, 0.1);
 
@@ -21,45 +19,21 @@ func _ready():
 	add_to_group('Tile')
 	
 	node_collision.polygon = polygon
-	
-	var material_mesh = SpatialMaterial.new()
-	material_mesh.flags_transparent = true
-	material_mesh.flags_unshaded = true
-	material_mesh.flags_do_not_receive_shadows = true
-	material_mesh.flags_disable_ambient_light = true
-	material_mesh.albedo_color = Color(1,1,1,0)
-	
-	node_mesh.material_override = material_mesh
-	node_mesh.scale.x = Consts.TILE_SIZE * 0.96
-	node_mesh.scale.z = Consts.TILE_SIZE * 0.96
-	
-	
-	var material_border = SpatialMaterial.new()
-	material_border.flags_transparent = true
-	material_border.flags_unshaded = true
-	material_border.flags_do_not_receive_shadows = true
-	material_border.flags_disable_ambient_light = true
-	material_border.albedo_color = Color(1,1,1,0)
-	
-	node_border.material_override = material_border
-	node_polygon.polygon = polygon
-	node_polygon_deflated.polygon = Geometry.offset_polygon_2d(polygon, -0.2)[0]
 
-func generate_polygon():
+static func generate_polygon():
+	var _polygon = []
 	for i in range(6):
-		polygon.append(pointy_hex_corner(Consts.TILE_SIZE, i))
-	polygon.append(polygon[0])
+		var angle_deg = 60 * i - 30
+		var angle_rad = PI / 180 * angle_deg
+		_polygon.append(Vector2(Consts.TILE_SIZE * cos(angle_rad), Consts.TILE_SIZE * sin(angle_rad)))
+	_polygon.append(_polygon[0])
+	return _polygon
 	
 func get_global_polygon():
 	var _polygon = []
-	for p in polygon:
-		_polygon.append(Vector2(p.x + translation.x, -(p.y + translation.z)))
+	for point in polygon:
+		_polygon.append(Vector2(point.x + translation.x, point.y + translation.z))
 	return _polygon
-	
-func pointy_hex_corner(size, i) -> Vector2:
-	var angle_deg = 60 * i - 30
-	var angle_rad = PI / 180 * angle_deg
-	return Vector2(size * cos(angle_rad), size * sin(angle_rad))
 
 func get_coords() -> Vector2:
 	var x = translation.x / (Consts.TILE_SIZE * sqrt(3)) * 2
@@ -67,49 +41,57 @@ func get_coords() -> Vector2:
 	return Vector2(int(round(x)), int(round(z)))
 
 func _on_mouse_entered():
-	if get_parent().get_parent() != GameState.curr_planet_system:
-		return
-	$AnimationPlayer.play("Hover")
+	GameState.hover = self
 	
 func _on_mouse_exited():
-	if get_parent().get_parent() != GameState.curr_planet_system:
-		return
-	$AnimationPlayer.play_backwards("Hover")
+	GameState.hover = null
 	
 func are_neighbors(to_check: Tile) -> bool:
 	return to_check in neighbors
 	
-func has_neighbors_in_dir(coords: Vector2) -> bool:
+func get_neighbor_in_dir(coords: Vector2) -> Tile:
 	for neighbor in neighbors:
-		if (neighbor.get_coords() - get_coords()) == coords:
-			return true
-	return false
+		if coords.is_equal_approx(neighbor.get_coords() - get_coords()):
+			return neighbor
+	return null
+	
+func has_neighbor_in_dir(coords: Vector2) -> bool:
+	return get_neighbor_in_dir(coords) != null
 
-func _on_body_entered(body):
+func _on_body_entered(body: Entity):
 	if body is Ship and not body in ships:
 		ships.append(body)
-		body.set_parent(self)
-		
-	if body is Planet:
-		Nav.update_weight(id, 10000)
+		body.parent = self
+		emit_signal('ship_changed')
 	
+#	if ships.size() > 0 and $TileOverlayContainer.get_child_count() == 0:
+#		$TileOverlayContainer.add_child(prefab_tile_overlay.instance())
 
 func _on_body_exited(body):
 	if body is Ship and body in ships:
 		if body.parent == self:
-			body.set_parent(null)
+			body.parent = null
 		ships.erase(body)
+		emit_signal('ship_changed')
+	
+	if ships.size() == 0 and $TileOverlayContainer.get_child_count() == 1:
+		for child in $TileOverlayContainer.get_children():
+			$TileOverlayContainer.remove_child(child)
 
-func _on_input_event(camera, event, click_position, click_normal, shape_idx):
-	if get_parent().get_parent() != GameState.curr_planet_system:
+func _on_input_event(_camera, event, _click_position, _click_normal, _shape_idx):
+	if get_parent().get_parent() != GameState.planet_system:
 		return
 	
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == BUTTON_LEFT:
-			GameState.set_selection(self)
-		elif event.button_index == BUTTON_RIGHT:
-			if GameState.get_selection():
-				for ship in GameState.get_selection().ships:
-					for module in ship.modules:
-						if module.class is ModuleShipMovement:
-							module.class.set_target(self)
+			GameState.selected_tile = self
+		elif event.button_index == BUTTON_RIGHT and GameState.selection and GameState.selection.has_node("States"):
+			var states_node = GameState.selection.get_node("States")
+			for state in states_node.get_children():
+				if state.name == "Move":
+					GameState.selection.target = self
+					states_node.set_state("Move" as NodePath)
+
+func set_entity(_entity: Entity):
+	entity = _entity
+	emit_signal("entity_changed")

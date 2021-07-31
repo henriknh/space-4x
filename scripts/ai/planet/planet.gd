@@ -9,7 +9,7 @@ static func process(entity: Planet, delta: float):
 		if entity.get_process_progress() > 1:
 			if (corporation.titanium == 0 or corporation.astral_dust == 0) and corporation.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
 				convertion(entity, corporation)
-			elif corporation.titanium >= Consts.SHIP_COST_TITANIUM:
+			elif corporation.titanium >= Consts.SHIP_COST_FIGHTER:
 				produce(entity, corporation)
 			elif corporation.asteroid_rocks >= Consts.RESOURCE_CONVERTION_COST:
 				convertion(entity, corporation)
@@ -21,11 +21,11 @@ static func process(entity: Planet, delta: float):
 		entity.set_entity_process(Enums.ai_states.delay, -1, delay_time)
 
 static func produce(entity: Planet, corporation: Corporation):
-	if corporation.titanium < Consts.SHIP_COST_TITANIUM:
+	if corporation.titanium < Consts.SHIP_COST_FIGHTER:
 		return
 	
 	var ship_to_produce
-	if corporation.titanium == Consts.SHIP_COST_TITANIUM:
+	if corporation.titanium == Consts.SHIP_COST_FIGHTER:
 		var has_miner_ships = false
 		for ship in entity.ships:
 			if ship.ship_type == Enums.ship_types.miner:
@@ -47,9 +47,9 @@ static func produce(entity: Planet, corporation: Corporation):
 		if corporation.friendliness < -0.5:
 			potential_ships.append(Enums.ship_types.combat)
 			
-		if corporation.titanium <= Consts.SHIP_COST_TITANIUM * 2:
+		if corporation.titanium <= Consts.SHIP_COST_FIGHTER * 2:
 			potential_ships.append(Enums.ship_types.miner)
-		if corporation.titanium <= Consts.SHIP_COST_TITANIUM:
+		if corporation.titanium <= Consts.SHIP_COST_FIGHTER:
 			potential_ships.append(Enums.ship_types.miner)
 		
 		if corporation.explorer > 0.5:
@@ -59,7 +59,7 @@ static func produce(entity: Planet, corporation: Corporation):
 		ship_to_produce = potential_ships[0]
 	
 	if ship_to_produce:
-		corporation.titanium -= Consts.SHIP_COST_TITANIUM
+		corporation.titanium -= Consts.SHIP_COST_FIGHTER
 		entity.set_entity_process(Enums.planet_states.produce, ship_to_produce, Consts.SHIP_PRODUCTION_TIME)
 
 static func convertion(entity: Planet, corporation: Corporation):

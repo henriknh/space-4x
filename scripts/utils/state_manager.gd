@@ -1,6 +1,6 @@
 extends Node
 
-var save_file_path = "user://savegame.save"
+var save_file_path: String = ''
 
 func has_save() -> bool:
 	var save_game = File.new()
@@ -71,23 +71,17 @@ func load_game() -> bool:
 	total_entities += node_data_ships.size()
 	var load_progress: float = 0
 	
-	GameState.loading_label = 'Planets'
 	for node_data_planet in node_data_planets:
 		self._instantiate_node_data(node_data_planet)
 		load_progress += 1
-		GameState.loading_progress = load_progress / total_entities
-	GameState.loading_label = 'Objects'
 	for node_data_prop in node_data_props:
 		self._instantiate_node_data(node_data_prop)
 		load_progress += 1
-		GameState.loading_progress = load_progress / total_entities
-	GameState.loading_label = 'Ships'
 	for node_data_ship in node_data_ships:
 		self._instantiate_node_data(node_data_ship)
 		load_progress += 1
-		GameState.loading_progress = load_progress / total_entities
 		
-	GameState.set_planet_system(GameState.curr_planet_system)
+	GameState.planet_system = GameState.planet_system
 	
 	return true
 
@@ -130,4 +124,3 @@ func delete_game_file() -> bool:
 		dir.remove(save_file_path)
 		return true
 	return false
-	

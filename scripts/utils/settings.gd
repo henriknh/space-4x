@@ -2,10 +2,17 @@ extends Node
 
 var settings_file_path = "user://settings.json"
 
+enum screen_values {
+	windowed,
+	fullscreen,
+	borderless,
+}
+
 var settings = {
 	'show_orbit_circles': true,
 	'show_planet_area': true,
 	'show_fps': false,
+	'screen': screen_values.windowed,
 	'vsync': false,
 	'fps': 0,
 	'debug': false
@@ -26,6 +33,20 @@ func _after_change():
 	else:
 		Engine.set_target_fps(settings['fps'])
 	
+	if settings['screen'] == screen_values.windowed:
+		OS.set_window_fullscreen(false)
+		OS.set_window_position(Vector2(0, 0))
+		OS.set_window_size(Vector2(1200, 720))
+		OS.set_borderless_window(false)
+	elif settings['screen'] == screen_values.fullscreen:
+		OS.set_borderless_window(false)
+		OS.set_window_fullscreen(true)
+	elif settings['screen'] == screen_values.borderless:
+		OS.set_window_fullscreen(false)
+		OS.set_window_position(Vector2(0, 0))
+		OS.set_window_size(OS.get_screen_size())
+		OS.set_borderless_window(true)
+	
 	emit_signal("settings_changed")
 
 func set_show_orbit_circles(show_orbit_circles: bool) -> void:
@@ -42,19 +63,26 @@ func set_show_planet_area(show_planet_area: bool) -> void:
 func get_show_planet_area() -> bool:
 	return settings['show_planet_area']
 
-func set_show_fps(show_fps: bool) -> void:
-	settings['show_fps'] = show_fps
+func set_screen(value: int) -> void:
+	settings['screen'] = value
 	_after_change()
 	
-func get_show_fps() -> bool:
-	return settings['show_fps']
-
+func get_screen() -> bool:
+	return settings['screen']
+	
 func set_vsync(vsync: bool) -> void:
 	settings['vsync'] = vsync
 	_after_change()
 	
 func get_vsync() -> bool:
 	return settings['vsync']
+	
+func set_show_fps(show_fps: bool) -> void:
+	settings['show_fps'] = show_fps
+	_after_change()
+	
+func get_show_fps() -> bool:
+	return settings['show_fps']
 
 func set_fps(fps: int) -> void:
 	settings['fps'] = fps

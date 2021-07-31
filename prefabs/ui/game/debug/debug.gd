@@ -33,19 +33,9 @@ func init():
 	var fighter_idx = node_spawner_ship_type.get_item_index(Enums.ship_types.fighter)
 	node_spawner_ship_type.select(fighter_idx)
 
-func _process(delta):
+func _process(_delta):
 	var mouse_pos = get_viewport().get_canvas_transform().affine_inverse().xform(get_viewport().get_mouse_position())
 	node_mouse_pos.text = "(%d, %d)" % [stepify(mouse_pos.x, 0.01), stepify(mouse_pos.y, 0.01)]
-	
-func _input(event: InputEvent) -> void:
-	if node_spawner_spawning.pressed and event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
-		get_tree().set_input_as_handled()
-		var ship = Instancer.ship(node_spawner_ship_type.get_selected_id(), null, null, {
-			'corporation_id': node_spawner_corporation.get_selected_id()
-		})
-		if ship:
-			get_node('/root/GameScene').add_child(ship)
-		node_spawner_spawning.pressed = false
 
 func _update_ui():
 	node_event_queue_handled.text = "Handled: %d" % EventQueue.handled_last_tick

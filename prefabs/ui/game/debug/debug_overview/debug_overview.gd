@@ -3,9 +3,8 @@ extends Control
 const texture_ai_difficulty = preload("res://assets/icons/chart-bar.png")
 const texture_ai_friendliness = preload("res://assets/icons/robot-happy.png")
 const texture_ai_explorer = preload("res://assets/icons/compass.png")
-const texture_rocks = preload("res://assets/icons/image-filter-hdr.png")
-const texture_titanium = preload("res://assets/icons/cube.png")
-const texture_astral_dust = preload("res://assets/icons/cloud.png")
+const texture_resource_titanium = preload("res://assets/icons/cube.png")
+const texture_resource_dust = preload("res://assets/icons/cloud.png")
 const texture_ship = preload("res://assets/icons/ship.png")
 const texture_planet = preload("res://assets/icons/planet.png")
 
@@ -24,7 +23,7 @@ func _ready():
 	
 func _update_ui():
 	node_list.clear()
-	node_list.max_columns = 11
+	node_list.max_columns = 10
 	node_list.fixed_icon_size = Vector2(24, 24)
 	
 	# Icon
@@ -34,9 +33,8 @@ func _update_ui():
 	node_list.add_icon_item(texture_ai_friendliness, false)
 	node_list.add_icon_item(texture_ai_explorer, false)
 	# Resources
-	node_list.add_icon_item(texture_rocks, false)
-	node_list.add_icon_item(texture_titanium, false)
-	node_list.add_icon_item(texture_astral_dust, false)
+	node_list.add_icon_item(texture_resource_titanium, false)
+	node_list.add_icon_item(texture_resource_dust, false)
 	# Planets
 	node_list.add_icon_item(texture_planet, false)
 	# Ships
@@ -73,10 +71,8 @@ func _update_ui():
 			node_list.add_item("", null, false)
 			
 		# Resources
-		
-		node_list.add_item(corporation.asteroid_rocks as String, null, false)
-		node_list.add_item(corporation.titanium as String, null, false)
-		node_list.add_item(corporation.astral_dust as String, null, false)
+		node_list.add_item(corporation.resource_titanium as String, null, false)
+		node_list.add_item(corporation.resource_dust as String, null, false)
 		
 		# Planets
 		

@@ -17,7 +17,7 @@ var screen_edge_size : int = 25
 
 var zoom_step: int = 0
 var zoom: int = 0
-var min_zoom: int = 1
+var min_zoom: int = 2
 var max_zoom: int = 10
 var can_overview: bool = false
 var can_overview_timer: float = 0
@@ -84,10 +84,10 @@ func _input(event):
 				
 				if direction > 0 and zoom_step + direction > max_zoom and can_overview:
 					zoom_step = 20
-					GameState.set_planet_system(null)
+					GameState.planet_system = null
 					_set_zoom_by_step()
 				else:
-					if not GameState.curr_planet_system:
+					if not GameState.planet_system:
 						var closest_planet_system = null
 						var closest_dist = INF
 						
@@ -97,7 +97,7 @@ func _input(event):
 								closest_dist = dist
 								closest_planet_system = planet_system
 						
-						GameState.set_planet_system(closest_planet_system)
+						GameState.planet_system = closest_planet_system
 					
 					zoom_step += direction
 					zoom_step = clamp(zoom_step, min_zoom, max_zoom) as int

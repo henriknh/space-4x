@@ -1,59 +1,74 @@
 extends Node
 
 # Temporary
-var _selection: Tile
-var loading: bool = false setget set_loading, is_loading
-var loading_progress: float = 0 setget set_loading_progress, get_loading_progress
-var loading_label: String = '' setget set_loading_label, get_loading_label
+var selected_tile: Tile = null setget set_selected_tile
+var selection: Entity = null setget set_selection
+var hover: Tile setget set_hover
+var loading: int = 0 setget set_loading
+var saveFile: String = ''
 
 # Persistent
-var curr_planet_system: PlanetSystem
-signal planet_system_changed
+var planet_system: PlanetSystem setget set_planet_system
 
+signal planet_system_changed
 signal selection_changed
+signal hover_changed
 signal state_changed
 signal update_ui
-signal loading_changed
+signal loading_done
+signal game_ready
 signal overview_changed
-
-func set_planet_system(planet_system: PlanetSystem) -> void:
-	if curr_planet_system != planet_system:
-		curr_planet_system = planet_system
-		emit_signal("planet_system_changed")
-
-func set_selection(new_selection: Tile):
-	_selection = new_selection
-	emit_signal("selection_changed")
 	
-func get_selection() -> Tile:
-	return _selection
+func set_planet_system(_planet_system: PlanetSystem) -> void:
+	if planet_system != _planet_system:
+		planet_system = _planet_system
+		if not planet_system:
+			self.selection = null
+		emit_signal("planet_system_changed")
+	
+func get_selected_tiles_entities():
+	if selected_tile:
+		var entities = []
+		
+		if selected_tile.entity and selected_tile.entity.corporation_id == Consts.PLAYER_CORPORATION:
+			entities.append(selected_tile.entity)
+		
+		for ship in selected_tile.ships:
+			if ship.corporation_id == Consts.PLAYER_CORPORATION:
+				entities.append(ship)
+		
+		return entities
+	else:
+		return null
+
+func set_selected_tile(_selected_tile: Tile):
+	if selected_tile == _selected_tile:
+		selected_tile = null
+	else:
+		selected_tile = _selected_tile
+	
+	var entities = get_selected_tiles_entities()
+	if entities and entities.size() > 0:
+		set_selection(entities[0])
+	else:
+		set_selection(null)
+
+func set_selection(_selection: Entity):
+	if selection == _selection:
+		selection = null
+	else:
+		selection = _selection
+	emit_signal("selection_changed")
+
+func set_hover(_hover: Tile = null):
+	hover = _hover
+	emit_signal("hover_changed")
 
 func set_loaded_game_state(state: Dictionary) -> void:
 	self.state = state
 	emit_signal("state_changed")
 	
-func set_loading(is_loading: bool) -> void:
-	loading = is_loading
-	loading_progress = 0
-	loading_label = ''
-	emit_signal("loading_changed")
-	if loading == false:
-		get_node('/root/GameScene/CanvasLayer/GameUI').init()
-
-func is_loading() -> bool:
-	return loading
-
-func set_loading_progress(_loading_progress: float) -> void:
-	loading_progress = _loading_progress
-	emit_signal("loading_changed")
-
-func get_loading_progress() -> float:
-	return loading_progress
-
-func set_loading_label(_loading_label: String) -> void:
-	loading_label = _loading_label
-	emit_signal("state_changed")
-	emit_signal("update_ui")
-
-func get_loading_label() -> String:
-	return loading_label
+func set_loading(_loading: int) -> void:
+	loading = _loading
+	if loading == 0:
+		emit_signal("loading_done")

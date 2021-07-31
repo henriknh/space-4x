@@ -1,6 +1,6 @@
 extends Control
 
-var settings = preload('res://prefabs/ui/settings/settings_menu.tscn')
+var settings = preload('res://prefabs/ui/settings_menu/settings_menu.tscn')
 	
 func _ready():
 	MenuState.push(self)

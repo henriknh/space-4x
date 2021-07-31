@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://prefabs/entities/nebula/nebula.gd" type="Script" id=1]
+[ext_resource path="res://assets/icons/cloud.png" type="Texture" id=2]
+
+[sub_resource type="CylinderShape" id=1]
+
+[sub_resource type="CylinderMesh" id=2]
+
+[node name="Nebula" type="KinematicBody"]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+input_ray_pickable = false
+collision_layer = 32
+collision_mask = 0
+script = ExtResource( 1 )
+icon = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="Mesh" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+material/0 = null

@@ -1,7 +1,7 @@
 extends Node
 
 const corporation_colors = {
-	0: Color(0.15, 0.15, 0.15),
+	0: Color(0.25, 0.25, 0.25),
 	1: Color(1, 1, 1), # white
 	2: Color(0.321, 0.517, 1), # blue
 	3: Color(0.556, 1, 0.360), # green
@@ -14,6 +14,12 @@ const corporation_colors = {
 	10: Color(0.694, 0.819, 0.501), # forest green
 	11: Color(0.529, 0.721, 0.768), # aqua blue
 	12: Color(0.831, 0.717, 0.490) # light brown
+}
+
+const ui_colors = {
+	'science': Color(0, 0.7, 1),
+	'ship': Color(1, 0.4, 0),
+	'build': Color(0, 1, 0.5)
 }
 
 const resource_types = {
@@ -89,12 +95,12 @@ const planet_scripts = {
 }
 
 # Ships 6000 - 6999
-const ship_types = {
-	'disabled': 6000,
-	'fighter': 6001,
-	'carrier': 6002,
-	'explorer': 6003,
-	'miner': 6004,
+enum ship_types {
+	disabled = 6000,
+	explorer = 6001,
+	fighter = 6002,
+	carrier = 6003,
+	miner = 6004,
 }
 
 const ship_colors = {

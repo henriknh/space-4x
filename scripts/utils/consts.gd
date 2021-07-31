@@ -12,8 +12,8 @@ const CAMERA_ZOOM_STEP = 1.1
 # General
 const COMPUTER_COUNT = {
 	Enums.world_size.small: {
-		'min': 2, 
-		'max': 5, 
+		'min': 3, 
+		'max': 3, 
 	},
 	Enums.world_size.medium: {
 		'min': 4, 
@@ -63,14 +63,17 @@ const GALAXY_GAP_PLANET_SYSTEMS = {
 # Planet system
 const PLANET_SYSTEM_RADIUS = {
 	Enums.world_size.small: {
+		'gap': 3,
 		'min': 6,
 		'max': 8
 	},
 	Enums.world_size.medium: {
+		'gap': 4,
 		'min': 10, 
 		'max': 12, 
 	},
 	Enums.world_size.large: {
+		'gap': 5,
 		'min': 14, 
 		'max': 16, 
 	}
@@ -90,15 +93,15 @@ const PLANET_SYSTEM_PLANETS = {
 	}
 }
 const PLANET_SYSTEM_DIR_ALL = [
-	Vector2(+1, +1), Vector2(+1, -1), Vector2(0, -2),
-	Vector2(-1, -1), Vector2(-1, +1), Vector2(0, +2),
+	Vector2(+1, +1), Vector2(0, +2), Vector2(-1, +1),
+	Vector2(-1, -1), Vector2(0, -2), Vector2(+1, -1)
 ]
 
 # Tile
 const TILE_SIZE = 5
 const TILE_DIR_ALL = [
-	Vector2(+2,  0), Vector2(+1, -1), Vector2(-1, -1), 
-	Vector2(-2,  0), Vector2(-1, +1), Vector2(+1, +1), 
+	Vector2(+2,  0), Vector2(+1, +1), Vector2(-1, +1),
+	Vector2(-2,  0), Vector2(-1, -1), Vector2(+1, -1)
 ]
 
 
@@ -111,7 +114,8 @@ const PLANET_COLONIZE_PROGRESS_PER_TICK = 0.01
 # Ships
 const SHIP_PRODUCTION_TIME = 10
 const SHIP_REBUILD_TIME = 10
-const SHIP_COST_TITANIUM = 1
+const SHIP_COST_FIGHTER = 2
+const SHIP_COST_CARRIER = 10
 const SHIP_BOID_COHESION_FORCE: float = 0.01
 const SHIP_BOID_ALIGNMENT_FORCE: float = 1.0
 const SHIP_BOID_SEPARATION_FORCE: float = 0.5
@@ -125,4 +129,9 @@ const SHIP_SPEED_MINER = 100
 const SHIP_SPEED_IDLE = 100
 
 # Research
-const RESEARCH_COST_ASTRAL_DUST = 1
+const RESEARCH_SHIP_DMG_1 = pow(2, 0)
+const RESEARCH_SHIP_DMG_2 = pow(2, 1)
+const RESEARCH_SHIP_DMG_3 = pow(2, 2)
+const RESEARCH_SHIP_HEALTH_1 = pow(2, 3)
+const RESEARCH_SHIP_HEALTH_2 = pow(2, 4)
+const RESEARCH_SHIP_HEALTH_3 = pow(2, 5)

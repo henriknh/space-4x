@@ -1,47 +1,40 @@
 extends Node
 
-var loading_scene = null
-var current_scene = null
-onready var thread = Thread.new()
+var packed_scene_loading: PackedScene = preload("res://scenes/loading/loading.tscn")
+var packed_scene_main_menu: PackedScene = preload("res://scenes/main_menu/main_menu.tscn")
+var packed_scene_game: PackedScene = preload("res://scenes/game/game.tscn")
 
-var main_menu_scene = preload('res://scenes/main_menu.tscn')
-var game_scene = preload('res://scenes/game.tscn')
-
-func _ready():
-	var root = get_tree().get_root()
-	current_scene = root.get_child(root.get_child_count() -1)
+signal scene_loaded
 	
-func goto_game(saveFile: String = '') -> void:
+func goto_game() -> void:
+	
+	_show_loading_scene()
+	
 	MenuState.reset()
 	
-	_load_scene(game_scene)
+	var timer = Timer.new()
+	timer.wait_time = 0.1
+	timer.one_shot = true
+	timer.autostart = true
+	timer.connect("timeout", self, "_load_game")
+	add_child(timer)
+	yield(timer, "timeout")
+	timer.queue_free()
 	
-	#thread.start(self, "_handle_loading_entities", saveFile)
-	_handle_loading_entities(saveFile)
+func _show_loading_scene():
+	get_tree().change_scene_to(packed_scene_loading)
+	yield(self, "scene_loaded")
 	
+func _load_game():
+	var game_scene = packed_scene_game.instance()
+	get_tree().get_root().add_child(game_scene)
+	
+	yield(GameState, "loading_done")
+	
+	get_tree().current_scene.queue_free()
+	get_tree().current_scene = game_scene
+
 func goto_main_menu() -> void:
 	MenuState.reset()
 	
-	_load_scene(main_menu_scene)
-	GameState.loading = false
-	
-func _load_scene(scene):
-	current_scene.queue_free()
-	current_scene = scene.instance()
-	
-	get_tree().get_root().add_child(current_scene)
-	get_tree().set_current_scene(current_scene)
-	GameState.loading = true
-	
-func _handle_loading_entities(saveFile: String):
-	if saveFile.length() == 0:
-		WorldGenerator.generate_world()
-	else:
-		StateManager.load_game()
-	
-	call_deferred("_handle_loading_entities_done")
-
-func _handle_loading_entities_done():
-	thread.wait_to_finish()
-	GameState.loading = false
-
+	get_tree().change_scene_to(packed_scene_main_menu)

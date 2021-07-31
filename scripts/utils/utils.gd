@@ -262,3 +262,19 @@ func polygon_add_midpoint_split(polygon: Array) -> Array:
 	polygon.insert(0, edgepoint)
 	polygon.append(edgepoint)
 	return polygon
+
+func get_type(entity: Entity):
+	var entity_type = null
+	if entity is Explorer:
+		entity_type = Explorer
+	if entity is Fighter:
+		entity_type = Fighter
+	if entity is Carrier:
+		entity_type = Carrier
+	if entity is Miner:
+		entity_type = Miner
+	
+	if not entity_type:
+		breakpoint
+	
+	return entity_type

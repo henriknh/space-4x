@@ -13,26 +13,21 @@ var explorer: float = Random.randf()
 var color: Color = Color(0,0,0,0)
 
 # Dyanamic variables
-var asteroid_rocks: int = Consts.RESOURCE_START_ASTEROID_ROCKS setget set_asteroid_rocks
-var titanium: int = Consts.RESOURCE_START_TITANIUM setget set_titanium
-var astral_dust: int = Consts.RESOURCE_START_ASTRAL_DUST setget set_astral_dust
+var resource_titanium: int = 0 setget set_resource_titanium
+var resource_dust: int = 0 setget set_resource_dust
 
-func _init(_corporation_id: int, is_computer: bool) -> void:
-	self.corporation_id = _corporation_id
-	self.is_computer = is_computer
-	self.color = Enums.corporation_colors[corporation_id]
+func _init(_corporation_id: int, _is_computer: bool) -> void:
+	corporation_id = _corporation_id
+	is_computer = _is_computer
+	color = Enums.corporation_colors[corporation_id]
 	emit_signal("corporation_changed")
 
-func set_asteroid_rocks(_asteroid_rocks):
-	asteroid_rocks = _asteroid_rocks
+func set_resource_titanium(_resource_titanium):
+	resource_titanium = _resource_titanium
 	emit_signal("corporation_changed")
-
-func set_titanium(_titanium):
-	titanium = _titanium
-	emit_signal("corporation_changed")
-
-func set_astral_dust(_astral_dust):
-	astral_dust = _astral_dust
+	
+func set_resource_dust(_resource_dust):
+	resource_dust = _resource_dust
 	emit_signal("corporation_changed")
 	
 func save():

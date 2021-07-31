@@ -3,12 +3,6 @@ extends Node
 var world_size: int = Enums.world_size.large
 var unique_id = 0 setget ,get_unique_id
 
-var gameScene
-var load_progress: float = 0
-var total_entities: float  = 0
-
-signal objects_loaded
-
 func get_unique_id() -> int:
 	unique_id += 1
 	return unique_id
@@ -21,106 +15,32 @@ func generate_world():
 	print("Generate world:")
 	print("seed: %d" % Random.get_seed())
 	print("size: %d" % world_size)
-	GameState.loading_progress = 0
 	
-	gameScene = get_node('/root/GameScene')
-	
-	load_progress = 0
-	total_entities = 0
+	var pending = []
 	
 	# Calculate planet systems
-	GameState.loading_label = 'Loading...'
+	get_node('/root/GameScene').add_child(Instancer.galaxy())
 	
-	var galaxy: Galaxy = Instancer.galaxy()
-	gameScene.add_child(galaxy)
-	
-	for planet_system in galaxy.planet_systems:
-		
-		planet_system.planet_sites = []
-		for site in planet_system.sites.values():
-			
-			var shuffled_tiles = site.tiles.duplicate()
-			shuffled_tiles.shuffle()
-			
-			var planet_site = Instancer.planet_site(site)
-			
-			for tile in planet_system.tiles:
-				planet_site.add_child(tile)
-			
-			var planet_tile = calculate_planet_tile(shuffled_tiles)
-			var planet: Planet = Instancer.planet(planet_tile)
-			planet_site.planet = planet
-			planet_tile.add_child(planet)
-			
-			planet_system.planet_sites.append(planet_site)
-			planet_system.add_child(planet_site)
-			
-		var empty_tiles = []
-		for tile in planet_system.tiles:
-			if not tile.entity:
-				empty_tiles.append(tile)
-		empty_tiles.shuffle()
-		for i in range(2):
-			var tile = empty_tiles[i]
-			var asteroid: Asteroid = Instancer.asteroid(tile)
-			tile.add_child(asteroid)
-			
-			
-		galaxy.add_child(planet_system)
+	yield(GameState, "loading_done")
 	
 	var player = Corporations.create(Consts.PLAYER_CORPORATION, false)
 	var player_planet = get_start_planet()
-	
-	player_planet.corporation_id = player.corporation_id
-	player_planet.emit_signal("entity_changed")
-	
+	player_planet.get_parent().get_parent().corporation_id = player.corporation_id
+
+	GameState.planet_system = player_planet.get_parent().get_parent().get_parent()
 	var camera: Spatial = get_node('/root/GameScene/CameraRoot')
-	camera.translation = player_planet.tile.translation
+	camera.translation = player_planet.get_parent().global_transform.origin
 
 	var computers_min = Consts.COMPUTER_COUNT[world_size].min
 	var computers_max = Consts.COMPUTER_COUNT[world_size].max
 	for idx in range(Random.randi_range(computers_min, computers_max)):
 		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx, true)
 		var start_planet = get_start_planet()
-		start_planet.corporation_id = ai_corporation.corporation_id
-		start_planet.emit_signal("entity_changed")
+		start_planet.get_parent().get_parent().corporation_id = ai_corporation.corporation_id
 	
 	Nav.create_network()
 	
-	emit_signal("objects_loaded")
-	GameState.set_planet_system(galaxy.planet_systems[0])
-	
-	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-	var ship_types = []
-	for i in range(2):
-		ship_types.append(Enums.ship_types.fighter)
-	for i in range(2):
-		ship_types.append(Enums.ship_types.carrier)
-	for i in range(0):
-		ship_types.append(Enums.ship_types.explorer)
-	for i in range(0):
-		ship_types.append(Enums.ship_types.miner)
-#	player_planet.planet_disabled_ships = 3
-
-	var i = 0
-	for ship_type in ship_types:
-		var planet = get_tree().get_nodes_in_group('Planet')[i]
-		planet = player_planet
-		var planet_tile = planet.get_parent()
-		var tile = planet_tile.neighbors[Random.randi() % planet_tile.neighbors.size()]
-		var ship = Instancer.ship(ship_type, planet, tile)
-		i += 1
-		gameScene.add_child(ship)
-	
-func add_node_deffered(parent: Node, node: Object):
-	parent.add_child(node)
-	
-	load_progress += 1
-	GameState.loading_progress = load_progress / total_entities
-	
-	if load_progress == total_entities:
-		emit_signal("objects_loaded")
+	GameState.emit_signal("game_ready")
 
 func get_start_planet() -> Planet:
 	var possible_planets = []

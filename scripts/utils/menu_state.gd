@@ -7,7 +7,8 @@ var _menus = []
 signal menu_changed
 
 func _ready():
-	GameState.connect("loading_changed", self, "update_visiblity")
+	#Scene.connect("scene_loaded", self, "reset")
+	connect("menu_changed", self, "update_visiblity")
 
 func is_over_ui() -> bool:
 	if _menus.size() > 1:
@@ -29,22 +30,20 @@ func set_over_ui(is_over_ui: bool) -> void:
 func reset() -> void:
 	_is_over_ui = false
 	for menu in _menus:
-		if menu:
+		if is_instance_valid(menu):
 			menu.queue_free()
 	_menus = []
 	emit_signal("menu_changed")
 	
 func push(new_menu: Control) -> void:
 	_menus.append(new_menu)
-	
-	update_visiblity()
+	emit_signal("menu_changed")
 
 func pop() -> void:
 	var menu = _menus.pop_back()
 	if menu:
 		menu.queue_free()
-	
-	update_visiblity()
+	emit_signal("menu_changed")
 
 func update_visiblity():
 	for menu in _menus:
@@ -52,8 +51,6 @@ func update_visiblity():
 	
 	_over_ui_semaphore = 0
 	_is_over_ui = false
-	
-	emit_signal("menu_changed")
 
 func menus_size() -> int:
 	return _menus.size()

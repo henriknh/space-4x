@@ -12,18 +12,21 @@ var movement_damping: float = 0.95
 var pivot_speed: int = 10
 var zoom_speed: int = 5
 
+signal camera_changed
+
 func _ready():
 #	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 	GameState.connect("planet_system_changed", self, "_update_bounds")
 
-func _process(delta):
+func _process(_delta):
 	
 	if node_parent.rotation_degrees != node_parent.pivot:
 		node_parent.rotation_degrees = lerp(node_parent.rotation_degrees, node_parent.pivot, get_process_delta_time() * pivot_speed)
 	
 	var move_dir = node_parent.get_move_dir()
-	if move_dir != Vector3.ZERO and not MenuState.is_over_ui():
+	if not Vector3.ZERO.is_equal_approx(move_dir) and not MenuState.is_over_ui():
 		velocity = move_dir
+		emit_signal("camera_changed")
 	
 	if contraints.size() == 0:
 		pass
@@ -42,14 +45,15 @@ func _process(delta):
 			
 	
 	var zoom = node_parent.get_zoom()
-	if zoom != translation.y:
+	if not is_equal_approx(zoom, translation.y):
 		var t = translation
 		var speed = zoom_speed if not node_parent.is_overview() else 5
 		t.y = lerp(t.y, zoom, get_process_delta_time() * speed)
 		translation = t
+		emit_signal("camera_changed")
 
 func _update_bounds():
-	curr_focus = get_node("/root/GameScene/Galaxy") if not GameState.curr_planet_system else GameState.curr_planet_system
+	curr_focus = get_node("/root/GameScene/Galaxy") if not GameState.planet_system else GameState.planet_system
 	if curr_focus:
 		var _contraints = []
 		for point in curr_focus.bounds:
