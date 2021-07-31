@@ -9,8 +9,6 @@ onready var node_load: Button = $VBoxContainer/Load
 onready var node_delete: Button = $VBoxContainer/DeleteSave
 
 func _ready():
-	print('main menu')
-	
 	for world_size_value in Enums.world_size.values():
 		node_world_size.add_item(Enums.world_size_label[world_size_value], world_size_value)
 

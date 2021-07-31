@@ -1,7 +1,6 @@
 extends Control
 
 func _ready():
-	print('spash screen')
 	Scene.emit_signal("scene_loaded")
 	
 	var timer = Timer.new()
