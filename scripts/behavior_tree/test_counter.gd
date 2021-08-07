@@ -11,9 +11,9 @@ func run():
 		count += 1
 	
 	if count <= MAX:
-	  print("%s counting: %d" % [name, count])
+	  #print("%s counting: %d" % [name, count])
 	  running()
 	else:
-	  print("Counter %s done!" % name)
+	  #print("Counter %s done!" % name)
 	  count = 0
 	  success() 

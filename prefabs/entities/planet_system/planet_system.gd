@@ -3,8 +3,7 @@ extends Entity
 class_name PlanetSystem
 
 var neighbors = []
-
-var bounds: Array = []
+var tiles = []
 
 func _ready():
 	add_to_group('Persist')
@@ -18,7 +17,6 @@ func get_coords() -> Vector2:
 	return Vector2(int(round(x)), int(round(z)))
 	
 func _generate_tiles():
-	var tiles = {}
 	var radius_min = Consts.PLANET_SYSTEM_RADIUS[WorldGenerator.world_size].min
 	var radius_max = Consts.PLANET_SYSTEM_RADIUS[WorldGenerator.world_size].max
 	var gap = Consts.PLANET_SYSTEM_RADIUS[WorldGenerator.world_size].gap
@@ -29,11 +27,11 @@ func _generate_tiles():
 	
 	for i in range(gap, gap + radius):
 		
-		var is_edge_node = i == gap + radius
+		var is_edge_node = (i + 1) == (gap + radius)
 		
 		if i == 0:
 			var tile = Instancer.tile(Vector3(0, 0, 0), is_edge_node)
-			tiles[tile.get_coords()] = tile
+			tiles.append(tile)
 		else:
 			for j in range(6):
 				var angle_deg = 60 * j + 60
@@ -41,7 +39,7 @@ func _generate_tiles():
 				var position = Vector3(cos(angle_rad), 0, sin(angle_rad)) * width * i
 				
 				var tile = Instancer.tile(position, is_edge_node)
-				tiles[tile.get_coords()] = tile
+				tiles.append(tile)
 
 				for k in range(1, i):
 					var angle_deg_child = angle_deg + 120
@@ -49,26 +47,22 @@ func _generate_tiles():
 					var position_child = position + Vector3(width * k * cos(angle_rad_child), 0, width * k * sin(angle_rad_child))
 
 					var tile_child = Instancer.tile(position_child, is_edge_node)
-					tiles[tile_child.get_coords()] = tile_child
+					tiles.append(tile_child)
 	
-	for tile in tiles.values():
+	var tiles_dict = {}
+	for tile in tiles:
+		tiles_dict[tile.get_coords()] = tile
+	
+	for tile in tiles:
 		for coord in Consts.TILE_DIR_ALL:
 			coord += tile.get_coords()
-			var neighbor = tiles.get(coord)
+			var neighbor = tiles_dict.get(coord)
 			if neighbor:
 				tile.neighbors.append(neighbor)
 	
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
-	for point in bounds:
-		st.add_vertex(Vector3(point.x, 0, point.y))
-	var mesh = MeshInstance.new()
-	mesh.mesh = st.commit()
-	add_child(mesh)
-	
-	_generate_sites(tiles)
+	_generate_sites()
 
-func _generate_sites(tiles):
+func _generate_sites():
 	var planets_min = Consts.PLANET_SYSTEM_PLANETS[WorldGenerator.world_size].min
 	var planets_max = Consts.PLANET_SYSTEM_PLANETS[WorldGenerator.world_size].max
 	var planet_count = Random.randi_range(planets_min, planets_max)
@@ -78,7 +72,7 @@ func _generate_sites(tiles):
 		planet_sites.append(Instancer.planet_site())
 	
 	var curr_site = 0
-	var unclaimed = tiles.values().duplicate()
+	var unclaimed = tiles.duplicate()
 	while unclaimed.size() > 0:
 		if planet_sites[curr_site].tiles.size() == 0:
 			var tile = unclaimed[Random.randi() % unclaimed.size()]
@@ -101,12 +95,6 @@ func _generate_sites(tiles):
 		add_child(planet_site)
 		for tile in planet_site.tiles:
 			planet_site.add_child(tile)
-		
-	var tiles_positions = []
-	for tile in tiles.values():
-		tiles_positions.append(Vector2(tile.global_transform.origin.x, tile.global_transform.origin.z))
-	bounds = Geometry.convex_hull_2d(tiles_positions)
-	bounds = Geometry.offset_polygon_2d(bounds, 25)[0]
 
 func get_neighbor_in_dir(coords: Vector2) -> PlanetSystem:
 	for neighbor in neighbors:

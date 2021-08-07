@@ -71,12 +71,28 @@ func ship(ship_type: int, inherit: Entity = null, override = {}) -> Ship:
 		Enums.ship_types.miner:
 			instance = prefab_ship_miner.instance()
 	
-	if inherit:
+	if inherit and inherit is Ship:
 		instance.corporation_id = inherit.corporation_id
 		instance.ship_count = inherit.ship_count
 		instance.health = inherit.health
 		instance.translation = inherit.translation
 		instance.parent = inherit.parent
+	elif inherit and inherit is Planet:
+		instance.corporation_id = inherit.corporation_id
+		
+		var spawn_tile = null
+		for neighbor in inherit.get_parent().neighbors:
+			if inherit.corporation_id == neighbor.corporation_id and not neighbor.entity:
+				spawn_tile = neighbor
+				break
+		if not spawn_tile:
+			for neighbor in inherit.get_parent().neighbors:
+				if inherit.corporation_id == neighbor.corporation_id:
+					spawn_tile = neighbor
+					break
+		if spawn_tile:
+			instance.translation = spawn_tile.global_transform.origin
+		
 	
 	for key in override.keys():
 		instance.set(key, override[key])

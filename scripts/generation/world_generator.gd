@@ -26,6 +26,7 @@ func generate_world():
 	var player = Corporations.create(Consts.PLAYER_CORPORATION, false)
 	var player_planet = get_start_planet()
 	player_planet.get_parent().get_parent().corporation_id = player.corporation_id
+	get_node('/root/GameScene').add_child(Instancer.ship(Enums.ship_types.explorer, player_planet))
 
 	GameState.planet_system = player_planet.get_parent().get_parent().get_parent()
 	var camera: Spatial = get_node('/root/GameScene/CameraRoot')
@@ -37,6 +38,7 @@ func generate_world():
 		var ai_corporation = Corporations.create(Consts.PLAYER_CORPORATION + 1 + idx, true)
 		var start_planet = get_start_planet()
 		start_planet.get_parent().get_parent().corporation_id = ai_corporation.corporation_id
+		get_node('/root/GameScene').add_child(Instancer.ship(Enums.ship_types.explorer, start_planet))
 	
 	Nav.create_network()
 	

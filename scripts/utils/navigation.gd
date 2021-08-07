@@ -49,18 +49,18 @@ func create_network():
 			if not astar.are_points_connected(tile.id, neighbor.id):
 				astar.connect_points(tile.id, neighbor.id)
 				
-				var st = SurfaceTool.new()
-				st.begin(Mesh.PRIMITIVE_LINE_STRIP)
-				st.add_vertex((tile as Spatial).global_transform.origin)
-				st.add_vertex((neighbor as Spatial).global_transform.origin)
-				var mesh = MeshInstance.new()
-				mesh.mesh = st.commit()
-				var material = SpatialMaterial.new()
-				material.albedo_color = Color(1,0,0,1)
-				mesh.material_override = material
-				get_node("/root/GameScene").add_child(mesh)
+#				var st = SurfaceTool.new()
+#				st.begin(Mesh.PRIMITIVE_LINE_STRIP)
+#				st.add_vertex((tile as Spatial).global_transform.origin)
+#				st.add_vertex((neighbor as Spatial).global_transform.origin)
+#				var mesh = MeshInstance.new()
+#				mesh.mesh = st.commit()
+#				var material = SpatialMaterial.new()
+#				material.albedo_color = Color(1,0,0,1)
+#				mesh.material_override = material
+#				get_node("/root/GameScene").add_child(mesh)
 	
-	for planet_system in []: #().get_nodes_in_group('PlanetSystem'):
+	for planet_system in get_tree().get_nodes_in_group('PlanetSystem'):
 		
 		for planet_system_dir in Consts.PLANET_SYSTEM_DIR_ALL:
 			var neighbor = planet_system.get_neighbor_in_dir(planet_system_dir)
@@ -88,20 +88,20 @@ func create_network():
 						if not astar.are_points_connected(origin_edge_tile.id, opposite_edge_tile.id):
 							astar.connect_points(origin_edge_tile.id, opposite_edge_tile.id)
 							
-#								var st = SurfaceTool.new()
-#								st.begin(Mesh.PRIMITIVE_LINE_STRIP)
-#								st.add_vertex((origin_edge_tile as Spatial).global_transform.origin)
-#								st.add_vertex((opposite_edge_tile as Spatial).global_transform.origin)
-#								var mesh = MeshInstance.new()
-#								mesh.mesh = st.commit()
-#								var material = SpatialMaterial.new()
-#								material.albedo_color = Color(1,0,0,1)
-#								mesh.material_override = material
-#								get_node("/root/GameScene").add_child(mesh)
+#							var st = SurfaceTool.new()
+#							st.begin(Mesh.PRIMITIVE_LINE_STRIP)
+#							st.add_vertex((origin_edge_tile as Spatial).global_transform.origin)
+#							st.add_vertex((opposite_edge_tile as Spatial).global_transform.origin)
+#							var mesh = MeshInstance.new()
+#							mesh.mesh = st.commit()
+#							var material = SpatialMaterial.new()
+#							material.albedo_color = Color(1,0,0,1)
+#							mesh.material_override = material
+#							get_node("/root/GameScene").add_child(mesh)
 
 	astar.listen_to_tiles_changes()
 
 func get_nav_path(from: Entity, to: Entity) -> PoolVector3Array:
-	var from_id = astar.get_closest_point(from.translation)
-	var to_id = astar.get_closest_point(to.translation)
+	var from_id = astar.get_closest_point(from.global_transform.origin)
+	var to_id = astar.get_closest_point(to.global_transform.origin)
 	return astar.get_point_path(from_id, to_id)

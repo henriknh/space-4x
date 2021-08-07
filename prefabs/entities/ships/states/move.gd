@@ -13,7 +13,7 @@ func update(delta):
 	
 	if ui_progress > 100:
 		var path = Nav.get_nav_path(host, host.target)
-		if path.size() > 0:
+		if path.size() > 1:
 			host.translation = path[1]
 			ui_progress = 0
 		else:

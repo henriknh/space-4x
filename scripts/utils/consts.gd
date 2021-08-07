@@ -42,8 +42,8 @@ const AI_DELAY_TIME = 1
 # Galaxy
 const GALAXY_SIZE = {
 	Enums.world_size.small: {
-		'min': 2, #6,
-		'max': 2 #8
+		'min': 3, #6,
+		'max': 3 #8
 	},
 	Enums.world_size.medium: {
 		'min': 8,

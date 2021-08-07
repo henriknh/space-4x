@@ -22,8 +22,8 @@ signal overview_changed
 func set_planet_system(_planet_system: PlanetSystem) -> void:
 	if planet_system != _planet_system:
 		planet_system = _planet_system
-		if not planet_system:
-			self.selection = null
+#		if not planet_system:
+#			self.selection = null
 		emit_signal("planet_system_changed")
 	
 func get_selected_tiles_entities():

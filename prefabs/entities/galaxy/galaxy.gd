@@ -1,14 +1,13 @@
 extends Entity
 
 class_name Galaxy
-
-var bounds = []
 	
 func _ready():
 	add_to_group('Persist')
 	add_to_group('Galaxy')
 	
-	call_deferred("_generate_planet_systems")
+	#call_deferred("_generate_planet_systems")
+	_generate_planet_systems()
 
 func _generate_planet_systems():
 	var planet_systems_min = Consts.GALAXY_SIZE[WorldGenerator.world_size].min
@@ -54,18 +53,3 @@ func _generate_planet_systems():
 			var neighbor = planet_systems.get(coord)
 			if neighbor:
 				planet_system.neighbors.append(neighbor)
-	
-	# calculate bounds
-	var tiles_positions = []
-	for planet_system in planet_systems.values():
-		tiles_positions.append_array(planet_system.bounds)
-	bounds = Geometry.convex_hull_2d(tiles_positions)
-	bounds = Geometry.offset_polygon_2d(bounds, 50)[0]
-	
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_LINE_LOOP)
-	for point in bounds:
-		st.add_vertex(Vector3(point.x, 0, point.y))
-	var mesh = MeshInstance.new()
-	mesh.mesh = st.commit()
-	add_child(mesh)
