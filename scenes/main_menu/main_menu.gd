@@ -21,6 +21,13 @@ func _ready():
 	Scene.emit_signal("scene_loaded")
 	MenuState.push(self)
 	
+	var timer = Timer.new()
+	timer.one_shot = true
+	timer.wait_time = 0.05
+	timer.autostart = true
+	timer.connect("timeout", self, "_on_start")
+	add_child(timer)
+	
 func _update_view_state():
 	node_start.disabled = StateManager.has_save()
 	node_load.disabled = not StateManager.has_save()
