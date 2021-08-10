@@ -41,7 +41,93 @@ func _ready():
 	
 	# Generate site mesh
 	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.begin(Mesh.PRIMITIVE_LINE_STRIP)
+	
+	var points = {}
+	
+	for tile in tiles:
+		
+		if not tile.is_edge:
+			continue
+		
+		var polygon = tile.get_global_polygon()
+		
+		for i in range(polygon.size()):
+			var p0 = polygon[((i - 1) + polygon.size()) % polygon.size()]
+			var p1 = polygon[i]
+			var p2 = polygon[((i + 1) + polygon.size()) % polygon.size()]
+			var p0_dict_key = null
+			var p1_dict_key = null
+			var p2_dict_key = null
+			for _point in points.keys():
+				if is_equal_approx(p0.x, _point.x) and is_equal_approx(p0.y, _point.y):
+					p0_dict_key = _point
+				if is_equal_approx(p1.x, _point.x) and is_equal_approx(p1.y, _point.y):
+					p1_dict_key = _point
+				if is_equal_approx(p2.x, _point.x) and is_equal_approx(p2.y, _point.y):
+					p2_dict_key = _point
+			
+			if p0_dict_key == null:
+				p0_dict_key = p0
+				points[p0_dict_key] = []
+			if p1_dict_key == null:
+				p1_dict_key = p1
+				points[p1_dict_key] = []
+			if p2_dict_key == null:
+				p2_dict_key = p2
+				points[p2_dict_key] = []
+				
+			# Check p0
+			var p0_found = false
+			for point in points[p1_dict_key]:
+				if is_equal_approx(p0_dict_key.x, point.x) and is_equal_approx(p0_dict_key.y, point.y):
+					p0_found = true
+					break
+			if not p0_found:
+				points[p1_dict_key].append(p0_dict_key)
+			
+			# Check p2
+			var p2_found = false
+			for point in points[p1_dict_key]:
+				if is_equal_approx(p2_dict_key.x, point.x) and is_equal_approx(p2_dict_key.y, point.y):
+					p2_found = true
+					break
+			if not p2_found:
+				points[p1_dict_key].append(p2_dict_key)
+				
+
+	
+	for point in points:
+		if point in points[point]:
+			points[point].erase(point)
+	
+	# find start
+	var line = []
+	for _point in points:
+		if points[_point].size() == 2:
+			line = [_point]
+			break
+	
+	var prev = 0
+	while line.size() == 1 or line.front() != line.back():
+		var fewest_points = null
+		var fewest_points_count = INF
+		for point in points[line.back()]:
+			if point in line:
+				continue
+			if points[point].size() < fewest_points_count:
+				fewest_points_count = points[point].size()
+				fewest_points = point
+				
+		if not fewest_points:
+			break
+		else:
+			line.append(fewest_points)
+			prev = fewest_points_count
+	
+	print(line)
+		
+		
 	
 	for tile in tiles:
 		var polygon = tile.get_global_polygon()
@@ -77,10 +163,13 @@ func _ready():
 #				st.add_vertex(p1 + Vector3.DOWN)
 
 			# Bottom
-			st.add_vertex(p0)
-			st.add_vertex(p1)
-			st.add_vertex(p2)
+#			st.add_vertex(p0)
+#			st.add_vertex(p1)
+#			st.add_vertex(p2)
 
+	line = Geometry.offset_polygon_2d(line, -0.01)[0]
+	for point in line:
+		st.add_vertex(Vector3(point.x, 0, point.y))
 	node_mesh.mesh = st.commit()
 	node_mesh.material_override = MaterialLibrary.get_material(planet.corporation_id, false)
 	

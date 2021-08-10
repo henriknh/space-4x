@@ -42,8 +42,8 @@ const AI_DELAY_TIME = 1
 # Galaxy
 const GALAXY_SIZE = {
 	Enums.world_size.small: {
-		'min': 3, #6,
-		'max': 3 #8
+		'min': 1, #6,
+		'max': 1 #8
 	},
 	Enums.world_size.medium: {
 		'min': 8,
@@ -80,8 +80,8 @@ const PLANET_SYSTEM_RADIUS = {
 }
 const PLANET_SYSTEM_PLANETS = {
 	Enums.world_size.small: {
-		'min': 4, 
-		'max': 8, 
+		'min': 3, 
+		'max': 3, 
 	},
 	Enums.world_size.medium: {
 		'min': 8, 

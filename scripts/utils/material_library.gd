@@ -15,10 +15,22 @@ func _ready():
 		var transparent = SpatialMaterial.new()
 		transparent.flags_transparent = true
 		transparent.flags_unshaded = true
-		transparent.flags_disable_ambient_light = true
-		transparent.flags_do_not_receive_shadows = true
+		#transparent.flags_disable_ambient_light = true
+		#transparent.flags_do_not_receive_shadows = true
 		transparent.albedo_color = Enums.corporation_colors[corporation_id]
-		transparent.albedo_color.a = 0.1
+		#transparent.albedo_color.a = 0.1
+		
+		var transparent_growth: SpatialMaterial = SpatialMaterial.new()
+		
+		transparent_growth.albedo_color = Enums.corporation_colors[corporation_id]
+		#transparent_growth.albedo_color.a = 0.1
+		
+		transparent.flags_unshaded = true
+		transparent_growth.params_grow = true
+		transparent_growth.params_grow_amount = -0.2
+		transparent_growth.params_blend_mode = SpatialMaterial.BLEND_MODE_SUB
+		transparent.next_pass = transparent_growth
+		
 		materials_transparent[corporation_id] = transparent
 
 func get_material(corporation_id: int, opaque: bool = true) -> SpatialMaterial:
