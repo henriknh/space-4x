@@ -12,8 +12,6 @@ var ships = []
 signal ship_changed
 var entity: Entity setget set_entity
 
-const VERTEX_COLOR = Color(0, 0, 1, 0.1);
-
 func _ready():
 	add_to_group('Persist')
 	add_to_group('Tile')

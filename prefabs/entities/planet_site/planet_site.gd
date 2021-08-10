@@ -38,6 +38,10 @@ func _ready():
 	resource_tile = _get_empty_entity_tile()
 	if resource_tile:
 		resource_tile.add_child(Instancer.nebula(resource_tile))
+	
+	for neighbor in resource_tile.neighbors:
+		if not neighbor.entity:
+			neighbor.add_child(Instancer.nebula(resource_tile))
 		
 	
 	planet.connect("entity_changed", self, "update_border_color")
@@ -128,7 +132,6 @@ func _generate_border():
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i in range(line_3d.size()):
 		var j = (i + 1) % line_3d.size()
-		
 		# First triangle (CCW)
 		# i1 - i2
 		# |   /
@@ -137,7 +140,6 @@ func _generate_border():
 		st.add_vertex(line_3d[i])
 		st.add_vertex(line_3d[j])
 		st.add_vertex(line_offset_3d[i])
-		
 		
 		# Second triangle  (CCW)
 		#      i2

@@ -26,9 +26,9 @@ func _ready():
 		# |   /
 		# |  /
 		# j1
-		st.add_vertex(Utils.v2_to_v3(polygon[i], -0.99))
-		st.add_vertex(Utils.v2_to_v3(polygon[j], -0.99))
-		st.add_vertex(Utils.v2_to_v3(polygon_offset[i], -0.99))
+		st.add_vertex(Utils.v2_to_v3(polygon[i]))
+		st.add_vertex(Utils.v2_to_v3(polygon[j]))
+		st.add_vertex(Utils.v2_to_v3(polygon_offset[i]))
 		
 		
 		# Second triangle  (CCW)
@@ -36,9 +36,9 @@ func _ready():
 		#   /  |
 		#  /   |
 		# j1 - j2
-		st.add_vertex(Utils.v2_to_v3(polygon_offset[i], -0.99))
-		st.add_vertex(Utils.v2_to_v3(polygon[j], -0.99))
-		st.add_vertex(Utils.v2_to_v3(polygon_offset[j], -0.99))
+		st.add_vertex(Utils.v2_to_v3(polygon_offset[i]))
+		st.add_vertex(Utils.v2_to_v3(polygon[j]))
+		st.add_vertex(Utils.v2_to_v3(polygon_offset[j]))
 	
 	node_selection.mesh = st.commit()
 	node_hover.mesh = st.commit()
@@ -69,6 +69,7 @@ func update_selection():
 	if GameState.selection:
 		node_selection.visible = true
 		node_selection.translation = GameState.selection.global_transform.origin
+		node_selection.translation.y = 0.01
 	else:
 		node_selection.visible = false
 
@@ -76,6 +77,7 @@ func update_hover():
 	if GameState.hover:
 		node_hover.visible = true
 		node_hover.translation = GameState.hover.global_transform.origin
+		node_hover.translation.y = 0.01
 	else:
 		node_hover.visible = false
 

@@ -34,7 +34,7 @@ surfaces/0 = {
 }
 
 [node name="Planet" type="KinematicBody"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0 )
 input_ray_pickable = false
 collision_layer = 8
 collision_mask = 0

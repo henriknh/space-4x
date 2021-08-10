@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/asteroid_small.png-52a935011d53309d79d10e6ecc438623.stex"
+path="res://.import/60-602081_fog-png-transparent-images-transparent-cloud-png-clipart.png-0126f8632646de4f003b8918ffaab17d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/asteroid_small.png"
-dest_files=[ "res://.import/asteroid_small.png-52a935011d53309d79d10e6ecc438623.stex" ]
+source_file="res://assets/60-602081_fog-png-transparent-images-transparent-cloud-png-clipart.png"
+dest_files=[ "res://.import/60-602081_fog-png-transparent-images-transparent-cloud-png-clipart.png-0126f8632646de4f003b8918ffaab17d.stex" ]
 
 [params]
 
