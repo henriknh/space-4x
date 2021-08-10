@@ -56,10 +56,10 @@ func load_game() -> bool:
 		var node_data = parse_json(save_game.get_line())
 		if node_data.has('game_state'):
 			GameState.set_loaded_game_state(node_data['game_state'])
-		elif node_data['entity_type'] == Enums.entity_types.planet:
+		elif node_data['entity_type'] == Enums.entity_types.PLANET:
 			node_data_planets.append(node_data)
-		elif node_data['entity_type'] == Enums.entity_types.prop:
-			node_data_props.append(node_data)
+#		elif node_data['entity_type'] == Enums.entity_types.ASTEROID:
+#			node_data_props.append(node_data)
 		else:
 			node_data_ships.append(node_data)
 

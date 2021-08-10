@@ -15,6 +15,7 @@ var color: Color = Color(0,0,0,0)
 # Dyanamic variables
 var resource_titanium: int = 0 setget set_resource_titanium
 var resource_dust: int = 0 setget set_resource_dust
+var research: int = 0 setget set_research
 
 func _init(_corporation_id: int, _is_computer: bool) -> void:
 	corporation_id = _corporation_id
@@ -29,6 +30,12 @@ func set_resource_titanium(_resource_titanium):
 func set_resource_dust(_resource_dust):
 	resource_dust = _resource_dust
 	emit_signal("corporation_changed")
+
+func set_research(_research: int):
+	research = _research
 	
+func has_research(_research: int) -> bool:
+	return research & _research > 0
+
 func save():
 	return inst2dict(self)

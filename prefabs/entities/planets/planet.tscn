@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://prefabs/entities/planets/states/planet_idle.gd" type="Script" id=1]
 [ext_resource path="res://prefabs/entities/planets/planet.gd" type="Script" id=2]
@@ -12,7 +12,10 @@
 [ext_resource path="res://scripts/behavior_tree/behavior_tree.gd" type="Script" id=10]
 [ext_resource path="res://scripts/behavior_tree/composites/sequence.gd" type="Script" id=11]
 [ext_resource path="res://scripts/behavior_tree/composites/random_selector.gd" type="Script" id=12]
-[ext_resource path="res://scripts/behavior_tree/test_counter.gd" type="Script" id=13]
+[ext_resource path="res://scripts/behavior_tree/leafs/has_research.gd" type="Script" id=13]
+[ext_resource path="res://scripts/behavior_tree/leafs/has_resource.gd" type="Script" id=14]
+[ext_resource path="res://scripts/behavior_tree/decorators/invert.gd" type="Script" id=15]
+[ext_resource path="res://scripts/behavior_tree/leafs/set_state.gd" type="Script" id=16]
 
 [sub_resource type="SphereShape" id=1]
 
@@ -70,20 +73,31 @@ script = ExtResource( 10 )
 [node name="RandomSelector" type="Node" parent="BehaviorTree"]
 script = ExtResource( 12 )
 
-[node name="Sequence" type="Node" parent="BehaviorTree/RandomSelector"]
+[node name="ProduceShip" type="Node" parent="BehaviorTree/RandomSelector"]
 script = ExtResource( 11 )
 
-[node name="ACounter1" type="Node" parent="BehaviorTree/RandomSelector/Sequence"]
-script = ExtResource( 13 )
+[node name="HasResource" type="Node" parent="BehaviorTree/RandomSelector/ProduceShip"]
+script = ExtResource( 14 )
+produce_type = 2
 
-[node name="ACounter2" type="Node" parent="BehaviorTree/RandomSelector/Sequence"]
-script = ExtResource( 13 )
+[node name="SetState" type="Node" parent="BehaviorTree/RandomSelector/ProduceShip"]
+script = ExtResource( 16 )
+state_path = NodePath("../../../../States/ProduceShip")
 
-[node name="RandomSelector" type="Node" parent="BehaviorTree/RandomSelector"]
-script = ExtResource( 12 )
+[node name="ResearchTurret" type="Node" parent="BehaviorTree/RandomSelector"]
+script = ExtResource( 11 )
 
-[node name="BCounter1" type="Node" parent="BehaviorTree/RandomSelector/RandomSelector"]
-script = ExtResource( 13 )
+[node name="HasResource" type="Node" parent="BehaviorTree/RandomSelector/ResearchTurret"]
+script = ExtResource( 14 )
+research_type = 64
 
-[node name="BCounter2" type="Node" parent="BehaviorTree/RandomSelector/RandomSelector"]
+[node name="Invert" type="Node" parent="BehaviorTree/RandomSelector/ResearchTurret"]
+script = ExtResource( 15 )
+
+[node name="HasResearch" type="Node" parent="BehaviorTree/RandomSelector/ResearchTurret/Invert"]
 script = ExtResource( 13 )
+research = 64
+
+[node name="SetState" type="Node" parent="BehaviorTree/RandomSelector/ResearchTurret"]
+script = ExtResource( 16 )
+state_path = NodePath("../../../../States/BuildTurret")

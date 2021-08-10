@@ -22,7 +22,7 @@ func exit():
 	
 func update(_delta):
 	if host.target:
-		return on_target_found_state
+		return get_node(on_target_found_state)
 
 func calc_area():
 	

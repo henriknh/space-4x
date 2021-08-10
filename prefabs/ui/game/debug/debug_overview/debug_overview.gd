@@ -23,7 +23,7 @@ func _ready():
 	
 func _update_ui():
 	node_list.clear()
-	node_list.max_columns = 10
+	node_list.max_columns = 11
 	node_list.fixed_icon_size = Vector2(24, 24)
 	
 	# Icon
@@ -38,10 +38,12 @@ func _update_ui():
 	# Planets
 	node_list.add_icon_item(texture_planet, false)
 	# Ships
-	var texture_ship_combat = texture_ship.duplicate()
-	node_list.add_icon_item(texture_ship_combat, false)
 	var texture_ship_explorer = texture_ship.duplicate()
 	node_list.add_icon_item(texture_ship_explorer, false)
+	var texture_ship_fighter = texture_ship.duplicate()
+	node_list.add_icon_item(texture_ship_fighter, false)
+	var texture_ship_carrier = texture_ship.duplicate()
+	node_list.add_icon_item(texture_ship_carrier, false)
 	var texture_ship_miner = texture_ship.duplicate()
 	node_list.add_icon_item(texture_ship_miner, false)
 	
@@ -84,20 +86,23 @@ func _update_ui():
 		
 		# Ships
 		
-		var combat = 0
 		var explorer = 0
+		var fighter = 0
+		var carrier = 0
 		var miner = 0
 		for ship in get_tree().get_nodes_in_group("Ship"):
 			if ship.corporation_id == corporation.corporation_id:
-				match ship.ship_type:
-					Enums.ship_types.combat:
-						combat += 1
-					Enums.ship_types.explorer:
-						explorer += 1
-					Enums.ship_types.miner:
-						miner += 1
-		node_list.add_item(combat as String, null, false)
+				if ship is Explorer:
+					explorer += 1
+				elif ship is Fighter:
+					fighter += 1
+				elif ship is Carrier:
+					carrier += 1
+				elif ship is Miner:
+					miner += 1
 		node_list.add_item(explorer as String, null, false)
+		node_list.add_item(fighter as String, null, false)
+		node_list.add_item(carrier as String, null, false)
 		node_list.add_item(miner as String, null, false)
 		
 		

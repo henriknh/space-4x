@@ -12,8 +12,8 @@ const CAMERA_ZOOM_STEP = 1.1
 # General
 const COMPUTER_COUNT = {
 	Enums.world_size.small: {
-		'min': 3, 
-		'max': 3, 
+		'min': 1, 
+		'max': 1, 
 	},
 	Enums.world_size.medium: {
 		'min': 4, 
@@ -64,18 +64,18 @@ const GALAXY_GAP_PLANET_SYSTEMS = {
 const PLANET_SYSTEM_RADIUS = {
 	Enums.world_size.small: {
 		'gap': 3,
-		'min': 6,
-		'max': 8
+		'min': 10,
+		'max': 12
 	},
 	Enums.world_size.medium: {
 		'gap': 4,
-		'min': 10, 
-		'max': 12, 
+		'min': 14, 
+		'max': 16, 
 	},
 	Enums.world_size.large: {
 		'gap': 5,
-		'min': 14, 
-		'max': 16, 
+		'min': 18, 
+		'max': 20, 
 	}
 }
 const PLANET_SYSTEM_PLANETS = {
@@ -127,11 +127,3 @@ const SHIP_SPEED_COMBAT = 200
 const SHIP_SPEED_EXPLORER = 150
 const SHIP_SPEED_MINER = 100
 const SHIP_SPEED_IDLE = 100
-
-# Research
-const RESEARCH_SHIP_DMG_1 = pow(2, 0)
-const RESEARCH_SHIP_DMG_2 = pow(2, 1)
-const RESEARCH_SHIP_DMG_3 = pow(2, 2)
-const RESEARCH_SHIP_HEALTH_1 = pow(2, 3)
-const RESEARCH_SHIP_HEALTH_2 = pow(2, 4)
-const RESEARCH_SHIP_HEALTH_3 = pow(2, 5)

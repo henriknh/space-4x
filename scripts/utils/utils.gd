@@ -278,3 +278,21 @@ func get_type(entity: Entity):
 		breakpoint
 	
 	return entity_type
+
+func get_ship_type(ship: Ship) -> bool:
+	var ship_type = null
+	if ship is Explorer:
+		ship_type = Enums.ship_types.explorer
+	if ship is Fighter:
+		ship_type = Enums.ship_types.fighter
+	if ship is Carrier:
+		ship_type = Enums.ship_types.carrier
+	if ship is Miner:
+		ship_type = Enums.ship_types.miner
+	
+	if not ship_type:
+		breakpoint
+	
+	return ship_type
+	
+	

@@ -17,7 +17,6 @@ func update(delta):
 			host.translation = path[1]
 			ui_progress = 0
 		else:
-			print('Error: Move did not have a path')
 			return true
 	
 	return 

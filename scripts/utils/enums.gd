@@ -61,10 +61,12 @@ const ai_states = {
 }
 
 # Entity 3000 - 3999
-const entity_types = {
-	'ship': 3000,
-	'planet': 3001,
-	'prop': 3003
+enum entity_types {
+	NONE = 3000,
+	SHIP = 3001,
+	PLANET = 3002,
+	ASTEROID = 3003,
+	NEBULA = 3004,
 }
 
 # Objects 4000 - 4999
@@ -116,7 +118,38 @@ const ship_states = {
 	'moving': 6101,
 }
 
-# Research 7000 - 7999
-const research_types = {
-	'dummy': 7000
+# Research
+enum research_types {
+	NONE = 			0
+	SHIP_DMG_1 = 	int(pow(2, 0)),
+	SHIP_DMG_2 = 	int(pow(2, 1)),
+	SHIP_DMG_3 = 	int(pow(2, 2)),
+	SHIP_HEALTH_1 = int(pow(2, 3)),
+	SHIP_HEALTH_2 = int(pow(2, 4)),
+	SHIP_HEALTH_3 = int(pow(2, 5)),
+	TURRET = 		int(pow(2, 6)),
+}
+
+const research_types_cost = {
+	research_types.SHIP_DMG_1: 5,
+	research_types.SHIP_DMG_2: 20,
+	research_types.SHIP_DMG_3: 50,
+	research_types.SHIP_HEALTH_1: 5,
+	research_types.SHIP_HEALTH_2: 20,
+	research_types.SHIP_HEALTH_3: 50,
+	research_types.TURRET: 25
+}
+
+# Cost
+enum produce_types {
+	NONE = 			0
+	SHIP = 			int(pow(2, 0)),
+	CONVERT_SHIP = 	int(pow(2, 1)),
+	PLANET_TURRET = int(pow(2, 2)),
+}
+
+const produce_types_cost = {
+	produce_types.SHIP: 5,
+	produce_types.CONVERT_SHIP: 5,
+	produce_types.PLANET_TURRET: 5,
 }

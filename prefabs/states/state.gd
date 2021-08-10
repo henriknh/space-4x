@@ -46,7 +46,7 @@ func ui_trigger():
 	if state_machine.state == self:
 		state_machine.set_state(null)
 	else:
-		state_machine.set_state(state_machine.get_path_to(self))
+		state_machine.set_state(self)
 	return null
 	
 func ui_update():

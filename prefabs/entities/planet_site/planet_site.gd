@@ -33,10 +33,11 @@ func _ready():
 	# Generate resource entity
 	var resource_tile = _get_empty_entity_tile()
 	if resource_tile:
-		if Random.randi() % 2 == 0:
-			resource_tile.add_child(Instancer.asteroid(resource_tile))
-		else:
-			resource_tile.add_child(Instancer.nebula(resource_tile))
+		resource_tile.add_child(Instancer.asteroid(resource_tile))
+		
+	resource_tile = _get_empty_entity_tile()
+	if resource_tile:
+		resource_tile.add_child(Instancer.nebula(resource_tile))
 	
 	# Generate site mesh
 	var st = SurfaceTool.new()
@@ -51,13 +52,14 @@ func _ready():
 			var p2 = Vector3(polygon[i + 1].x, 0, polygon[i + 1].y)
 			
 			var neighbor = tile.get_neighbor_in_dir(Consts.TILE_DIR_ALL[i])
-			
+
 			if not neighbor or not neighbor in tiles:
+				pass
 
 				# First triangle
-				st.add_vertex(p2)
-				st.add_vertex(p1 + Vector3.DOWN)
-				st.add_vertex(p2 + Vector3.DOWN)
+#				st.add_vertex(p2)
+#				st.add_vertex(p1 + Vector3.DOWN)
+#				st.add_vertex(p2 + Vector3.DOWN)
 				
 				# First triangle (inside)
 #				st.add_vertex(p2)
@@ -65,9 +67,9 @@ func _ready():
 #				st.add_vertex(p1 + Vector3.DOWN)
 
 				# Second triangle
-				st.add_vertex(p1)
-				st.add_vertex(p1 + Vector3.DOWN)
-				st.add_vertex(p2)
+#				st.add_vertex(p1)
+#				st.add_vertex(p1 + Vector3.DOWN)
+#				st.add_vertex(p2)
 				
 				# Second triangle (inside)
 #				st.add_vertex(p1)
@@ -78,7 +80,7 @@ func _ready():
 			st.add_vertex(p0)
 			st.add_vertex(p1)
 			st.add_vertex(p2)
-	
+
 	node_mesh.mesh = st.commit()
 	node_mesh.material_override = MaterialLibrary.get_material(planet.corporation_id, false)
 	
@@ -93,7 +95,16 @@ func update_overview():
 	node_mesh.visible = not (GameState.planet_system == null and self.planet.corporation_id == 0)
 
 func _get_empty_entity_tile() -> Tile:
-	for tile in tiles:
+	var _tiles = tiles
+	_tiles.shuffle()
+	for tile in _tiles:
 		if not tile.entity:
 			return tile
 	return null
+
+class MyCustomSorter:
+	var center = Vector2.ZERO
+	func sort_ascending(a, b):
+		if center.angle_to_point(a) < center.angle_to_point(b):
+			return true
+		return false

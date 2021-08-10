@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://assets/icons/ship.png" type="Texture" id=1]
 [ext_resource path="res://prefabs/entities/ships/miner.gd" type="Script" id=2]
@@ -11,6 +11,15 @@
 [ext_resource path="res://prefabs/entities/ships/states/merge.gd" type="Script" id=9]
 [ext_resource path="res://prefabs/entities/ships/states/convert_ship.gd" type="Script" id=10]
 [ext_resource path="res://prefabs/entities/ships/states/split.gd" type="Script" id=11]
+[ext_resource path="res://scripts/behavior_tree/behavior_tree.gd" type="Script" id=12]
+[ext_resource path="res://scripts/behavior_tree/composites/sequence.gd" type="Script" id=13]
+[ext_resource path="res://prefabs/entities/ships/behavior_leafs/mine.gd" type="Script" id=14]
+[ext_resource path="res://scripts/behavior_tree/leafs/target_closest_in_group.gd" type="Script" id=15]
+[ext_resource path="res://scripts/behavior_tree/leafs/set_state.gd" type="Script" id=16]
+[ext_resource path="res://prefabs/entities/ships/behavior_leafs/can_mine.gd" type="Script" id=17]
+[ext_resource path="res://scripts/behavior_tree/leafs/parent_in_group.gd" type="Script" id=18]
+[ext_resource path="res://scripts/behavior_tree/decorators/invert.gd" type="Script" id=19]
+[ext_resource path="res://prefabs/entities/ships/behavior_leafs/deliver.gd" type="Script" id=20]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.53, 0.135, 0.266 )
@@ -70,3 +79,54 @@ texture = ExtResource( 5 )
 script = ExtResource( 10 )
 ship_type = 6003
 texture = ExtResource( 7 )
+
+[node name="BehaviorTree" type="Node" parent="."]
+script = ExtResource( 12 )
+
+[node name="Sequence" type="Node" parent="BehaviorTree"]
+script = ExtResource( 13 )
+
+[node name="CanMine" type="Node" parent="BehaviorTree/Sequence"]
+script = ExtResource( 17 )
+
+[node name="ParentInGroup" type="Node" parent="BehaviorTree/Sequence"]
+script = ExtResource( 18 )
+group_names = [ "Asteroid", "Nebula" ]
+
+[node name="Mine" type="Node" parent="BehaviorTree/Sequence"]
+script = ExtResource( 14 )
+
+[node name="Sequence2" type="Node" parent="BehaviorTree"]
+script = ExtResource( 13 )
+
+[node name="CanMine" type="Node" parent="BehaviorTree/Sequence2"]
+script = ExtResource( 17 )
+
+[node name="TargetClosestInGroup" type="Node" parent="BehaviorTree/Sequence2"]
+script = ExtResource( 15 )
+group_names = [ "Asteroid", "Nebula" ]
+allow_neutral = true
+
+[node name="SetState" type="Node" parent="BehaviorTree/Sequence2"]
+script = ExtResource( 16 )
+state_path = NodePath("../../../States/Move")
+
+[node name="Sequence3" type="Node" parent="BehaviorTree"]
+script = ExtResource( 13 )
+
+[node name="Invert" type="Node" parent="BehaviorTree/Sequence3"]
+script = ExtResource( 19 )
+
+[node name="CanMine" type="Node" parent="BehaviorTree/Sequence3/Invert"]
+script = ExtResource( 17 )
+
+[node name="TargetClosestInGroup" type="Node" parent="BehaviorTree/Sequence3"]
+script = ExtResource( 15 )
+group_names = [ "Planet" ]
+
+[node name="SetState" type="Node" parent="BehaviorTree/Sequence3"]
+script = ExtResource( 16 )
+state_path = NodePath("../../../States/Move")
+
+[node name="Deliver" type="Node" parent="BehaviorTree/Sequence3"]
+script = ExtResource( 20 )

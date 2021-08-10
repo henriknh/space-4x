@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/behavior_tree/behavior_tree.gd"
 }, {
+"base": "Task",
+"class": "CanMine",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/behavior_leafs/can_mine.gd"
+}, {
 "base": "Ship",
 "class": "Carrier",
 "language": "GDScript",
@@ -42,7 +47,12 @@ _global_script_classes=[ {
 "base": "Task",
 "class": "Counter",
 "language": "GDScript",
-"path": "res://scripts/behavior_tree/test_counter.gd"
+"path": "res://scripts/behavior_tree/leafs/test_counter.gd"
+}, {
+"base": "Task",
+"class": "Deliver",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/behavior_leafs/deliver.gd"
 }, {
 "base": "Spatial",
 "class": "Entity",
@@ -70,6 +80,16 @@ _global_script_classes=[ {
 "path": "res://scenes/game/game.gd"
 }, {
 "base": "Task",
+"class": "HasResearch",
+"language": "GDScript",
+"path": "res://scripts/behavior_tree/leafs/has_research.gd"
+}, {
+"base": "Task",
+"class": "HasResource",
+"language": "GDScript",
+"path": "res://scripts/behavior_tree/leafs/has_resource.gd"
+}, {
+"base": "Task",
 "class": "Invert",
 "language": "GDScript",
 "path": "res://scripts/behavior_tree/decorators/invert.gd"
@@ -78,6 +98,11 @@ _global_script_classes=[ {
 "class": "Leaf",
 "language": "GDScript",
 "path": "res://scripts/behavior_tree/leaf.gd"
+}, {
+"base": "Task",
+"class": "Mine",
+"language": "GDScript",
+"path": "res://prefabs/entities/ships/behavior_leafs/mine.gd"
 }, {
 "base": "Ship",
 "class": "Miner",
@@ -88,6 +113,11 @@ _global_script_classes=[ {
 "class": "Nebula",
 "language": "GDScript",
 "path": "res://prefabs/entities/nebula/nebula.gd"
+}, {
+"base": "Task",
+"class": "ParentInGroup",
+"language": "GDScript",
+"path": "res://scripts/behavior_tree/leafs/parent_in_group.gd"
 }, {
 "base": "Entity",
 "class": "Planet",
@@ -129,15 +159,30 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/behavior_tree/composites/sequence.gd"
 }, {
+"base": "Task",
+"class": "SetState",
+"language": "GDScript",
+"path": "res://scripts/behavior_tree/leafs/set_state.gd"
+}, {
 "base": "Entity",
 "class": "Ship",
 "language": "GDScript",
 "path": "res://prefabs/entities/ships/ship.gd"
 }, {
+"base": "Task",
+"class": "ShipTypeCount",
+"language": "GDScript",
+"path": "res://scripts/behavior_tree/leafs/ship_type_count.gd"
+}, {
 "base": "Node",
 "class": "State",
 "language": "GDScript",
 "path": "res://prefabs/states/state.gd"
+}, {
+"base": "Task",
+"class": "TargetClosestInGroup",
+"language": "GDScript",
+"path": "res://scripts/behavior_tree/leafs/target_closest_in_group.gd"
 }, {
 "base": "Node",
 "class": "Task",
@@ -164,18 +209,24 @@ _global_script_class_icons={
 "AlwaysFail": "",
 "Asteroid": "",
 "BehaviorTree": "",
+"CanMine": "",
 "Carrier": "",
 "Corporation": "",
 "Counter": "",
+"Deliver": "",
 "Entity": "",
 "Explorer": "",
 "Fighter": "",
 "Galaxy": "",
 "Game": "",
+"HasResearch": "",
+"HasResource": "",
 "Invert": "",
 "Leaf": "",
+"Mine": "",
 "Miner": "",
 "Nebula": "",
+"ParentInGroup": "",
 "Planet": "",
 "PlanetSite": "",
 "PlanetSystem": "",
@@ -184,8 +235,11 @@ _global_script_class_icons={
 "Repeat": "",
 "ScanForEnemiesState": "",
 "Sequence": "",
+"SetState": "",
 "Ship": "",
+"ShipTypeCount": "",
 "State": "",
+"TargetClosestInGroup": "",
 "Task": "",
 "Tile": "",
 "Turret": "",
@@ -214,7 +268,6 @@ Nav="*res://scripts/utils/navigation.gd"
 Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
 Corporations="*res://scripts/utils/corporations.gd"
-AI="*res://scripts/ai/ai.gd"
 Boid="*res://scripts/entities/boid.gd"
 EventQueue="*res://scripts/utils/event_queue.gd"
 FogOfWar="*res://scripts/fog_of_war.gd"

@@ -1,6 +1,17 @@
 extends State
 
-export var speed = 50
+export var speed = 20
+
+var completed = false
+
+func enter():
+	ui_progress = 0
+	completed = false
+	get_owner().get_corporation().resource_titanium -= Enums.produce_types_cost[Enums.produce_types.SHIP]
+
+func exit():
+	if not completed:
+		get_owner().get_corporation().resource_titanium += Enums.produce_types_cost[Enums.produce_types.SHIP]
 
 func update(delta):
 	ui_progress += delta * speed
@@ -19,6 +30,8 @@ func update(delta):
 				"corporation_id": host.corporation_id
 			}
 			get_node('/root/GameScene').add_child(Instancer.ship(Enums.ship_types.explorer, null, override))
+			
+			completed = true
 		
 		return true
 	

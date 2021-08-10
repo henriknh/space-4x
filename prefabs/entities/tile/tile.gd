@@ -90,7 +90,7 @@ func _on_input_event(_camera, event, _click_position, _click_normal, _shape_idx)
 			for state in states_node.get_children():
 				if state.name == "Move":
 					GameState.selection.target = self
-					states_node.set_state("Move" as NodePath)
+					states_node.set_state(states_node.get_node("Move" as NodePath))
 
 func set_entity(_entity: Entity):
 	entity = _entity
