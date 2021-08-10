@@ -268,11 +268,11 @@ Nav="*res://scripts/utils/navigation.gd"
 Settings="*res://scripts/utils/settings.gd"
 MenuState="*res://scripts/utils/menu_state.gd"
 Corporations="*res://scripts/utils/corporations.gd"
-AI="*res://scripts/ai/ai.gd"
 Boid="*res://scripts/entities/boid.gd"
 EventQueue="*res://scripts/utils/event_queue.gd"
 FogOfWar="*res://scripts/fog_of_war.gd"
 MaterialLibrary="*res://scripts/utils/material_library.gd"
+AI="*res://scripts/ai/ai.gd"
 
 [display]
 

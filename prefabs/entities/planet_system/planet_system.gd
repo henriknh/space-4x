@@ -92,9 +92,9 @@ func _generate_sites():
 		curr_site = (curr_site + 1) % planet_count
 	
 	for planet_site in planet_sites:
-		add_child(planet_site)
 		for tile in planet_site.tiles:
 			planet_site.add_child(tile)
+		add_child(planet_site)
 
 func get_neighbor_in_dir(coords: Vector2) -> PlanetSystem:
 	for neighbor in neighbors:

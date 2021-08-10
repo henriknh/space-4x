@@ -12,31 +12,34 @@ func _ready():
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
 	var polygon = Tile.generate_polygon()
+	var polygon_offset = Geometry.offset_polygon_2d(polygon, -1, Geometry.JOIN_MITER)[0]
+	polygon = Geometry.offset_polygon_2d(polygon, 0, Geometry.JOIN_MITER)[0]
 	
-	var p0 = Vector3.ZERO
-	for i in range(0, polygon.size() - 1):
-		var p1 = Vector3(polygon[i].x, 0, polygon[i].y)
-		var p2 = Vector3(polygon[i + 1].x, 0, polygon[i + 1].y)
-		# Top
-		st.add_vertex(p0)
-		st.add_vertex(p1)
-		st.add_vertex(p2)
+	print(polygon)
+	print(polygon_offset)
+	
+	for i in range(polygon.size()):
+		var j = (i + 1) % polygon.size()
 		
-		# First side
-		st.add_vertex(p2)
-		st.add_vertex(p1 + Vector3.DOWN)
-		st.add_vertex(p2 + Vector3.DOWN)
-
-		# Second side
-		st.add_vertex(p1)
-		st.add_vertex(p1 + Vector3.DOWN)
-		st.add_vertex(p2)
-
-		# Bottom
-		st.add_vertex(p0 + Vector3.DOWN)
-		st.add_vertex(p1 + Vector3.DOWN)
-		st.add_vertex(p2 + Vector3.DOWN)
+		# First triangle (CCW)
+		# i1 - i2
+		# |   /
+		# |  /
+		# j1
+		st.add_vertex(Utils.v2_to_v3(polygon[i], -0.99))
+		st.add_vertex(Utils.v2_to_v3(polygon[j], -0.99))
+		st.add_vertex(Utils.v2_to_v3(polygon_offset[i], -0.99))
 		
+		
+		# Second triangle  (CCW)
+		#      i2
+		#   /  |
+		#  /   |
+		# j1 - j2
+		st.add_vertex(Utils.v2_to_v3(polygon_offset[i], -0.99))
+		st.add_vertex(Utils.v2_to_v3(polygon[j], -0.99))
+		st.add_vertex(Utils.v2_to_v3(polygon_offset[j], -0.99))
+	
 	node_selection.mesh = st.commit()
 	node_hover.mesh = st.commit()
 	
@@ -48,7 +51,7 @@ func _ready():
 	material_selection.flags_do_not_receive_shadows = true
 	material_selection.flags_disable_ambient_light = true
 	material_selection.flags_unshaded = true
-	material_selection.albedo_color = Color(1,1,1,0.2)
+	material_selection.albedo_color = Color(1,1,1,1)
 	node_selection.material_override = material_selection
 	
 	var material_hover = SpatialMaterial.new()
@@ -56,7 +59,7 @@ func _ready():
 	material_hover.flags_do_not_receive_shadows = true
 	material_hover.flags_disable_ambient_light = true
 	material_hover.flags_unshaded = true
-	material_hover.albedo_color = Color(1,1,1,0.1)
+	material_hover.albedo_color = Color(1,1,1,0.5)
 	node_hover.material_override = material_hover
 	
 	GameState.connect("selection_changed", self, "update_selection")

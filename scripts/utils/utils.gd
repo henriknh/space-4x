@@ -295,4 +295,9 @@ func get_ship_type(ship: Ship) -> bool:
 	
 	return ship_type
 	
+func v2_to_v3(v2: Vector2, y: float = 0) -> Vector3:
+	return Vector3(v2.x, y, v2.y)
+	
+func v3_to_v2(v3: Vector3) -> Vector2:
+	return Vector2(v3.x, v3.z)
 	
