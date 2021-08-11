@@ -3,6 +3,7 @@
 [ext_resource path="res://prefabs/ui/game/debug/debug.gd" type="Script" id=1]
 [ext_resource path="res://assets/icons/godot_icon.png" type="Texture" id=2]
 
+
 [node name="Debug" type="VBoxContainer"]
 margin_top = 42.0
 margin_right = 32.0

@@ -34,11 +34,8 @@ func update(delta):
 	return true
 	
 
-func ui_data():
-	return {
-		"disabled": host.ship_count < 2,
-		"texture": preload("res://assets/icons/split.png")
-	}
+func ui_disabled() -> bool:
+	return host.ship_count < 2
 
 func _parent_changed():
 	if host.parent:

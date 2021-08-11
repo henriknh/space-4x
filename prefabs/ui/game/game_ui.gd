@@ -87,7 +87,7 @@ func update_selection_ui():
 	selection_overlay.visible = GameState.selection != null
 
 func _add_state(states, state):
-	var can_add = state.ui_data().get("visible") != false
+	var can_add = state.ui_icon and state.ui_visible()
 	
 	if state.state_ui_unique_id != null:
 		for s in states:

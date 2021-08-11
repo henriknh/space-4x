@@ -1,10 +1,10 @@
 extends Control
 
-const texture_ai_difficulty = preload("res://assets/icons/chart-bar.png")
-const texture_ai_friendliness = preload("res://assets/icons/robot-happy.png")
-const texture_ai_explorer = preload("res://assets/icons/compass.png")
-const texture_resource_titanium = preload("res://assets/icons/cube.png")
-const texture_resource_dust = preload("res://assets/icons/cloud.png")
+const texture_ai_difficulty = preload("res://assets/icons/debug_ai_difficulty.png")
+const texture_ai_friendliness = preload("res://assets/icons/debug_ai_friendliness.png")
+const texture_ai_explorer = preload("res://assets/icons/debug_ai_explorer.png")
+const texture_resource_titanium = preload("res://assets/icons/titanium.png")
+const texture_resource_dust = preload("res://assets/icons/dust.png")
 const texture_ship = preload("res://assets/icons/ship.png")
 const texture_planet = preload("res://assets/icons/planet.png")
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://prefabs/entities/ships/carrier.gd" type="Script" id=1]
-[ext_resource path="res://assets/icons/ammunition.png" type="Texture" id=2]
+[ext_resource path="res://assets/icons/carrier.png" type="Texture" id=2]
 [ext_resource path="res://prefabs/entities/ships/states/move.gd" type="Script" id=3]
 [ext_resource path="res://prefabs/weapon/projectiles/laser.tscn" type="PackedScene" id=4]
 [ext_resource path="res://prefabs/states/shoot.gd" type="Script" id=5]

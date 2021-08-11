@@ -120,14 +120,17 @@ const ship_states = {
 
 # Research
 enum research_types {
-	NONE = 			0
-	SHIP_DMG_1 = 	int(pow(2, 0)),
-	SHIP_DMG_2 = 	int(pow(2, 1)),
-	SHIP_DMG_3 = 	int(pow(2, 2)),
-	SHIP_HEALTH_1 = int(pow(2, 3)),
-	SHIP_HEALTH_2 = int(pow(2, 4)),
-	SHIP_HEALTH_3 = int(pow(2, 5)),
-	TURRET = 		int(pow(2, 6)),
+	NONE 				= 0
+	SHIP_DMG_1 			= int(pow(2, 0)),
+	SHIP_DMG_2 			= int(pow(2, 1)),
+	SHIP_DMG_3 			= int(pow(2, 2)),
+	SHIP_HEALTH_1 		= int(pow(2, 3)),
+	SHIP_HEALTH_2 		= int(pow(2, 4)),
+	SHIP_HEALTH_3 		= int(pow(2, 5)),
+	SHIP_SPEED 			= int(pow(2, 6)),
+	SHIP_OVER_DRIVE 	= int(pow(2, 7)),
+	SHIP_WARP_DRIVE 	= int(pow(2, 8)),
+	TURRET 				= int(pow(2, 9)),
 }
 
 const research_types_cost = {
@@ -137,10 +140,13 @@ const research_types_cost = {
 	research_types.SHIP_HEALTH_1: 5,
 	research_types.SHIP_HEALTH_2: 20,
 	research_types.SHIP_HEALTH_3: 50,
+	research_types.SHIP_SPEED: 10,
+	research_types.SHIP_OVER_DRIVE: 20,
+	research_types.SHIP_WARP_DRIVE: 50,
 	research_types.TURRET: 25
 }
 
-# Cost
+# Produce
 enum produce_types {
 	NONE = 			0
 	SHIP = 			int(pow(2, 0)),

@@ -1,9 +1,10 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/font_normal.tres" type="DynamicFont" id=1]
-[ext_resource path="res://assets/icons/ship.png" type="Texture" id=2]
-[ext_resource path="res://assets/icons/plus.png" type="Texture" id=3]
+[ext_resource path="res://assets/icons/explorer.png" type="Texture" id=2]
+[ext_resource path="res://assets/icons/unused/plus.png" type="Texture" id=3]
 [ext_resource path="res://prefabs/entities/tile/tile_overlay/tile_overlay.gd" type="Script" id=4]
+
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Sprite3D/Viewport")

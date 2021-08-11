@@ -6,6 +6,7 @@ var parent: Entity setget set_parent
 var enemy: Entity
 signal parent_changed
 signal ship_arrive
+var is_over_drive = false
 
 var ship_count: int = 1 setget _set_ship_count
 

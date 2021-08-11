@@ -15,11 +15,8 @@ func update(_delta):
 	
 	return true
 
-func ui_data():
-	return {
-		"disabled": _get_adjacent_ships().size() < 2,
-		"texture": preload("res://assets/icons/merge.png")
-	}
+func ui_disabled() -> bool:
+	return _get_adjacent_ships().size() < 2
 
 func _get_adjacent_ships() -> Array:
 	var adjacent_ships = []

@@ -1,7 +1,5 @@
 extends State
 
-export var speed: float = 100
-
 func exit():
 	host.target = null
 	
@@ -9,9 +7,9 @@ func update(delta):
 	if host.parent == host.target:
 		return true
 	
-	ui_progress += delta * speed
+	ui_progress += (delta / process_speed)
 	
-	if ui_progress > 100:
+	if ui_progress >= 1:
 		var path = Nav.get_nav_path(host, host.target)
 		if path.size() > 1:
 			host.translation = path[1]

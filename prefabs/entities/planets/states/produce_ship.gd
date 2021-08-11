@@ -1,7 +1,5 @@
 extends State
 
-export var speed = 20
-
 var completed = false
 
 func enter():
@@ -14,9 +12,9 @@ func exit():
 		get_owner().get_corporation().resource_titanium += Enums.produce_types_cost[Enums.produce_types.SHIP]
 
 func update(delta):
-	ui_progress += delta * speed
+	ui_progress += (delta / process_speed)
 	
-	if ui_progress >= 100:
+	if ui_progress >= 1:
 		var spawn_tile = null
 		for neighbor in host.get_parent().neighbors:
 			if host.corporation_id == neighbor.corporation_id:
@@ -36,8 +34,3 @@ func update(delta):
 		return true
 	
 	return
-
-func ui_data():
-	return {
-		"texture": preload("res://assets/icons/ship.png")
-	}
