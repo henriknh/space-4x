@@ -30,7 +30,7 @@ func get_selected_tiles_entities():
 	if selected_tile:
 		var entities = []
 		
-		if selected_tile.entity and selected_tile.entity.corporation_id == Consts.PLAYER_CORPORATION:
+		if selected_tile.entity:
 			entities.append(selected_tile.entity)
 		
 		for ship in selected_tile.ships:

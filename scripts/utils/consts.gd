@@ -12,8 +12,8 @@ const CAMERA_ZOOM_STEP = 1.1
 # General
 const COMPUTER_COUNT = {
 	Enums.world_size.small: {
-		'min': 0, 
-		'max': 0, 
+		'min': 1, 
+		'max': 1, 
 	},
 	Enums.world_size.medium: {
 		'min': 4, 

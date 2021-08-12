@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://prefabs/entities/asteroid/asteroid_cluster.gd" type="Script" id=1]
+[ext_resource path="res://prefabs/entities/asteroid/asteroid_group.gd" type="Script" id=1]
 
 [sub_resource type="Curve3D" id=1]
 _data = {
@@ -8,7 +8,7 @@ _data = {
 "tilts": PoolRealArray( 0, 0, 0, 0, 0 )
 }
 
-[node name="AsteroidCluster" type="Spatial"]
+[node name="AsteroidGroup" type="Spatial"]
 script = ExtResource( 1 )
 
 [node name="Path" type="Path" parent="."]

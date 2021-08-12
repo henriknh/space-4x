@@ -30,22 +30,6 @@ func _ready():
 	planet = Instancer.planet(planet_tile)
 	planet_tile.add_child(planet)
 	
-	# Generate resource entity
-	
-	var asteroid_cluster = preload("res://prefabs/entities/asteroid/asteroid_cluster.tscn").instance()
-	asteroid_cluster.tiles = Utils.get_tile_positions_at_n_distance(1, planet_tile.global_transform.origin)
-	asteroid_cluster.translation = planet_tile.translation
-	planet_tile.add_child(asteroid_cluster)
-		
-	var nebula_tile = _get_empty_entity_tile()
-	if nebula_tile:
-		nebula_tile.add_child(Instancer.nebula(nebula_tile))
-
-		for neighbor in nebula_tile.neighbors:
-			if not neighbor.entity:
-				neighbor.add_child(Instancer.nebula(neighbor))
-		
-	
 	planet.connect("entity_changed", self, "update_border_color")
 	update_border_color()
 	GameState.connect("planet_system_changed", self, "update_overview")

@@ -2,8 +2,6 @@ extends State
 
 export(PackedScene) var packed_scene
 
-var ui_texture
-
 func _ready():
 	if not packed_scene:
 		breakpoint

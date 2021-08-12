@@ -321,3 +321,7 @@ func get_tile_positions_at_n_distance(n: int, offset: Vector3 = Vector3.ZERO):
 				tile_positions.append(intitial_position + Vector3(width * k * cos(angle_rad_child), 0, width * k * sin(angle_rad_child)) + offset)
 	
 	return tile_positions
+
+
+
+

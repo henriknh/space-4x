@@ -27,7 +27,7 @@ func _physics_process(_delta):
 	node_fps.text = Engine.get_frames_per_second() as String
 
 func _process(_delta):
-	if is_instance_valid(GameState.selection) and GameState.selection.corporation_id == Consts.PLAYER_CORPORATION:
+	if is_instance_valid(GameState.selection):
 		var screen_pos = camera.unproject_position(GameState.selected_tile.global_transform.origin) - user_actions.rect_size / 2
 		selection_overlay.rect_position = screen_pos
 

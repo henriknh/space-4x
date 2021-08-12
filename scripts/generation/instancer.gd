@@ -13,6 +13,8 @@ var prefab_ship_fighter = preload("res://prefabs/entities/ships/fighter.tscn")
 var prefab_ship_carrier = preload("res://prefabs/entities/ships/carrier.tscn")
 var prefab_ship_miner = preload("res://prefabs/entities/ships/miner.tscn")
 
+var group_id_counter: int = 1
+
 func galaxy() -> Galaxy:
 	GameState.loading += 1
 	

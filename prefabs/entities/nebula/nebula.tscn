@@ -7,21 +7,18 @@
 
 [sub_resource type="CylinderShape" id=1]
 
-[sub_resource type="SpatialMaterial" id=2]
+[sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 flags_unshaded = true
-flags_vertex_lighting = true
-flags_do_not_receive_shadows = true
 vertex_color_use_as_albedo = true
-params_blend_mode = 1
 params_billboard_mode = 3
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
 albedo_texture = ExtResource( 3 )
 
-[sub_resource type="QuadMesh" id=3]
-material = SubResource( 2 )
+[sub_resource type="QuadMesh" id=2]
+material = SubResource( 3 )
 size = Vector2( 4, 4 )
 
 [node name="Nebula" type="KinematicBody"]
@@ -42,4 +39,4 @@ lifetime = 5.0
 speed_scale = 0.5
 randomness = 0.5
 process_material = ExtResource( 4 )
-draw_pass_1 = SubResource( 3 )
+draw_pass_1 = SubResource( 2 )
