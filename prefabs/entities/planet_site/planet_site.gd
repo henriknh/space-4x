@@ -31,17 +31,19 @@ func _ready():
 	planet_tile.add_child(planet)
 	
 	# Generate resource entity
-	var resource_tile = _get_empty_entity_tile()
-	if resource_tile:
-		resource_tile.add_child(Instancer.asteroid(resource_tile))
-		
-	resource_tile = _get_empty_entity_tile()
-	if resource_tile:
-		resource_tile.add_child(Instancer.nebula(resource_tile))
 	
-	for neighbor in resource_tile.neighbors:
-		if not neighbor.entity:
-			neighbor.add_child(Instancer.nebula(resource_tile))
+	var asteroid_cluster = preload("res://prefabs/entities/asteroid/asteroid_cluster.tscn").instance()
+	asteroid_cluster.tiles = Utils.get_tile_positions_at_n_distance(1, planet_tile.global_transform.origin)
+	asteroid_cluster.translation = planet_tile.translation
+	planet_tile.add_child(asteroid_cluster)
+		
+	var nebula_tile = _get_empty_entity_tile()
+	if nebula_tile:
+		nebula_tile.add_child(Instancer.nebula(nebula_tile))
+
+		for neighbor in nebula_tile.neighbors:
+			if not neighbor.entity:
+				neighbor.add_child(Instancer.nebula(neighbor))
 		
 	
 	planet.connect("entity_changed", self, "update_border_color")
@@ -52,10 +54,6 @@ func _ready():
 	call_deferred("_generate_border")
 
 func _generate_border():
-	
-	
-	
-	
 	# Calculate outer border
 	var fewest_neighbors = null
 	var fewest_neighbors_count = INF
@@ -115,8 +113,9 @@ func _generate_border():
 			if neighbor_has_point:
 				curr_tile = neighbor_has_point
 				break
-	var line_offset = Geometry.offset_polygon_2d(line, -1, Geometry.JOIN_MITER)[0]
 	line = Geometry.offset_polygon_2d(line, 0, Geometry.JOIN_MITER)[0]
+	var line_offset = Geometry.offset_polygon_2d(line, 1, Geometry.JOIN_MITER)[0]
+	line_offset = Geometry.offset_polygon_2d(line_offset, -2, Geometry.JOIN_MITER)[0]
 	
 	
 	var line_3d = []
@@ -126,12 +125,12 @@ func _generate_border():
 	for point in line_offset:
 		line_offset_3d.append(Vector3(point.x, 0, point.y))
 	
-
 	# Generate site mesh
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i in range(line_3d.size()):
 		var j = (i + 1) % line_3d.size()
+		
 		# First triangle (CCW)
 		# i1 - i2
 		# |   /

@@ -12,8 +12,8 @@ const CAMERA_ZOOM_STEP = 1.1
 # General
 const COMPUTER_COUNT = {
 	Enums.world_size.small: {
-		'min': 1, 
-		'max': 1, 
+		'min': 0, 
+		'max': 0, 
 	},
 	Enums.world_size.medium: {
 		'min': 4, 
@@ -80,8 +80,8 @@ const PLANET_SYSTEM_RADIUS = {
 }
 const PLANET_SYSTEM_PLANETS = {
 	Enums.world_size.small: {
-		'min': 2, 
-		'max': 2, 
+		'min': 13, 
+		'max': 13, 
 	},
 	Enums.world_size.medium: {
 		'min': 8, 

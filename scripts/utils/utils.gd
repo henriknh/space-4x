@@ -300,4 +300,24 @@ func v2_to_v3(v2: Vector2, y: float = 0) -> Vector3:
 	
 func v3_to_v2(v3: Vector3) -> Vector2:
 	return Vector2(v3.x, v3.z)
+
+func get_tile_positions_at_n_distance(n: int, offset: Vector3 = Vector3.ZERO):
+	var width = Consts.TILE_SIZE * sqrt(3)
+	var _height = Consts.TILE_SIZE * 2
 	
+	var tile_positions = []
+	if n == 0:
+		tile_positions.append(Vector3(0, 0, 0) + offset)
+	else:
+		for j in range(6):
+			var angle_deg = 60 * j + 60
+			var angle_rad = PI / 180 * angle_deg
+			var intitial_position = Vector3(cos(angle_rad), 0, sin(angle_rad)) * width * n
+			tile_positions.append(intitial_position + offset)
+			
+			for k in range(1, n):
+				var angle_deg_child = angle_deg + 120
+				var angle_rad_child = PI / 180 * angle_deg_child
+				tile_positions.append(intitial_position + Vector3(width * k * cos(angle_rad_child), 0, width * k * sin(angle_rad_child)) + offset)
+	
+	return tile_positions

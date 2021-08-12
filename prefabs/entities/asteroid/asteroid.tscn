@@ -18,6 +18,26 @@ icon = ExtResource( 2 )
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
+[node name="MeshInstance5" type="MeshInstance" parent="."]
+transform = Transform( 0.227155, 0, 0.251074, -0.0971322, 0.204146, 0.136524, -0.176471, -0.112365, 0.24804, 0, -0.421445, -0.594402 )
+visible = false
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="."]
+transform = Transform( 0.190333, 0, 0.130641, -0.101173, 0.247141, 0.147401, -0.0826502, -0.302528, 0.120414, -0.552848, -0.409091, 0.0949321 )
+visible = false
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="MeshInstance3" type="MeshInstance" parent="."]
+transform = Transform( 0.273943, 0, 0, 0, 0.102309, 0.127302, 0, -0.0442199, 0.294531, 0.147018, -0.491063, 0.385967 )
+visible = false
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="MeshInstance2" type="MeshInstance" parent="."]
+transform = Transform( 0.0159826, 0, 0.14791, 0.138579, 0.190717, -0.00224348, -0.356116, 0.0742156, 0.00576522, 0.666838, -0.344251, 0.38079 )
+visible = false
 mesh = SubResource( 2 )
 material/0 = null

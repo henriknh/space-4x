@@ -22,32 +22,10 @@ func _generate_tiles():
 	var gap = Consts.PLANET_SYSTEM_RADIUS[WorldGenerator.world_size].gap
 	var radius = Random.randi_range(radius_min, radius_max)
 	
-	var width = Consts.TILE_SIZE * sqrt(3)
-	var _height = Consts.TILE_SIZE * 2
-	
 	for i in range(gap, gap + radius):
-		
 		var is_edge_node = (i + 1) == (gap + radius)
-		
-		if i == 0:
-			var tile = Instancer.tile(Vector3(0, 0, 0), is_edge_node)
-			tiles.append(tile)
-		else:
-			for j in range(6):
-				var angle_deg = 60 * j + 60
-				var angle_rad = PI / 180 * angle_deg
-				var position = Vector3(cos(angle_rad), 0, sin(angle_rad)) * width * i
-				
-				var tile = Instancer.tile(position, is_edge_node)
-				tiles.append(tile)
-
-				for k in range(1, i):
-					var angle_deg_child = angle_deg + 120
-					var angle_rad_child = PI / 180 * angle_deg_child
-					var position_child = position + Vector3(width * k * cos(angle_rad_child), 0, width * k * sin(angle_rad_child))
-
-					var tile_child = Instancer.tile(position_child, is_edge_node)
-					tiles.append(tile_child)
+		for tile_positon in Utils.get_tile_positions_at_n_distance(i):
+			tiles.append(Instancer.tile(tile_positon, is_edge_node))
 	
 	var tiles_dict = {}
 	for tile in tiles:
